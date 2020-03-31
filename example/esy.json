@@ -26,7 +26,8 @@
     "ocaml": "~4.8.0",
     "refmterr": "*",
     "@opam/zarith": "1.9.1",
-    "@opam/zarith_stubs_js": "v0.13.0"
+    "@opam/zarith_stubs_js": "v0.13.0",
+    "@opam/xml-light": "2.4"
   },
   "devDependencies": {
     "ocaml": "~4.8.0",
