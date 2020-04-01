@@ -19,8 +19,8 @@ let space = {
 let make = (~name="Billy", ~children=?) => {
   let (count, setCount) = React.useState(() => 0);
   let (state, dispatch) = React.useReducer(reducer, 0);
-
   <div>
+    <TreeView />
     <UseEffect count />
     <p> {"Hallo " ++ (Parse.extract(z)) |> React.string}</p>
     <p> {"Hellllo from GreetingReason " ++ name |> React.string} </p>

@@ -84,23 +84,25 @@
                     <value>
                         <map>
                             <key>
-value domain
-</key>
+                                value domain
+                            </key>
                             <value>
                                 <map>
                                     <key>
-__tzname</key>
+                                        __tzname
+                                    </key>
                                     <value>
                                         <data>
-top
-</data>
+                                        top
+                                        </data>
                                     </value>
-                                    <key>
-__daylight</key>
+                                        <key>
+                                        __daylight
+                                        </key>
                                     <value>
                                         <data>
-top
-</data>
+                                            top
+                                        </data>
                                     </value>
                                     <key>
 __timezone</key>
