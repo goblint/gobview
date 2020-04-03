@@ -19,7 +19,8 @@ type run = Run of parameters * result
 let x = XmlParser.make ()
 let _ = XmlParser.prove x false
 
-let xml_data = XmlParser.parse x (SString Data.xml_data)
+(* [%blob "static/data.xml"] *)
+let xml_data = XmlParser.parse x (SString Data.xml_data) 
 (* let xml_data = Xml.parse_file "file:///home/alex/git/bachelor/jsoo-react-6/jsoo-react/example/src/data.xml" *)
 
 let default d = function Some x -> x | None -> d
