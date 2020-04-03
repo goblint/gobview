@@ -1,6 +1,3 @@
-let f () = print_endline "Hallo Welt"
-
-module Z = XmlParser 
 module X = Xml
 module T = Tree
 
@@ -19,20 +16,12 @@ type parameters = Parameters of string
 type result = Result of file list * call list * glob list
 type run = Run of parameters * result
 
-let extract p = (match p with Run (z,_) -> (match z with Parameters (s) -> s))
+let x = XmlParser.make ()
+let _ = XmlParser.prove x false
 
-let x = Z.make () 
-let y = Z.prove x false
-
-let xml_data = Z.parse x (SString Data.xml_data)
+let xml_data = XmlParser.parse x (SString Data.xml_data)
 (* let xml_data = Xml.parse_file "file:///home/alex/git/bachelor/jsoo-react-6/jsoo-react/example/src/data.xml" *)
-let x = Xml.to_string_fmt xml_data
-    
-let b = Xml.tag xml_data 
 
-let tag () = print_endline (x)
-let rec iter a = Xml.iter (fun x -> print_endline (Xml.tag x ^ "    -    ") ; try iter x with Xml.Not_element x -> (print_endline ("NOT FOUND " ^ Xml.to_string_fmt x) )) a
-let los () = iter xml_data
 let default d = function Some x -> x | None -> d
 let default_app d f = function Some x -> f x | None -> d
 
@@ -42,7 +31,10 @@ let rec parse_data_set c = match X.tag c with
     | "map" -> Map (X.children c |> List.map parse_key_value )
     | _ -> failwith "Alex expected data_set"
 
-and parse_key_value c = match X.tag c with "value" -> Value (parse_data_set @@ List.hd @@ X.children c) | "key" -> Key (X.pcdata @@ List.hd @@ X.children c) | _ -> failwith "Alex expected key or value"
+and parse_key_value c = match X.tag c with 
+    | "value" -> Value (parse_data_set @@ List.hd @@ X.children c) 
+    | "key" -> Key (X.pcdata @@ List.hd @@ X.children c) 
+    | _ -> failwith "Alex expected key or value"
 let parse_analysis c = Analysis (X.attrib c "name", parse_key_value @@ List.hd @@ X.children c) 
 let parse_node c = Node (X.attrib c "name")
 let parse_funct c = Funct ((List.map parse_node (X.children c)),X.attrib c "name") 
@@ -52,26 +44,22 @@ let parse_path c = Path (List.map parse_analysis @@ X.children c)
 let parse_call c = Call (parse_context @@ List.find (fun x -> X.tag x = "context") @@ X.children c , parse_path @@ List.find (fun x -> X.tag x = "path") @@ X.children c)
 let parse_glob c = Glob (parse_key_value @@ List.find (fun x -> X.tag x = "key") @@ X.children c, 
     List.map parse_analysis (List.filter (fun x -> X.tag x = "analysis") @@ X.children c))
-let parse_parameters c = if X.tag c = "parameters" then Parameters (List.nth (X.children c) 0 |> X.pcdata  ) else failwith ("Alex expected parameters "^(X.tag c) )
+let parse_parameters c = match X.tag c with 
+    | "parameters" -> Parameters (List.nth (X.children c) 0 |> X.pcdata)
+    | _ -> failwith ("Alex expected parameters "^(X.tag c))
 let parse_result c = if X.tag c = "result" then
- let files = List.filter (fun x -> X.tag x = "file") (X.children c) in 
- let calls = List.filter (fun x -> X.tag x = "call") (X.children c) in 
- let globs = List.filter (fun x -> X.tag x = "glob") (X.children c) in 
- Result (List.map parse_file files, List.map parse_call calls, List.map parse_glob globs) else failwith "Alex expected result"
+    let files = List.filter (fun x -> X.tag x = "file") (X.children c) in 
+    let calls = List.filter (fun x -> X.tag x = "call") (X.children c) in 
+    let globs = List.filter (fun x -> X.tag x = "glob") (X.children c) in 
+    Result (List.map parse_file files, List.map parse_call calls, List.map parse_glob globs) else failwith "Alex expected result"
 
 let parse (c : X.xml) : run = match X.tag c with 
     | "run" -> let parameters = List.nth (X.children c) 0 |> parse_parameters in 
                 let result = List.nth (X.children c) 1 |> parse_result in 
                 Run (parameters, result)
-                
     | _ -> failwith "Alex expected run tag"
 
-
-(* let _ = parse xml_data *)
-
 let get_calls r = let (Run(_, Result(_, calls, _))) = r in calls
-(* type data_set = Data of string | Set of key_value option | Map of key_value list *)
-
     
 let rec list_to_kv_tuple l = if List.length l > 0 then match l with x::y::z -> [(x,y)]@(list_to_kv_tuple z) 
     | _ -> failwith "Alex expected for each key a value in xml map" else []
@@ -90,8 +78,8 @@ and  key_value_tuple_to_tree = function
     | _ -> failwith "Alex expected proper key value pairs"
 
 let analysis_to_tree (Analysis (name, value)) =  match value with 
-| Value (Map kvl) -> T.Node (name, List.map key_value_tuple_to_tree @@ list_to_kv_tuple kvl)
-| _ -> T.Node(name, [key_value_to_tree value])
+    | Value (Map kvl) -> T.Node (name, List.map key_value_tuple_to_tree @@ list_to_kv_tuple kvl)
+    | _ -> T.Node(name, [key_value_to_tree value])
 let context_to_tree c = let (Context (analysis_list)) = c in T.Node("context", List.map analysis_to_tree analysis_list)
-let path_to_tree c = let (Path (analysis_list)) = c in T.Node("path", List.map analysis_to_tree analysis_list)
-let call_to_tree c = let (Call (context, path)) = c in T.Node("call" , [context_to_tree context; path_to_tree path])
+let path_to_tree (Path (analysis_list)) = T.Node("path", List.map analysis_to_tree analysis_list)
+let call_to_tree (Call (context, path)) = T.Node("call" , [context_to_tree context; path_to_tree path])

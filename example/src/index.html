@@ -16,11 +16,8 @@
         flex: 0 0 auto;
         padding: 0 2rem;
         background-color: #e9e9e9;
-      }
-      .sidebar ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
+        height: 100vh;
+        width: 300px;
       }
       .content-wrapper {
         flex: 1 1 auto;
@@ -29,13 +26,11 @@
       .content {
         margin: 0 2rem;
       }
-
-
-
-
             /* Remove default bullets */
       ul, #myUL {
         list-style-type: none;
+        padding-left: 10px;
+        font-size: small;
       }
 
       /* Remove margins and padding from the parent ul */
@@ -84,5 +79,16 @@
   <body>
     <div id="app"></div>
     <script src="Index.js"></script>
+    <script> 
+      var toggler = document.getElementsByClassName("caret");
+        var i;
+
+        for (i = 0; i < toggler.length; i++) {
+          toggler[i].addEventListener("click", function () {
+            this.parentElement.querySelector(".nested").classList.toggle("active");
+            this.classList.toggle("caret-down");
+          });
+        }
+    </script>
   </body>
 </html>
