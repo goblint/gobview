@@ -6,7 +6,7 @@ let make = () => {
   <>
     { code_list |> List.mapi( (i, l) => {
         <> 
-          <Code key={string_of_int(i)} text=l numb=i />
+          <Code key={string_of_int(i)} text=l numb=(i+1) />
         </>;
     })  |> React.list}
     </>;

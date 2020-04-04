@@ -10,17 +10,21 @@ type context = Context of analysis list
 type node = Node of string
 type funct = Funct of node list * string
 type file = File of funct list * attribs
-type call = Call of context * path
+type c_id = string
+type c_file = string
+type c_line = string
+type c_order = string
+type call = Call of c_id * c_file * c_line * c_order * context * path
 type glob = Glob of key_value * analysis list
 type parameters = Parameters of string
 type result = Result of file list * call list * glob list
 type run = Run of parameters * result
 
-let x = XmlParser.make ()
-let _ = XmlParser.prove x false
+let x = let x = XmlParser.make () in 
+        let _ = XmlParser.prove x false in x
 
 (* [%blob "static/data.xml"] *)
-let xml_data = XmlParser.parse x (SString Data.xml_data) 
+let xml_data = XmlParser.parse x (SString Data01.xml_data) 
 (* let xml_data = Xml.parse_file "file:///home/alex/git/bachelor/jsoo-react-6/jsoo-react/example/src/data.xml" *)
 
 let default d = function Some x -> x | None -> d
@@ -42,7 +46,12 @@ let parse_funct c = Funct ((List.map parse_node (X.children c)),X.attrib c "name
 let parse_file c = File (List.map parse_funct (X.children c), X.attribs c )
 let parse_context c = Context (List.map parse_analysis @@ X.children c)
 let parse_path c = Path (List.map parse_analysis @@ X.children c)
-let parse_call c = Call (parse_context @@ List.find (fun x -> X.tag x = "context") @@ X.children c , parse_path @@ List.find (fun x -> X.tag x = "path") @@ X.children c)
+let parse_call c = 
+    let id = X.attrib c "id" in
+    let file = X.attrib c "file" in
+    let line = X.attrib c "line" in
+    let order = X.attrib c "order" in
+    Call (id, file, line, order, parse_context @@ List.find (fun x -> X.tag x = "context") @@ X.children c , parse_path @@ List.find (fun x -> X.tag x = "path") @@ X.children c)
 let parse_glob c = Glob (parse_key_value @@ List.find (fun x -> X.tag x = "key") @@ X.children c, 
     List.map parse_analysis (List.filter (fun x -> X.tag x = "analysis") @@ X.children c))
 let parse_parameters c = match X.tag c with 
@@ -80,7 +89,8 @@ and  key_value_tuple_to_tree = function
 
 let analysis_to_tree (Analysis (name, value)) =  match value with 
     | Value (Map kvl) -> T.Node (name, List.map key_value_tuple_to_tree @@ list_to_kv_tuple kvl)
+    | Value (Set None) -> T.Node (name^"→ ∅", [])
     | _ -> T.Node(name, [key_value_to_tree value])
 let context_to_tree c = let (Context (analysis_list)) = c in T.Node("context", List.map analysis_to_tree analysis_list)
 let path_to_tree (Path (analysis_list)) = T.Node("path", List.map analysis_to_tree analysis_list)
-let call_to_tree (Call (context, path)) = T.Node("call" , [context_to_tree context; path_to_tree path])
+let call_to_tree (Call (id, _, _, _, context, path)) = T.Node("Node:"^id , [context_to_tree context; path_to_tree path])
