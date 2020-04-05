@@ -1,15 +1,15 @@
 let calls = Parse.parse (Parse.xml_data )|> Parse.get_calls;
-let treez = calls |> List.hd |> Parse.call_to_tree;
-let tree_list = List.map (Parse.call_to_tree , calls);
 
 [@react.component]
-let make = () => {
-  {tree_list |> 
-    List.mapi ( (i,l) => {
+let make = (~line) => {
+  { calls |> 
+    List.filter( call => {Parse.get_line(call) == string_of_int(line)}) |>
+    List.mapi ( (i,c) => {
       <div key={string_of_int(i)}>
         <ul id="myUL" >
-          <TreeView tree=l />
+          <TreeView tree={Parse.call_to_tree(c)} />
         </ul>
+        <hr />
       </div>
-    }) |> React.list }
+    }) |> React.list };
 };

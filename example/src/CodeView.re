@@ -2,11 +2,11 @@
 let code_list = String.split_on_char  ('\n', CodeData.c_code);
 
 [@react.component]
-let make = () => {
-  <>
+let make = (~dispatch) => {
+  <>  
     { code_list |> List.mapi( (i, l) => {
         <> 
-          <Code key={string_of_int(i)} text=l numb=(i+1) />
+          <Code key={string_of_int(i)} text=l numb=(i+1) dispatch/>
         </>;
     })  |> React.list}
     </>;

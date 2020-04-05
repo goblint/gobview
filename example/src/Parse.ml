@@ -94,3 +94,6 @@ let analysis_to_tree (Analysis (name, value)) =  match value with
 let context_to_tree c = let (Context (analysis_list)) = c in T.Node("context", List.map analysis_to_tree analysis_list)
 let path_to_tree (Path (analysis_list)) = T.Node("path", List.map analysis_to_tree analysis_list)
 let call_to_tree (Call (id, _, _, _, context, path)) = T.Node("Node:"^id , [context_to_tree context; path_to_tree path])
+
+
+let get_line (Call(_,_,line,_,_,_)) = line
