@@ -1,7 +1,5 @@
-let calls = Parse.parse (Parse.xml_data )|> Parse.get_calls;
-
 [@react.component]
-let make = (~line) => {
+let make = (~line, ~calls) => {
   { calls |> 
     List.filter( call => {Parse.get_line(call) == string_of_int(line)}) |>
     List.mapi ( (i,c) => {

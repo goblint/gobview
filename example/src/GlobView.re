@@ -1,7 +1,5 @@
-let globs = Parse.parse (Parse.xml_data )|> Parse.get_globs ;
-
 [@react.component]
-let make = () => {
+let make = (~globs) => {
   { globs |> 
     List.mapi ( (i,c) => {
       <div key={string_of_int(i)}>
