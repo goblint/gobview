@@ -69,8 +69,6 @@ let parse (c : X.xml) : run = match X.tag c with
                 Run (parameters, result)
     | _ -> failwith "Alex expected run tag"
 
-let get_calls r = let (Run(_, Result(_, calls, _))) = r in calls
-    
 let rec list_to_kv_tuple l = if List.length l > 0 then match l with x::y::z -> [(x,y)]@(list_to_kv_tuple z) 
     | _ -> failwith "Alex expected for each key a value in xml map" else []
 let rec data_set_to_tree = function 
@@ -94,6 +92,13 @@ let analysis_to_tree (Analysis (name, value)) =  match value with
 let context_to_tree c = let (Context (analysis_list)) = c in T.Node("context", List.map analysis_to_tree analysis_list)
 let path_to_tree (Path (analysis_list)) = T.Node("path", List.map analysis_to_tree analysis_list)
 let call_to_tree (Call (id, _, _, _, context, path)) = T.Node("Node:"^id , [context_to_tree context; path_to_tree path])
+let glob_to_tree (Glob (k , analysis_list)) = 
+    let s = match k with
+        | Key (s) -> s 
+        | _ -> failwith "Alex expected a Key not Value"
+    in T.Node( s, List.map analysis_to_tree analysis_list)
 
 
 let get_line (Call(_,_,line,_,_,_)) = line
+let get_calls r = let (Run(_, Result(_, calls, _))) = r in calls
+let get_globs r = let (Run(_, Result(_, _, globs))) = r in globs
