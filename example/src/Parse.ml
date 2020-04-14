@@ -108,8 +108,13 @@ let glob_to_inverted_tree (gl : glob list) : T.tree list =
     let create s = T.Node(s, List.map (fun g -> glob_to_something g s) gl) in
     [create "expRelation"; create "base"; create "escape"; create "mutex"]
 
-
+(* type file = File of funct list * attribs *)
+let file_to_name (File (_, attribs)) = List.assoc_opt "name" attribs |> default "name missing"
+let file_to_path (File (_, attribs)) = List.assoc_opt "path" attribs |> default "path missing" 
+let file_is_empty (File (func_list, _)) = 
+    let sum = List.map (fun (Funct(nl, _)) -> List.length nl ) func_list |> List.fold_left (+) 0 in sum = 0 
 
 let get_line (Call(_,_,line,_,_,_)) = line
-let get_calls r = let (Run(_, Result(_, calls, _))) = r in calls
-let get_globs r = let (Run(_, Result(_, _, globs))) = r in globs
+let get_calls (Run(_, Result(_, calls, _))) = calls
+let get_globs (Run(_, Result(_, _, globs))) = globs
+let get_files (Run(_, Result(files, _,_))) = files

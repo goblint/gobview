@@ -3,6 +3,7 @@ let parsed_data = Parse.xml_data |> Parse.parse;
 [@react.component]
 let make = () => {
   let (line, setLine) = React.useState(() => -1);
+  let (file, setFile) = React.useState(() => "test");
   
   <div style={ReactDOM.Style.make(~position="relative",())}>
     <div className="sidebar">
@@ -17,7 +18,9 @@ let make = () => {
       <div className="content" style={ReactDOM.Style.make(~marginTop="30px",())}
         /* onClick={_ => {setLine(l => l+1)}} */
       >
+        <h3>{file |> React.string}</h3>
         <CodeView dispatch=setLine calls={parsed_data |> Parse.get_calls} />
+        <FileList files={parsed_data |> Parse.get_files} setFile />
       </div>
     </div>
   </div>;
