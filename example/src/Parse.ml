@@ -92,11 +92,22 @@ let analysis_to_tree (Analysis (name, value)) =  match value with
 let context_to_tree c = let (Context (analysis_list)) = c in T.Node("context", List.map analysis_to_tree analysis_list)
 let path_to_tree (Path (analysis_list)) = T.Node("path", List.map analysis_to_tree analysis_list)
 let call_to_tree (Call (id, _, _, _, context, path)) = T.Node("Node:"^id , [context_to_tree context; path_to_tree path])
-let glob_to_tree (Glob (k , analysis_list)) = 
-    let s = match k with
+let get_glob_name = function
         | Key (s) -> s 
         | _ -> failwith "Alex expected a Key not Value"
-    in T.Node( s, List.map analysis_to_tree analysis_list)
+let glob_to_tree (Glob (k , analysis_list)) = T.Node(get_glob_name k, List.map analysis_to_tree analysis_list)
+
+
+let glob_to_something (Glob (name , al)) something = 
+    match List.find (fun (Analysis (a,_)) -> String.equal a something) al with
+        | (Analysis (_,Value(Data(d)))) ->  T.Node(get_glob_name name^" → "^d, [])
+        | (Analysis (_,Value (Set None))) ->  T.Node(get_glob_name name^"→ ∅", [])
+        | (Analysis (_,kv)) ->  T.Node(get_glob_name name, [key_value_to_tree kv])
+
+let glob_to_inverted_tree (gl : glob list) : T.tree list = 
+    let create s = T.Node(s, List.map (fun g -> glob_to_something g s) gl) in
+    [create "expRelation"; create "base"; create "escape"; create "mutex"]
+
 
 
 let get_line (Call(_,_,line,_,_,_)) = line
