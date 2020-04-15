@@ -1,6 +1,6 @@
 (executable
  (name App)
- (libraries js_of_ocaml-lwt jsoo-react-esy xml-light)
+ (libraries js_of_ocaml-lwt jsoo-react-esy xml-light zarith zarith_stubs_js)
  (js_of_ocaml
   (javascript_files static-requires.js))
  (preprocess
