@@ -27,7 +27,9 @@
     "refmterr": "*",
     "@opam/zarith": "1.9.1",
     "@opam/zarith_stubs_js": "v0.13.0",
-    "@opam/xml-light": "2.4"
+    "@opam/xml-light": "2.4",
+    "@opam/goblint-cil": "*",
+    "@opam/goblint":"*"
   },
   "devDependencies": {
     "ocaml": "~4.8.0",
@@ -35,6 +37,8 @@
   },
   "resolutions": {
     "jsoo-react-ppx-esy": "link-dev:../ppx",
-    "jsoo-react-esy": "link-dev:../lib"
+    "jsoo-react-esy": "link-dev:../lib",
+    "@opam/goblint-cil": "goblint/cil:goblint-cil.opam#0d12b5b324",
+    "@opam/goblint":"goblint/analyzer:goblint.opam#c4f6b88de85cac5"
   }
 }
