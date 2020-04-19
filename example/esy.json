@@ -39,6 +39,6 @@
     "jsoo-react-ppx-esy": "link-dev:../ppx",
     "jsoo-react-esy": "link-dev:../lib",
     "@opam/goblint-cil": "goblint/cil:goblint-cil.opam#0d12b5b324",
-    "@opam/goblint":"goblint/analyzer:goblint.opam#c4f6b88de85cac5"
+    "@opam/goblint":"tau-gamma/analyzer:goblint.opam#19de92465b5f"
   }
 }

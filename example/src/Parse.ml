@@ -127,4 +127,5 @@ module Test = struct
     let zarith_string = 
         let zarith_test = Z.zero in 
         Z.to_string zarith_test
+    let cilversion = Cil.cilVersion
 end 
