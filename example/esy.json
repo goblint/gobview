@@ -27,9 +27,7 @@
     "refmterr": "*",
     "@opam/zarith": "1.9.1",
     "@opam/zarith_stubs_js": "v0.13.0",
-    "@opam/xml-light": "2.4",
-    "@opam/goblint-cil": "*",
-    "@opam/goblint":"*"
+    "@opam/xml-light": "2.4"
   },
   "devDependencies": {
     "ocaml": "~4.8.0",
@@ -38,8 +36,6 @@
   "resolutions": {
     "jsoo-react-ppx-esy": "link-dev:../ppx",
     "jsoo-react-esy": "link-dev:../lib",
-    "@opam/goblint-cil": "goblint/cil:goblint-cil.opam#0d12b5b324",
-    "@opam/goblint":"tau-gamma/analyzer:goblint.opam#19de92465b5f",
     "@opam/js_of_ocaml": "jchavarri/js_of_ocaml:js_of_ocaml.opam#266720d",
     "@opam/js_of_ocaml-lwt": "jchavarri/js_of_ocaml:js_of_ocaml-lwt.opam#266720d",
     "@opam/js_of_ocaml-ppx": "jchavarri/js_of_ocaml:js_of_ocaml-ppx.opam#266720d"

@@ -21,7 +21,7 @@ let make = () => {
         <h3>{file |> React.string}</h3>
         <CodeView dispatch=setLine calls={parsed_data |> Parse.get_calls} />
         <FileList files={parsed_data |> Parse.get_files} setFile />
-        <p>{Parse.Test.zarith_string |> React.string}</p>
+        /* <p>{Parse.Test.zarith_string |> React.string}</p> */
       </div>
     </div>
   </div>;

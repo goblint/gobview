@@ -120,7 +120,7 @@ let get_calls (Run(_, Result(_, calls, _))) = calls
 let get_globs (Run(_, Result(_, _, globs))) = globs
 let get_files (Run(_, Result(files, _,_))) = files
 
-module Test = struct
+(* module Test = struct
     (* let int64num = Int64.of_int 14
     let h = IntDomain.Interval32.hash int64num *)
     
@@ -128,4 +128,4 @@ module Test = struct
         let zarith_test = Z.zero in 
         Z.to_string zarith_test
     let cilversion = Cil.cilVersion
-end 
+end  *)
