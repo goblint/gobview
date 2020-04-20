@@ -14,7 +14,7 @@ type c_id = string
 type c_file = string
 type c_line = string
 type c_order = string
-type call = Call of c_id * c_file * c_line * c_order * context * path
+type call = Call of c_id * c_file * c_line * c_order * (context * path) list
 type glob = Glob of key_value * analysis list
 type parameters = Parameters of string
 type result = Result of file list * call list * glob list
@@ -52,7 +52,13 @@ let parse_call c =
     let file = X.attrib c "file" in
     let line = X.attrib c "line" in
     let order = X.attrib c "order" in
-    Call (id, file, line, order, parse_context @@ List.find (fun x -> X.tag x = "context") @@ X.children c , parse_path @@ List.find (fun x -> X.tag x = "path") @@ X.children c)
+    let context = List.map parse_context @@ List.find_all (fun x -> X.tag x = "context") @@ X.children c in
+    let path = List.map parse_path @@ List.find_all (fun x -> X.tag x = "path") @@ X.children c in 
+    let rec combine = function 
+        | [], [] -> []
+        | x::xl, y::yl -> [(x,y)] @ (combine (xl, yl) )
+        | _ -> failwith "Alex expected for each context a path" in
+    Call (id, file, line, order, combine (context, path))
 let parse_glob c = Glob (parse_key_value @@ List.find (fun x -> X.tag x = "key") @@ X.children c, 
     List.map parse_analysis (List.filter (fun x -> X.tag x = "analysis") @@ X.children c))
 let parse_parameters c = match X.tag c with 
@@ -92,7 +98,11 @@ let analysis_to_tree (Analysis (name, value)) =  match value with
     | _ -> T.Node(name, [key_value_to_tree value])
 let context_to_tree c = let (Context (analysis_list)) = c in T.Node("context", List.map analysis_to_tree analysis_list)
 let path_to_tree (Path (analysis_list)) = T.Node("path", List.map analysis_to_tree analysis_list)
-let call_to_tree (Call (id, _, _, _, context, path)) = T.Node("Node:"^id , [context_to_tree context; path_to_tree path])
+let call_to_tree (Call (id, _, _, _, l)) = 
+    let context_path_list =  if List.length l > 1 
+        then List.mapi (fun i (c,p) -> T.Node("Tuple "^(string_of_int i), [context_to_tree c; path_to_tree p])) l
+        else let (c,p) = List.hd l in [context_to_tree c; path_to_tree p] in
+    T.Node("Node:"^id ,  context_path_list)
 let get_glob_name = function
         | Key (s) -> s 
         | _ -> failwith "Alex expected a Key not Value"
@@ -115,7 +125,7 @@ let file_to_path (File (_, attribs)) = List.assoc_opt "path" attribs |> default 
 let file_is_empty (File (func_list, _)) = 
     let sum = List.map (fun (Funct(nl, _)) -> List.length nl ) func_list |> List.fold_left (+) 0 in sum = 0 
 
-let get_line (Call(_,_,line,_,_,_)) = line
+let get_line (Call(_,_,line,_,_)) = line
 let get_calls (Run(_, Result(_, calls, _))) = calls
 let get_globs (Run(_, Result(_, _, globs))) = globs
 let get_files (Run(_, Result(files, _,_))) = files
