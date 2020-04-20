@@ -28,6 +28,7 @@ let xml_data = XmlParser.parse x (SString Data01.xml_data)
 (* let xml_data = Xml.parse_file "file:///home/alex/git/bachelor/jsoo-react-6/jsoo-react/example/src/data.xml" *)
 (* let xml_data = Xml.parse_file "/data01.xml" *)
 
+
 let default d = function Some x -> x | None -> d
 let default_app d f = function Some x -> f x | None -> d
 
@@ -76,6 +77,8 @@ let parse (c : X.xml) : run = match X.tag c with
                 Run (parameters, result)
     | _ -> failwith "Alex expected run tag"
 
+let parse_string s : run = XmlParser.parse x (SString s) |> parse 
+
 let rec list_to_kv_tuple l = if List.length l > 0 then match l with x::y::z -> [(x,y)]@(list_to_kv_tuple z) 
     | _ -> failwith "Alex expected for each key a value in xml map" else []
 let rec data_set_to_tree = function 
@@ -119,7 +122,6 @@ let glob_to_inverted_tree (gl : glob list) : T.tree list =
     let create s = T.Node(s, List.map (fun g -> glob_to_something g s) gl) in
     [create "expRelation"; create "base"; create "escape"; create "mutex"]
 
-(* type file = File of funct list * attribs *)
 let file_to_name (File (_, attribs)) = List.assoc_opt "name" attribs |> default "name missing"
 let file_to_path (File (_, attribs)) = List.assoc_opt "path" attribs |> default "path missing" 
 let file_is_empty (File (func_list, _)) = 
@@ -130,12 +132,12 @@ let get_calls (Run(_, Result(_, calls, _))) = calls
 let get_globs (Run(_, Result(_, _, globs))) = globs
 let get_files (Run(_, Result(files, _,_))) = files
 
-(* module Test = struct
+module Test = struct
     (* let int64num = Int64.of_int 14
     let h = IntDomain.Interval32.hash int64num *)
+    (* let cilversion = Cil.cilVersion *)
     
-    let zarith_string = 
+    (* let zarith_string = 
         let zarith_test = Z.zero in 
-        Z.to_string zarith_test
-    let cilversion = Cil.cilVersion
-end  *)
+        Z.to_string zarith_test *)
+end 
