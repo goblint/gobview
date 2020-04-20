@@ -1,14 +1,22 @@
 [@react.component]
 let make = () => {
   let (line, setLine) = React.useState(() => -1);
-  let (file, setFile) = React.useState(() => "test");
+  let (file, setFile) = React.useState(() => "code.c");
   let (pdata, setPdata) = React.useState(() => (Parse.xml_data |> Parse.parse));
   let (code, setCode) = React.useState(() => (CodeData.c_code));
+  let fetchCode = (s) => {let _ = Lwt.bind(Datafetcher.http_get_with_base(s), (s => { setCode(_ => s); Lwt.return(())}));();}
+
   React.useEffect0(() => {
     let _ = Lwt.bind(Datafetcher.http_get_with_base("data.xml"), (s => { setPdata(_ => (Parse.parse_string(s))); Lwt.return(())}));
-    let _ = Lwt.bind(Datafetcher.http_get_with_base("code.c"), (s => { setCode(_ => s); Lwt.return(())}));
+    fetchCode("code.c");
     Datafetcher.log("fetch data"); None;
   });
+
+  React.useEffect1(() => {
+    fetchCode(file);
+    Datafetcher.log("fetch code");
+    None;
+  }, [|file|]);
 
   <div style={ReactDOM.Style.make(~position="relative",())}>
     <div className="sidebar">
