@@ -64,15 +64,7 @@
         transform: rotate(90deg);
       }
 
-      /* Hide the nested list */
-      .nested {
-        display: none;
-      }
-
-      /* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
-      .active {
-        display: block;
-      } 
+  
 
       .remove-margin {
         margin: 0px;
@@ -100,21 +92,6 @@
   <body>
     <div id="app"></div>
     <script src="Index.js"></script>
-    <script>
-      function treeAction(){
 
-        var toggler = document.getElementsByClassName("caret");
-        var i;
-        
-        for (i = 0; i < toggler.length; i++) {
-          toggler[i].addEventListener("click", function () {
-            this.parentElement.querySelector(".nested").classList.toggle("active");
-            this.classList.toggle("caret-down");
-          });
-        }
-      }
-      treeAction();
-      // setInterval(treeAction, 1000);
-    </script>
   </body>
 </html>
