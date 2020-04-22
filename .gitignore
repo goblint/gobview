@@ -70,5 +70,4 @@ _release
 *.byte
 *.native
 *.install
-build
 _build
