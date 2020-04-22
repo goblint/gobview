@@ -2,7 +2,7 @@
 let make = () => {
   let (line, setLine) = React.useState(() => -1);
   let (file, setFile) = React.useState(() => "code.c");
-  let (pdata, setPdata) = React.useState(() => (Parse.xml_data |> Parse.parse));
+  let (pdata, setPdata) = React.useState(() => (Parse.empty_run));
   let (code, setCode) = React.useState(() => "");
   let (showsvg, setShowsvg) = React.useState(() => false);
   let fetchCode = (s) => {let _ = Lwt.bind(Datafetcher.http_get_with_base(s), (s => { setCode(_ => s); Lwt.return(())}));();}

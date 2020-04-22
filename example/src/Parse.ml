@@ -24,10 +24,11 @@ let x = let x = XmlParser.make () in
         let _ = XmlParser.prove x false in x
 
 (* [%blob "static/data.xml"] *)
-let xml_data = XmlParser.parse x (SString Data01.xml_data) 
+(* let xml_data = XmlParser.parse x (SString Data01.xml_data)  *)
 (* let xml_data = Xml.parse_file "file:///home/alex/git/bachelor/jsoo-react-6/jsoo-react/example/src/data.xml" *)
 (* let xml_data = Xml.parse_file "/data01.xml" *)
 
+let empty_run = Run (Parameters (""), Result([],[],[]))
 
 let default d = function Some x -> x | None -> d
 let default_app d f = function Some x -> f x | None -> d
