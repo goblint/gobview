@@ -148,3 +148,25 @@ let search_main_file fl =
     let f = List.find_opt (fun f -> contains_main f) fl in 
     default_app "" file_to_name f
 
+let glob_to_inverted_tree_2 gl = 
+    let add_element (l:('a * 'b) list) (glob_name, glob_value) = 
+        let found,li = List.fold_left (fun (found,inner_list) (key, value) -> 
+            if String.equal key glob_name then true,(key,glob_value::value)::inner_list 
+            else found,(key,value)::inner_list) (false,[]) l 
+        in if found then li else (glob_name, [glob_value])::li in
+    let add_single_analysis (Analysis(aname, kv)) gname l =
+        let x = 
+            match kv with 
+                | Value(Data(d)) ->  T.Node(gname^" → "^d, [])
+                | Value (Set None) ->  T.Node(gname^"→ ∅", [])
+                | kv ->  T.Node(gname, [key_value_to_tree kv])
+        in add_element l (aname, x) in
+    let add_glob_to_map l (Glob (gname , al)) = let gname = get_glob_name gname in 
+        List.fold_left (fun s a -> add_single_analysis a gname s ) l al in
+    let gmap = List.fold_left add_glob_to_map [] gl in 
+        List.map (fun (aname, l) -> T.Node(aname, l)) gmap
+
+
+
+
+

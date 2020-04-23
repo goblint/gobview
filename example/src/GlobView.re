@@ -1,10 +1,10 @@
 [@react.component]
 let make = (~globs) => {
-  { globs |> 
+  { globs |> Parse.glob_to_inverted_tree_2 |>
     List.mapi ( (i,c) => {
       <div key={string_of_int(i)}>
         <ul id="myUL" >
-          <TreeView tree={Parse.glob_to_tree(c)} />
+          <TreeView tree={c} />
         </ul>
         <hr />
       </div>
