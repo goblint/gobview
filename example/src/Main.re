@@ -24,7 +24,6 @@ let make = () => {
   React.useEffect0(() => {
     Datafetcher.log("Initial data and code fetch");
     fetchData("data.xml");
-    /* fetchCode("code.c"); */
     None;
   });
 
