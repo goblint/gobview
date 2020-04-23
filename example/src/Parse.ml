@@ -84,6 +84,7 @@ let rec list_to_kv_tuple l = if List.length l > 0 then match l with x::y::z -> [
     | _ -> failwith "Alex expected for each key a value in xml map" else []
 let rec data_set_to_tree = function 
     | Data s ->  T.Node(s, []) 
+    | Set Some Value Data x -> T.Node (x, [])
     | Set kv -> T.Node ("set", default_app [] (fun x -> [key_value_to_tree x]) kv ) 
     | Map kvl -> T.Node("map", List.map key_value_tuple_to_tree @@ list_to_kv_tuple kvl)
 and key_value_to_tree = function 
@@ -91,6 +92,7 @@ and key_value_to_tree = function
     | Value (data) -> T.Node ("value", [data_set_to_tree data])
     | Key(s) -> T.Node(s, [])
 and  key_value_tuple_to_tree = function 
+    | Key(s), Value Set Some Value Data x -> T.Node (s^" → "^x, [])
     | Key(s), Value (Data x) -> T.Node (s^" → "^x, []) 
     | Key(s), Value (Map kvl) -> T.Node (s, List.map key_value_tuple_to_tree @@ list_to_kv_tuple kvl)
     | Key(s), Value (data) -> T.Node (s, [data_set_to_tree data])

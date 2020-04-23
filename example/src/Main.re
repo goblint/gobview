@@ -15,7 +15,11 @@ let make = () => {
       Datafetcher.log("Parse data done"); 
       Datafetcher.log("Search main");
       let mainfile = Parse.search_main_file(Parse.get_files(data));
-      Datafetcher.log("Found main file: " ++ mainfile);
+      if(String.equal(mainfile, "")){
+        Datafetcher.log("Found no main file");
+      }else {
+        Datafetcher.log("Found main file: " ++ mainfile);
+      }
       setFile(_ => mainfile);
       Lwt.return(())
     }));
