@@ -1,7 +1,7 @@
 [@react.component]
 let make = () => {
   let (line, setLine) = React.useState(() => -1);
-  let (file, setFile) = React.useState(() => "code.c");
+  let (file, setFile) = React.useState(() => "");
   let (pdata, setPdata) = React.useState(() => (Parse.empty_run));
   let (code, setCode) = React.useState(() => "");
   let (showsvg, setShowsvg) = React.useState(() => false);
@@ -10,8 +10,13 @@ let make = () => {
     let _ = Lwt.bind(Datafetcher.http_get_with_base(s), 
     (s => { 
       Datafetcher.log("Parse data"); 
-      setPdata(_ => (Parse.parse_string(s))); 
+      let data = Parse.parse_string(s);
+      setPdata(_ => data); 
       Datafetcher.log("Parse data done"); 
+      Datafetcher.log("Search main");
+      let mainfile = Parse.search_main_file(Parse.get_files(data));
+      Datafetcher.log("Found main file: " ++ mainfile);
+      setFile(_ => mainfile);
       Lwt.return(())
     }));
   }
@@ -24,12 +29,15 @@ let make = () => {
   });
 
   React.useEffect1(() => {
-    fetchCode(file);
-    Datafetcher.log("fetch code");
+    if(!String.equal(file, "")){
+      fetchCode(file);
+      Datafetcher.log("Fetched code: " ++ file);
+    }
+    setLine(_=> -1);
     None;
   }, [|file|]);
 
-  <div style={ReactDOM.Style.make(~position="relative",())}>
+  <div className="relative">
     <div className="sidebar">
       <h2 className="title"> {"Gobview" |> React.string} </h2>
         <TreeList line calls={pdata |> Parse.get_calls}/>
@@ -47,7 +55,7 @@ let make = () => {
             { (showsvg ? "Code View" : "Node View")  |> React.string}</button>
         </div>
         <div style={ReactDOM.Style.make(~overflow="auto",~height="85vh", ())}>
-          {!showsvg ? <CodeView dispatch=setLine calls={pdata |> Parse.get_calls} code=code /> : 
+          {!showsvg ? <CodeView dispatch=setLine calls={pdata |> Parse.get_calls} code=code line /> : 
             <img src={Datafetcher.base_url ++ "code2.svg"} width="100%"/>
           }
           <FileList files={pdata |> Parse.get_files} setFile />

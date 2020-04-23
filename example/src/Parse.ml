@@ -142,3 +142,9 @@ module Test = struct
         let zarith_test = Z.zero in 
         Z.to_string zarith_test *)
 end 
+
+let search_main_file fl = 
+    let contains_main (File(l,_)) = List.exists (fun (Funct(_,name)) -> String.equal name "main") l in
+    let f = List.find_opt (fun f -> contains_main f) fl in 
+    default_app "" file_to_name f
+
