@@ -131,6 +131,7 @@ let file_is_empty (File (func_list, _)) =
     let sum = List.map (fun (Funct(nl, _)) -> List.length nl ) func_list |> List.fold_left (+) 0 in sum = 0 
 
 let get_line (Call(_,_,line,_,_)) = line
+let get_file (Call(_,file,_,_,_)) = file
 let get_calls (Run(_, Result(_, calls, _))) = calls
 let get_globs (Run(_, Result(_, _, globs))) = globs
 let get_files (Run(_, Result(files, _,_))) = files

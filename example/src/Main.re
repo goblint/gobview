@@ -2,6 +2,7 @@
 let make = () => {
   let (line, setLine) = React.useState(() => -1);
   let (file, setFile) = React.useState(() => "");
+  let (filepath, setFilepath) = React.useState(() => "");
   let (pdata, setPdata) = React.useState(() => (Parse.empty_run));
   let (code, setCode) = React.useState(() => "");
   let (showsvg, setShowsvg) = React.useState(() => false);
@@ -43,7 +44,7 @@ let make = () => {
   <div className="relative">
     <div className="sidebar">
       <h2 className="title"> {"Gobview" |> React.string} </h2>
-        <TreeList line calls={pdata |> Parse.get_calls}/>
+        <TreeList line calls={pdata |> Parse.get_calls} filepath/>
     </div>
     <div className="sidebar globsidebar">
       <h2 className="title"> {"Globals" |> React.string} </h2>
@@ -58,10 +59,10 @@ let make = () => {
             { (showsvg ? "Code View" : "Node View")  |> React.string}</button>
         </div>
         <div style={ReactDOM.Style.make(~overflow="auto",~height="85vh", ())}>
-          {!showsvg ? <CodeView dispatch=setLine calls={pdata |> Parse.get_calls} code=code line /> : 
+          {!showsvg ? <CodeView dispatch=setLine calls={pdata |> Parse.get_calls} code=code line filepath /> : 
             <img src={Datafetcher.base_url ++ "code2.svg"} width="100%"/>
           }
-          <FileList files={pdata |> Parse.get_files} setFile />
+          <FileList files={pdata |> Parse.get_files} setFile setFilepath />
           /* <p>{Parse.Test.zarith_string |> React.string}</p> */
         </div>
       </div>
