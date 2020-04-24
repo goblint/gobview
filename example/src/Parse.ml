@@ -17,8 +17,9 @@ type c_line = string
 type c_order = string
 type call = Call of c_id * c_file * c_line * c_order * (context * path option) list
 type glob = Glob of key_value * analysis list
+type warning = Warning of c_file * c_line * string
 type parameters = Parameters of string
-type result = Result of file list * call list * glob list
+type result = Result of file list * call list * glob list * warning list
 type run = Run of parameters * result
 
 let x = let x = XmlParser.make () in 
@@ -29,7 +30,7 @@ let x = let x = XmlParser.make () in
 (* let xml_data = Xml.parse_file "file:///home/alex/git/bachelor/jsoo-react-6/jsoo-react/example/src/data.xml" *)
 (* let xml_data = Xml.parse_file "/data01.xml" *)
 
-let empty_run = Run (Parameters (""), Result([],[],[]))
+let empty_run = Run (Parameters (""), Result([],[],[],[]))
 
 let default d = function Some x -> x | None -> d
 let default_app d f = function Some x -> f x | None -> d
@@ -68,11 +69,18 @@ let parse_glob c = Glob (parse_key_value @@ List.find (fun x -> X.tag x = "key")
 let parse_parameters c = match X.tag c with 
     | "parameters" -> Parameters (List.nth (X.children c) 0 |> X.pcdata)
     | _ -> error ("Alex expected parameters "^(X.tag c))
+let parse_warning c = 
+    let text_tag = X.children c |> List.hd in
+    let file = X.attrib text_tag "file" in
+    let line = X.attrib text_tag "file" in
+    let text = X.pcdata @@ List.hd @@ X.children text_tag in
+    Warning (file, line, text)
 let parse_result c = if X.tag c = "result" then
     let files = List.filter (fun x -> X.tag x = "file") (X.children c) in 
     let calls = List.filter (fun x -> X.tag x = "call") (X.children c) in 
     let globs = List.filter (fun x -> X.tag x = "glob") (X.children c) in 
-    Result (List.map parse_file files, List.map parse_call calls, List.map parse_glob globs) else error "Alex expected result"
+    let warnings = List.filter (fun x -> X.tag x = "warning") (X.children c) in 
+    Result (List.map parse_file files, List.map parse_call calls, List.map parse_glob globs, List.map parse_warning warnings) else error "Alex expected result"
 
 let parse (c : X.xml) : run = match X.tag c with 
     | "run" -> let parameters = List.nth (X.children c) 0 |> parse_parameters in 
@@ -137,9 +145,10 @@ let file_is_empty (File (func_list, _)) =
 let has_dead_code (Call(_,_,_,_,l)) = List.exists (fun (_, x) -> match x with None -> true | _ -> false) l
 let get_line (Call(_,_,line,_,_)) = line
 let get_file (Call(_,file,_,_,_)) = file
-let get_calls (Run(_, Result(_, calls, _))) = calls
-let get_globs (Run(_, Result(_, _, globs))) = globs
-let get_files (Run(_, Result(files, _,_))) = files
+let get_calls (Run(_, Result(_,calls,_,_))) = calls
+let get_globs (Run(_, Result(_,_,globs,_))) = globs
+let get_files (Run(_, Result(files,_,_,_))) = files
+let get_warnings (Run(_, Result(_,_,_,warnings))) = warnings 
 
 
 module Test = struct
