@@ -1,7 +1,5 @@
-let log = a => Js_of_ocaml.Firebug.console##log(a);
-
 [@react.component]
-let make = (~text, ~numb, ~dispatch, ~hasc:bool, ~highlight:bool) => {
+let make = (~text, ~numb, ~dispatch, ~hasc:bool, ~highlight:bool, ~hasDeadCode:bool) => {
   let codeRef = React.useRef(None);
   React.useEffect(() => {
     switch (codeRef |> React.Ref.current) {
@@ -18,7 +16,7 @@ let make = (~text, ~numb, ~dispatch, ~hasc:bool, ~highlight:bool) => {
       onClick={_=>{ if (hasc) { dispatch((_:int) => numb ) }}}>
       
       {let line_number =  string_of_int(numb)++"  " ++ (numb < 10 ? " " : "") |> React.string;
-        hasc ? <b>line_number</b> : line_number;
+        hasc ? <b style={ReactDOM.Style.make(~color=(hasDeadCode ? "#DD4A68" : "black"),())}>line_number</b> : line_number;
       }
       
       <code style={ReactDOM.Style.make( ~textShadow=(highlight ? "0 0px white" : ""),())} ref={ReactDOM.Ref.domRef(codeRef)}> {text |> React.string} </code>

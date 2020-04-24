@@ -1,3 +1,4 @@
+open Util
 module X = Xml
 module T = Tree
 
@@ -14,7 +15,7 @@ type c_id = string
 type c_file = string
 type c_line = string
 type c_order = string
-type call = Call of c_id * c_file * c_line * c_order * (context * path) list
+type call = Call of c_id * c_file * c_line * c_order * (context * path option) list
 type glob = Glob of key_value * analysis list
 type parameters = Parameters of string
 type result = Result of file list * call list * glob list
@@ -37,18 +38,18 @@ let rec parse_data_set c = match X.tag c with
     | "data" -> Data (X.children c |> fun x -> List.nth_opt x 0 |> Option.map X.pcdata |> default  "" )
     | "set" -> Set (X.children c |> fun x -> List.nth_opt x 0 |> Option.map parse_key_value)
     | "map" -> Map (X.children c |> List.map parse_key_value )
-    | _ -> failwith "Alex expected data_set"
+    | _ -> error "Alex expected data_set"
 
 and parse_key_value c = match X.tag c with 
     | "value" -> Value (parse_data_set @@ List.hd @@ X.children c) 
     | "key" -> Key (X.pcdata @@ List.hd @@ X.children c) 
-    | _ -> failwith "Alex expected key or value"
+    | _ -> error "Alex expected key or value"
 let parse_analysis c = Analysis (X.attrib c "name", parse_key_value @@ List.hd @@ X.children c) 
 let parse_node c = Node (X.attrib c "name")
 let parse_funct c = Funct ((List.map parse_node (X.children c)),X.attrib c "name") 
 let parse_file c = File (List.map parse_funct (X.children c), X.attribs c )
 let parse_context c = Context (List.map parse_analysis @@ X.children c)
-let parse_path c = Path (List.map parse_analysis @@ X.children c)
+let parse_path c = Some (Path (List.map parse_analysis @@ X.children c))
 let parse_call c = 
     let id = X.attrib c "id" in
     let file = X.attrib c "file" in
@@ -59,29 +60,30 @@ let parse_call c =
     let rec combine = function 
         | [], [] -> []
         | x::xl, y::yl -> [(x,y)] @ (combine (xl, yl) )
-        | _ -> failwith "Alex expected for each context a path" in
+        | [x], [] -> [(x, None)]
+        | _ -> error "Alex expected for each context a path" in
     Call (id, file, line, order, combine (context, path))
 let parse_glob c = Glob (parse_key_value @@ List.find (fun x -> X.tag x = "key") @@ X.children c, 
     List.map parse_analysis (List.filter (fun x -> X.tag x = "analysis") @@ X.children c))
 let parse_parameters c = match X.tag c with 
     | "parameters" -> Parameters (List.nth (X.children c) 0 |> X.pcdata)
-    | _ -> failwith ("Alex expected parameters "^(X.tag c))
+    | _ -> error ("Alex expected parameters "^(X.tag c))
 let parse_result c = if X.tag c = "result" then
     let files = List.filter (fun x -> X.tag x = "file") (X.children c) in 
     let calls = List.filter (fun x -> X.tag x = "call") (X.children c) in 
     let globs = List.filter (fun x -> X.tag x = "glob") (X.children c) in 
-    Result (List.map parse_file files, List.map parse_call calls, List.map parse_glob globs) else failwith "Alex expected result"
+    Result (List.map parse_file files, List.map parse_call calls, List.map parse_glob globs) else error "Alex expected result"
 
 let parse (c : X.xml) : run = match X.tag c with 
     | "run" -> let parameters = List.nth (X.children c) 0 |> parse_parameters in 
                 let result = List.nth (X.children c) 1 |> parse_result in 
                 Run (parameters, result)
-    | _ -> failwith "Alex expected run tag"
+    | _ -> error "Alex expected run tag"
 
 let parse_string s : run = XmlParser.parse x (SString s) |> parse 
 
 let rec list_to_kv_tuple l = if List.length l > 0 then match l with x::y::z -> [(x,y)]@(list_to_kv_tuple z) 
-    | _ -> failwith "Alex expected for each key a value in xml map" else []
+    | _ -> error "Alex expected for each key a value in xml map" else []
 let rec data_set_to_tree = function 
     | Data s ->  T.Node(s, []) 
     | Set Some Value Data x -> T.Node (x, [])
@@ -96,7 +98,7 @@ and  key_value_tuple_to_tree = function
     | Key(s), Value (Data x) -> T.Node (s^" → "^x, []) 
     | Key(s), Value (Map kvl) -> T.Node (s, List.map key_value_tuple_to_tree @@ list_to_kv_tuple kvl)
     | Key(s), Value (data) -> T.Node (s, [data_set_to_tree data])
-    | _ -> failwith "Alex expected proper key value pairs"
+    | _ -> error "Alex expected proper key value pairs"
 
 let analysis_to_tree (Analysis (name, value)) =  match value with 
     | Value (Map kvl) -> T.Node (name, List.map key_value_tuple_to_tree @@ list_to_kv_tuple kvl)
@@ -104,14 +106,16 @@ let analysis_to_tree (Analysis (name, value)) =  match value with
     | _ -> T.Node(name, [key_value_to_tree value])
 let context_to_tree c = let (Context (analysis_list)) = c in T.Node("context", List.map analysis_to_tree analysis_list)
 let path_to_tree (Path (analysis_list)) = T.Node("path", List.map analysis_to_tree analysis_list)
+
+let path_to_some_tree  = function None -> [] | Some p -> [path_to_tree p]
 let call_to_tree (Call (id, _, _, _, l)) = 
     let context_path_list =  if List.length l > 1 
-        then List.mapi (fun i (c,p) -> T.Node("Tuple "^(string_of_int i), [context_to_tree c; path_to_tree p])) l
-        else let (c,p) = List.hd l in [context_to_tree c; path_to_tree p] in
+        then List.mapi (fun i (c,p) -> T.Node("Tuple "^(string_of_int i), [context_to_tree c] @ path_to_some_tree p)) l
+        else let (c,p) = List.hd l in [context_to_tree c] @ path_to_some_tree p in
     T.Node("Node:"^id ,  context_path_list)
 let get_glob_name = function
         | Key (s) -> s 
-        | _ -> failwith "Alex expected a Key not Value"
+        | _ -> error "Alex expected a Key not Value"
 let glob_to_tree (Glob (k , analysis_list)) = T.Node(get_glob_name k, List.map analysis_to_tree analysis_list)
 
 
@@ -130,11 +134,13 @@ let file_to_path (File (_, attribs)) = List.assoc_opt "path" attribs |> default 
 let file_is_empty (File (func_list, _)) = 
     let sum = List.map (fun (Funct(nl, _)) -> List.length nl ) func_list |> List.fold_left (+) 0 in sum = 0 
 
+let has_dead_code (Call(_,_,_,_,l)) = List.exists (fun (_, x) -> match x with None -> true | _ -> false) l
 let get_line (Call(_,_,line,_,_)) = line
 let get_file (Call(_,file,_,_,_)) = file
 let get_calls (Run(_, Result(_, calls, _))) = calls
 let get_globs (Run(_, Result(_, _, globs))) = globs
 let get_files (Run(_, Result(files, _,_))) = files
+
 
 module Test = struct
     (* let int64num = Int64.of_int 14
@@ -149,7 +155,7 @@ end
 let search_main_file fl = 
     let contains_main (File(l,_)) = List.exists (fun (Funct(_,name)) -> String.equal name "main") l in
     let f = List.find_opt (fun f -> contains_main f) fl in 
-    default_app "" file_to_name f
+    (default_app "" file_to_name f, default_app "" file_to_path f)
 
 let glob_to_inverted_tree_2 gl = 
     let add_element (l:('a * 'b) list) (glob_name, glob_value) = 

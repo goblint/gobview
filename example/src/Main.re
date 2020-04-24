@@ -1,3 +1,5 @@
+open Util;
+
 [@react.component]
 let make = () => {
   let (line, setLine) = React.useState(() => -1);
@@ -10,24 +12,25 @@ let make = () => {
   let fetchData = (s) => {
     let _ = Lwt.bind(Datafetcher.http_get_with_base(s), 
     (s => { 
-      Datafetcher.log("Parse data"); 
+      log("Parse data"); 
       let data = Parse.parse_string(s);
       setPdata(_ => data); 
-      Datafetcher.log("Parse data done"); 
-      Datafetcher.log("Search main");
-      let mainfile = Parse.search_main_file(Parse.get_files(data));
-      if(String.equal(mainfile, "")){
-        Datafetcher.log("Found no main file");
+      log("Parse data done"); 
+      log("Search main");
+      let (xfile, xfilepath) = Parse.search_main_file(Parse.get_files(data));
+      if(String.equal(xfile, "")){
+        log("Found no main file");
       }else {
-        Datafetcher.log("Found main file: " ++ mainfile);
+        log("Found main file: " ++ xfile);
       }
-      setFile(_ => mainfile);
+      setFile(_ => xfile);
+      setFilepath(_ => xfilepath);
       Lwt.return(())
     }));
   }
 
   React.useEffect0(() => {
-    Datafetcher.log("Initial data and code fetch");
+    log("Initial data and code fetch");
     fetchData("data.xml");
     None;
   });
@@ -35,7 +38,7 @@ let make = () => {
   React.useEffect1(() => {
     if(!String.equal(file, "")){
       fetchCode(file);
-      Datafetcher.log("Fetched code: " ++ file);
+      log("Fetched code: " ++ file);
     }
     setLine(_=> -1);
     None;

@@ -16,5 +16,3 @@ let http_get_with_base filename = http_get @@ base_url^filename
 
 let get_file f =
   try Lwt.return (Sys_js.read_file ~name:f) with Not_found -> http_get f >|= fun s -> s
-
-let log s = Firebug.console##log (Js.string s)
