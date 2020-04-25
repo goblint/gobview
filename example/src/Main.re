@@ -62,7 +62,7 @@ let make = () => {
             { (showsvg ? "Code View" : "Node View")  |> React.string}</button>
         </div>
         <div style={ReactDOM.Style.make(~overflow="auto",~height="85vh", ())}>
-          {!showsvg ? <CodeView dispatch=setLine calls={pdata |> Parse.get_calls} code=code line filepath /> : 
+          {!showsvg ? <CodeView dispatch=setLine calls={pdata |> Parse.get_calls} code=code line filepath warnings={pdata |> Parse.get_warnings} /> : 
             <img src={Datafetcher.base_url ++ "code2.svg"} width="100%"/>
           }
           <FileList files={pdata |> Parse.get_files} setFile setFilepath />

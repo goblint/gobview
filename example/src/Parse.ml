@@ -72,7 +72,7 @@ let parse_parameters c = match X.tag c with
 let parse_warning c = 
     let text_tag = X.children c |> List.hd in
     let file = X.attrib text_tag "file" in
-    let line = X.attrib text_tag "file" in
+    let line = X.attrib text_tag "line" in
     let text = X.pcdata @@ List.hd @@ X.children text_tag in
     Warning (file, line, text)
 let parse_result c = if X.tag c = "result" then
@@ -149,6 +149,10 @@ let get_calls (Run(_, Result(_,calls,_,_))) = calls
 let get_globs (Run(_, Result(_,_,globs,_))) = globs
 let get_files (Run(_, Result(files,_,_,_))) = files
 let get_warnings (Run(_, Result(_,_,_,warnings))) = warnings 
+
+let warning_to_file (Warning (file,_,_)) = file
+let warning_to_line (Warning (_,line,_)) = line
+let warning_to_text (Warning (_,_,text)) = text
 
 
 module Test = struct
