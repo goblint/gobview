@@ -109,8 +109,9 @@ and  key_value_tuple_to_tree = function
     | _ -> error "Alex expected proper key value pairs"
 
 let analysis_to_tree (Analysis (name, value)) =  match value with 
+    | Value (Data x) -> T.Node (name^" → "^x, [])
     | Value (Map kvl) -> T.Node (name, List.map key_value_tuple_to_tree @@ list_to_kv_tuple kvl)
-    | Value (Set None) -> T.Node (name^"→ ∅", [])
+    | Value (Set None) -> T.Node (name^" → ∅", [])
     | _ -> T.Node(name, [key_value_to_tree value])
 let context_to_tree c = let (Context (analysis_list)) = c in T.Node("context", List.map analysis_to_tree analysis_list)
 let path_to_tree (Path (analysis_list)) = T.Node("path", List.map analysis_to_tree analysis_list)
@@ -130,7 +131,7 @@ let glob_to_tree (Glob (k , analysis_list)) = T.Node(get_glob_name k, List.map a
 let glob_to_something (Glob (name , al)) something = 
     match List.find (fun (Analysis (a,_)) -> String.equal a something) al with
         | (Analysis (_,Value(Data(d)))) ->  T.Node(get_glob_name name^" → "^d, [])
-        | (Analysis (_,Value (Set None))) ->  T.Node(get_glob_name name^"→ ∅", [])
+        | (Analysis (_,Value (Set None))) ->  T.Node(get_glob_name name^" → ∅", [])
         | (Analysis (_,kv)) ->  T.Node(get_glob_name name, [key_value_to_tree kv])
 
 let glob_to_inverted_tree (gl : glob list) : T.tree list = 
@@ -180,7 +181,7 @@ let glob_to_inverted_tree_2 gl =
         let x = 
             match kv with 
                 | Value(Data(d)) ->  T.Node(gname^" → "^d, [])
-                | Value (Set None) ->  T.Node(gname^"→ ∅", [])
+                | Value (Set None) ->  T.Node(gname^" → ∅", [])
                 | kv ->  T.Node(gname, [key_value_to_tree kv])
         in add_element l (aname, x) in
     let add_glob_to_map l (Glob (gname , al)) = let gname = get_glob_name gname in 
