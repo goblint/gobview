@@ -28,7 +28,7 @@ let make = (~text, ~numb, ~dispatch, ~hasc:bool, ~highlight:bool, ~hasDeadCode:b
         } 
       }
       
-      <code style={ReactDOM.Style.make( ~textShadow=(highlight ? "0 0px white" : ""),())} ref={ReactDOM.Ref.domRef(codeRef)}> {text |> React.string} </code>
+      <code style={ReactDOM.Style.make( ~textShadow=(highlight ? "0 0px white" : ""),~textDecoration=(hasDeadCode && hasc ? "line-through" : ""),())} ref={ReactDOM.Ref.domRef(codeRef)}> {text |> React.string} </code>
     </pre>
       {
         if(highlight){
