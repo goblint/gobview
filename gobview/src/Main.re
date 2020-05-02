@@ -47,7 +47,7 @@ let make = () => {
   <div className="relative">
     <div className="sidebar">
       <h2 className="title"> {"Gobview" |> React.string} </h2>
-        <TreeList line calls={pdata |> Parse.get_calls} filepath/>
+        <CallView line calls={pdata |> Parse.get_calls} filepath/>
     </div>
     <div className="sidebar globsidebar">
       <h2 className="title"> {"Globals" |> React.string} </h2>

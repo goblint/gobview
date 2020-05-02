@@ -1,4 +1,6 @@
-let hasc = (calls, line, filepath) => { List.exists(c => { Parse.get_line(c) == string_of_int(line) && String.equal(Parse.get_file(c), filepath) },calls)  };
+let hasc = (calls, line, filepath) => { 
+  List.exists(c => { Parse.get_line(c) == string_of_int(line) && String.equal(Parse.get_file(c), filepath) },calls)
+};
 let has_dead_code = (calls, line, filepath) => { 
   !List.exists(c => { Parse.get_line(c) == string_of_int(line) 
     && String.equal(Parse.get_file(c), filepath)
