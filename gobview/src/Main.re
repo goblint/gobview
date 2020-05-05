@@ -1,4 +1,5 @@
 open Util;
+open SelectedView;
 
 [@react.component]
 let make = () => {
@@ -7,7 +8,7 @@ let make = () => {
   let (filepath, setFilepath) = React.useState(() => "");
   let (pdata, setPdata) = React.useState(() => (Parse.empty_run));
   let (code, setCode) = React.useState(() => "");
-  let (showNodeView, setShowNodeView) = React.useState(() => false);
+  let (selectedView, setSelectedView) = React.useState(() => Code);
   let fetchCode = (s) => {let _ = Lwt.bind(Datafetcher.http_get_with_base(s), (s => { setCode(_ => s); Lwt.return(())}));();}
   let fetchData = (s) => {
     let _ = Lwt.bind(Datafetcher.http_get_with_base(s), 
@@ -40,7 +41,7 @@ let make = () => {
       fetchCode(file);
       log("Fetched code: " ++ file);
     }
-    setLine(_=> -1);
+    /* setLine(_=> -1); */
     None;
   }, [|file|]);
 
@@ -55,20 +56,25 @@ let make = () => {
     </div>
     <div className="content-wrapper">
       <div className="content">
-        <div>
-          <h3 style={ReactDOM.Style.make(~display="inline-block",())}>{file |> React.string}</h3>
-          <button onClick={_ => setShowNodeView(x => !x)}
-            style={ReactDOM.Style.make(~float="right",~marginTop="24px", ())}>
-            { (showNodeView ? "Code View" : "Node View")  |> React.string}</button>
-        </div>
-        <div style={ReactDOM.Style.make(~overflow="auto",~height="85vh", ())}>
-          { if (!showNodeView){
-            <CodeView dispatch=setLine calls={pdata |> Parse.get_calls} code=code line filepath warnings={pdata |> Parse.get_warnings} />
-            } else {
-              <NodeView />
-            }
+        <Menu selectedView setSelectedView />
+        {
+          if (selectedView == Code) {
+            <div>
+              <h3 className="filename">{file |> React.string}</h3>
+            </div>
+          } else {
+            React.null 
           }
-          <FileList files={pdata |> Parse.get_files} setFile setFilepath />
+        }
+        <div style={ReactDOM.Style.make(~overflow="auto",~height="85vh", ())}>
+          { 
+            switch selectedView {
+            | Code => <CodeView dispatch=setLine calls={pdata |> Parse.get_calls} code=code line filepath warnings={pdata |> Parse.get_warnings} />
+            | Node => <NodeView />
+            | Warning => <WarningView setFile setFilepath setSelectedView setLine warnings={pdata |> Parse.get_warnings}/>
+            | File => <FileList files={pdata |> Parse.get_files} setFile setFilepath setSelectedView />
+            };
+          }
           /* <p>{Parse.Test.zarith_string |> React.string}</p> */
         </div>
       </div>

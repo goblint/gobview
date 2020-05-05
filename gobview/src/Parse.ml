@@ -137,6 +137,8 @@ let file_to_name (File (_, attribs)) = List.assoc_opt "name" attribs |> default 
 let file_to_path (File (_, attribs)) = List.assoc_opt "path" attribs |> default "path missing" 
 let file_is_empty (File (func_list, _)) = 
     let sum = List.map (fun (Funct(nl, _)) -> List.length nl ) func_list |> List.fold_left (+) 0 in sum = 0 
+let get_file_from_filepath s = let l = String.split_on_char '/' s in List.nth l (List.length l - 1)
+
 
 let has_dead_code (Call(_,_,_,_,l)) = List.exists (fun (_, x) -> match x with None -> true | _ -> false) l
 let get_line (Call(_,_,line,_,_)) = line
