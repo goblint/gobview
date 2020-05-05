@@ -22,14 +22,6 @@ type parameters = Parameters of string
 type result = Result of file list * call list * glob list * warning list
 type run = Run of parameters * result
 
-let x = let x = XmlParser.make () in 
-        let _ = XmlParser.prove x false in x
-
-(* [%blob "static/data.xml"] *)
-(* let xml_data = XmlParser.parse x (SString Data01.xml_data)  *)
-(* let xml_data = Xml.parse_file "file:///home/alex/git/bachelor/jsoo-react-6/jsoo-react/example/src/data.xml" *)
-(* let xml_data = Xml.parse_file "/data01.xml" *)
-
 let empty_run = Run (Parameters (""), Result([],[],[],[]))
 
 let default d = function Some x -> x | None -> d
@@ -88,7 +80,10 @@ let parse (c : X.xml) : run = match X.tag c with
                 Run (parameters, result)
     | _ -> error "Alex expected run tag"
 
-let parse_string s : run = XmlParser.parse x (SString s) |> parse 
+let parse_string s : run = 
+    let parser = XmlParser.make () in 
+    XmlParser.prove parser false ;
+    XmlParser.parse parser  (SString s) |> parse 
 
 let rec list_to_kv_tuple l = if List.length l > 0 then match l with x::y::z -> [(x,y)]@(list_to_kv_tuple z) 
     | _ -> error "Alex expected for each key a value in xml map" else []
@@ -155,17 +150,6 @@ let warning_to_file (Warning (file,_,_)) = file
 let warning_to_line (Warning (_,line,_)) = line
 let warning_to_text (Warning (_,_,text)) = text
 
-
-module Test = struct
-    (* let int64num = Int64.of_int 14
-    let h = IntDomain.Interval32.hash int64num *)
-    (* let cilversion = Cil.cilVersion *)
-    
-    (* let zarith_string = 
-        let zarith_test = Z.zero in 
-        Z.to_string zarith_test *)
-end 
-
 let search_main_file fl = 
     let contains_main (File(l,_)) = List.exists (fun (Funct(_,name)) -> String.equal name "main") l in
     let f = List.find_opt (fun f -> contains_main f) fl in 
@@ -190,6 +174,12 @@ let glob_to_inverted_tree_2 gl =
         List.map (fun (aname, l) -> T.Node(aname, l)) gmap
 
 
-
-
-
+module ZarithTest = struct
+    (* let int64num = Int64.of_int 14
+    let h = IntDomain.Interval32.hash int64num *)
+    (* let cilversion = Cil.cilVersion *)
+    
+    (* let zarith_string = 
+        let zarith_test = Z.zero in 
+        Z.to_string zarith_test *)
+end 

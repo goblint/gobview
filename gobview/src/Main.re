@@ -7,7 +7,7 @@ let make = () => {
   let (filepath, setFilepath) = React.useState(() => "");
   let (pdata, setPdata) = React.useState(() => (Parse.empty_run));
   let (code, setCode) = React.useState(() => "");
-  let (showsvg, setShowsvg) = React.useState(() => false);
+  let (showNodeView, setShowNodeView) = React.useState(() => false);
   let fetchCode = (s) => {let _ = Lwt.bind(Datafetcher.http_get_with_base(s), (s => { setCode(_ => s); Lwt.return(())}));();}
   let fetchData = (s) => {
     let _ = Lwt.bind(Datafetcher.http_get_with_base(s), 
@@ -31,7 +31,7 @@ let make = () => {
 
   React.useEffect0(() => {
     log("Initial data and code fetch");
-    fetchData("data.xml");
+    fetchData("analysis.xml");
     None;
   });
 
@@ -57,13 +57,16 @@ let make = () => {
       <div className="content">
         <div>
           <h3 style={ReactDOM.Style.make(~display="inline-block",())}>{file |> React.string}</h3>
-          <button onClick={_ => setShowsvg(x => !x)}
+          <button onClick={_ => setShowNodeView(x => !x)}
             style={ReactDOM.Style.make(~float="right",~marginTop="24px", ())}>
-            { (showsvg ? "Code View" : "Node View")  |> React.string}</button>
+            { (showNodeView ? "Code View" : "Node View")  |> React.string}</button>
         </div>
         <div style={ReactDOM.Style.make(~overflow="auto",~height="85vh", ())}>
-          {!showsvg ? <CodeView dispatch=setLine calls={pdata |> Parse.get_calls} code=code line filepath warnings={pdata |> Parse.get_warnings} /> : 
-            <img src={Datafetcher.base_url ++ "code2.svg"} width="100%"/>
+          { if (!showNodeView){
+            <CodeView dispatch=setLine calls={pdata |> Parse.get_calls} code=code line filepath warnings={pdata |> Parse.get_warnings} />
+            } else {
+              <NodeView />
+            }
           }
           <FileList files={pdata |> Parse.get_files} setFile setFilepath />
           /* <p>{Parse.Test.zarith_string |> React.string}</p> */
