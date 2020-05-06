@@ -3,7 +3,7 @@ open SelectedView;
 [@react.component]
 let make = (~setFile, ~setFilepath, ~calls : list(Parse.call), ~setSelectedView, ~setLine) => {
   <div className="filebox">
-    <h3>{ (List.length(calls) == 0 ? "No dead code available!" : "Dead Code") |> React.string}</h3>
+    <h3>{ (List.length(calls) == 0 ? "No dead code found!" : "Dead Code") |> React.string}</h3>
     <ul>
       { calls |>
         List.mapi ( (i,c) => {

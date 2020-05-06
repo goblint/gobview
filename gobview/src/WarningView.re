@@ -3,7 +3,7 @@ open SelectedView;
 [@react.component]
 let make = (~setFile, ~setFilepath, ~warnings : list(Parse.warning), ~setSelectedView, ~setLine) => {
   <div className="filebox">
-    <h3>{ (List.length(warnings) == 0 ? "No warnings available!" : "Warnings") |> React.string}</h3>
+    <h3>{ (List.length(warnings) == 0 ? "No warnings found!" : "Warnings") |> React.string}</h3>
     <ul>
       { warnings |>
         List.mapi ( (i,c) => {
