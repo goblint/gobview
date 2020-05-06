@@ -73,6 +73,7 @@ let make = () => {
             | Node => <NodeView />
             | Warning => <WarningView setFile setFilepath setSelectedView setLine warnings={pdata |> Parse.get_warnings}/>
             | File => <FileList files={pdata |> Parse.get_files} setFile setFilepath setSelectedView />
+            | Parameters => <Parameters parameters={pdata |> Parse.get_parameters} />
             };
           }
           /* <p>{Parse.Test.zarith_string |> React.string}</p> */

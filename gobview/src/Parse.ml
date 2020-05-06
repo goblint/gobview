@@ -143,6 +143,7 @@ let get_file_from_filepath s = let l = String.split_on_char '/' s in List.nth l 
 let has_dead_code (Call(_,_,_,_,l)) = List.exists (fun (_, x) -> match x with None -> true | _ -> false) l
 let get_line (Call(_,_,line,_,_)) = line
 let get_file (Call(_,file,_,_,_)) = file
+let get_parameters (Run(Parameters x, _)) = x
 let get_calls (Run(_, Result(_,calls,_,_))) = calls
 let get_globs (Run(_, Result(_,_,globs,_))) = globs
 let get_files (Run(_, Result(files,_,_,_))) = files
