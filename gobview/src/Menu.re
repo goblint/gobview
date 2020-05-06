@@ -1,6 +1,7 @@
 open SelectedView;
 
-let items = [(Code, "Code View"), (Node, "Node View"), (Warning, "Warnings"), (File, "Select File"), (Parameters, "Parameters")];
+let items = [(Code, "Code View"), (Node, "Node View"), (Warning, "Warnings"), (DeadCode, "Dead Code"),
+    (File, "Select File"), (Parameters, "Parameters")];
 
 [@react.component]
 let make = (~selectedView, ~setSelectedView) => {

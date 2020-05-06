@@ -140,7 +140,7 @@ let file_is_empty (File (func_list, _)) =
 let get_file_from_filepath s = let l = String.split_on_char '/' s in List.nth l (List.length l - 1)
 
 
-let has_dead_code (Call(_,_,_,_,l)) = List.exists (fun (_, x) -> match x with None -> true | _ -> false) l
+let has_dead_code (Call(_,_,_,_,l)) = List.length l > 0 && not (List.exists (fun (_, x) -> match x with None -> false | _ -> true) l)
 let get_line (Call(_,_,line,_,_)) = line
 let get_file (Call(_,file,_,_,_)) = file
 let get_parameters (Run(Parameters x, _)) = x
@@ -186,3 +186,6 @@ module ZarithTest = struct
         let zarith_test = Z.zero in 
         Z.to_string zarith_test *)
 end 
+
+
+let sort_calls_by_line = List.sort (fun x y -> (get_line x |> int_of_string) - (get_line y |> int_of_string))

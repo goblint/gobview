@@ -1,1 +1,1 @@
-type t = Node | Code | Warning | File | Parameters
+type t = Node | Code | Warning | File | Parameters | DeadCode

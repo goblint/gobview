@@ -74,6 +74,8 @@ let make = () => {
             | Warning => <WarningView setFile setFilepath setSelectedView setLine warnings={pdata |> Parse.get_warnings}/>
             | File => <FileList files={pdata |> Parse.get_files} setFile setFilepath setSelectedView />
             | Parameters => <Parameters parameters={pdata |> Parse.get_parameters} />
+            | DeadCode => <DeadCodeView setFile setFilepath setSelectedView setLine 
+               calls={pdata |> Parse.get_calls |> List.filter(Parse.has_dead_code) |> Parse.sort_calls_by_line}/>
             };
           }
           /* <p>{Parse.Test.zarith_string |> React.string}</p> */
