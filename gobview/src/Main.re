@@ -48,7 +48,7 @@ let make = () => {
   <div className="relative">
     <div className="sidebar">
       <h2 className="title"> {"Gobview" |> React.string} </h2>
-        <CallView line calls={pdata |> Parse.get_calls} filepath/>
+        <StateView line calls={pdata |> Parse.get_calls} filepath/>
     </div>
     <div className="sidebar globsidebar">
       <h2 className="title"> {"Globals" |> React.string} </h2>
@@ -73,7 +73,7 @@ let make = () => {
             | Node => <NodeView />
             | Warning => <WarningView setFile setFilepath setSelectedView setLine warnings={pdata |> Parse.get_warnings}/>
             | File => <FileList files={pdata |> Parse.get_files} setFile setFilepath setSelectedView />
-            | Parameters => <Parameters parameters={pdata |> Parse.get_parameters} />
+            | Parameters => <ParameterView parameters={pdata |> Parse.get_parameters} />
             | DeadCode => <DeadCodeView setFile setFilepath setSelectedView setLine 
                calls={pdata |> Parse.get_calls |> List.filter(Parse.has_dead_code) |> Parse.sort_calls_by_line}/>
             };

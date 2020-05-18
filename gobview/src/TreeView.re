@@ -1,8 +1,6 @@
 open Tree;
 
-let makeProps:
-  (~tree: tree, ~key: string=?, unit) =>
-  Js_of_ocaml.Js.t({. tree: Js_of_ocaml.Js.readonly_prop(tree)}) =
+let makeProps: (~tree: tree, ~key: string=?, unit) => Js_of_ocaml.Js.t({. tree: Js_of_ocaml.Js.readonly_prop(tree)}) =
   (~tree, ~key=?, _) =>
     Js_of_ocaml.Js.Unsafe.(
       obj(
@@ -25,14 +23,7 @@ let makeProps:
       )
     );
     
-let rec make =
-(
-  props:
-    Js_of_ocaml.Js.t({
-      .
-      tree: Js_of_ocaml.Js.readonly_prop(tree),
-    })
-) => {
+let rec make = ( props: Js_of_ocaml.Js.t({ . tree: Js_of_ocaml.Js.readonly_prop(tree), }) ) => {
     let (Node (s, c)) = props##.tree;
     let (collapse, setCollapse) = React.useState(() => s == "context" );
   <li>
