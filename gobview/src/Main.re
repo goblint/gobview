@@ -9,6 +9,7 @@ let make = () => {
   let (pdata, setPdata) = React.useState(() => (Parse.empty_run));
   let (code, setCode) = React.useState(() => "");
   let (selectedView, setSelectedView) = React.useState(() => Code);
+  let ((tree1, tree2), _setCompareTree) = React.useState(() => (Tree.Node( "Hallo Welt", [Tree.Node( "Hallo Welt", [])]), Tree.Node( "Hallo OCaml", [Tree.Node( "Hallo Welt", [])])))
   let fetchCode = (s) => {let _ = Lwt.bind(Datafetcher.http_get_with_base(s), (s => { setCode(_ => s); Lwt.return(())}));();}
   let fetchData = (s) => {
     let _ = Lwt.bind(Datafetcher.http_get_with_base(s), 
@@ -76,6 +77,7 @@ let make = () => {
             | Parameters => <ParameterView parameters={pdata |> Parse.get_parameters} />
             | DeadCode => <DeadCodeView setFile setFilepath setSelectedView setLine 
                calls={pdata |> Parse.get_calls |> List.filter(Parse.has_dead_code) |> Parse.sort_calls_by_line}/>
+            | Compare => <DTreeView tree={Parse.calc_difference(tree1, tree2)} />
             };
           }
           /* <p>{Parse.Test.zarith_string |> React.string}</p> */

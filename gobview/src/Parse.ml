@@ -189,3 +189,6 @@ end
 
 
 let sort_calls_by_line = List.sort (fun x y -> (get_line x |> int_of_string) - (get_line y |> int_of_string))
+
+let rec calc_difference  (Node(s1, t1l):T.tree) (Node(s2,t2l):T.tree) : T.dtree = 
+    Dnode (String.compare s1 s2 == 0, s2, List.map2 calc_difference t1l t2l)

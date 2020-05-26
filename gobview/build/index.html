@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Gobview</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <!-- <link rel="stylesheet" type="text/css" href="style.css"> -->
     <style>
       .flex-container {
         display: flex;
@@ -74,7 +74,6 @@
         margin: 0px;
       }
       .filebox {
-        margin-top: 30px;
         background-color: #f5f2f0;
         padding: 10px;
       }
@@ -119,6 +118,46 @@
         margin-bottom: 2px;
         margin-left: 3px;
       }
+      .filename {
+        margin: 5px;
+      }
+      .warnitem {
+        margin-bottom: 10px;
+        background-color: #dcd9d8;
+      }
+      .menu {
+        margin-top: 10px;
+        margin-bottom: 25px;
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-evenly;
+      }
+      .menuitem {
+        flex-grow: 1;
+        flex-shrink: 1;
+        padding: 6px;
+        background-color:#f5f2f0;
+        border-radius: 8px;
+        margin-right: 5px;
+        cursor: pointer;
+        text-align: center;
+        border: solid;
+        border-color:#aba9a8;
+        border-width: 1px;
+      }
+      .menuitem:hover {
+        background-color:#dcd9d8;
+      }
+      .menuitemSelected {
+        background-color:#dcd9d8;
+      }
+      .differentState{
+        background-color:#fde1ed;
+      }
+      .sameState{
+        background-color:white;
+      }
+
     </style>
     
     <link
