@@ -20,9 +20,10 @@ type glob = Glob of key_value * analysis list
 type warning = Warning of c_file * c_line * string
 type parameters = Parameters of string
 type result = Result of file list * call list * glob list * warning list
-type run = Run of parameters * result
+type statistics = Statistics of string
+type run = Run of parameters * result * statistics
 
-let empty_run = Run (Parameters (""), Result([],[],[],[]))
+let empty_run = Run (Parameters (""), Result([],[],[],[]), Statistics "")
 
 let default d = function Some x -> x | None -> d
 let default_app d f = function Some x -> f x | None -> d
@@ -58,26 +59,30 @@ let parse_call c =
     Call (id, file, line, order, combine (context, path))
 let parse_glob c = Glob (parse_key_value @@ List.find (fun x -> X.tag x = "key") @@ X.children c, 
     List.map parse_analysis (List.filter (fun x -> X.tag x = "analysis") @@ X.children c))
-let parse_parameters c = match X.tag c with 
-    | "parameters" -> Parameters (List.nth (X.children c) 0 |> X.pcdata)
-    | _ -> error ("Alex expected parameters "^(X.tag c))
+let parse_parameters c = Parameters (List.nth (X.children c) 0 |> X.pcdata)
 let parse_warning c = 
     let text_tag = X.children c |> List.hd in
     let file = X.attrib text_tag "file" in
     let line = X.attrib text_tag "line" in
     let text = X.pcdata @@ List.hd @@ X.children text_tag in
     Warning (file, line, text)
-let parse_result c = if X.tag c = "result" then
-    let files = List.filter (fun x -> X.tag x = "file") (X.children c) in 
-    let calls = List.filter (fun x -> X.tag x = "call") (X.children c) in 
-    let globs = List.filter (fun x -> X.tag x = "glob") (X.children c) in 
-    let warnings = List.filter (fun x -> X.tag x = "warning") (X.children c) in 
-    Result (List.map parse_file files, List.map parse_call calls, List.map parse_glob globs, List.map parse_warning warnings) else error "Alex expected result"
+let parse_result c = 
+    let child = (X.children c) in
+    let files = List.filter (fun x -> X.tag x = "file") child in 
+    let calls = List.filter (fun x -> X.tag x = "call") child in 
+    let globs = List.filter (fun x -> X.tag x = "glob") child in 
+    let warnings = List.filter (fun x -> X.tag x = "warning") child in 
+    Result (List.map parse_file files, List.map parse_call calls, List.map parse_glob globs, List.map parse_warning warnings) 
+
+let parse_statistics = function Some x -> Statistics (List.nth (X.children x) 0 |> X.pcdata) | None -> Statistics ""
 
 let parse (c : X.xml) : run = match X.tag c with 
-    | "run" -> let parameters = List.nth (X.children c) 0 |> parse_parameters in 
-                let result = List.nth (X.children c) 1 |> parse_result in 
-                Run (parameters, result)
+    | "run" ->  let child = (X.children c) in
+                let parameters = List.find (fun x -> X.tag x = "parameters") child |> parse_parameters in 
+                let result = List.find (fun x -> X.tag x = "result") child |> parse_result in 
+                let statistics = List.find_opt (fun x -> X.tag x = "statistics") child |> parse_statistics in 
+                (* let statistics = Statistics "asd" in *)
+                Run (parameters, result, statistics)
     | _ -> error "Alex expected run tag"
 
 let parse_string s : run = 
@@ -143,11 +148,12 @@ let get_file_from_filepath s = let l = String.split_on_char '/' s in List.nth l 
 let has_dead_code (Call(_,_,_,_,l)) = List.length l > 0 && not (List.exists (fun (_, x) -> match x with None -> false | _ -> true) l)
 let get_line (Call(_,_,line,_,_)) = line
 let get_file (Call(_,file,_,_,_)) = file
-let get_parameters (Run(Parameters x, _)) = x
-let get_calls (Run(_, Result(_,calls,_,_))) = calls
-let get_globs (Run(_, Result(_,_,globs,_))) = globs
-let get_files (Run(_, Result(files,_,_,_))) = files
-let get_warnings (Run(_, Result(_,_,_,warnings))) = warnings 
+let get_parameters (Run(Parameters x,_,_)) = x
+let get_calls (Run(_, Result(_,calls,_,_),_)) = calls
+let get_globs (Run(_, Result(_,_,globs,_),_)) = globs
+let get_files (Run(_, Result(files,_,_,_),_)) = files
+let get_warnings (Run(_, Result(_,_,_,warnings),_)) = warnings 
+let get_statistics (Run(_,_,Statistics x)) = x
 
 let warning_to_file (Warning (file,_,_)) = file
 let warning_to_line (Warning (_,line,_)) = line

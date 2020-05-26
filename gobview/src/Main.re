@@ -78,6 +78,7 @@ let make = () => {
             | DeadCode => <DeadCodeView setFile setFilepath setSelectedView setLine 
                calls={pdata |> Parse.get_calls |> List.filter(Parse.has_dead_code) |> Parse.sort_calls_by_line}/>
             | Compare => <DTreeView tree={Parse.calc_difference(tree1, tree2)} />
+            | Statistics => <Statistics statistics={pdata |> Parse.get_statistics } />
             };
           }
           /* <p>{Parse.Test.zarith_string |> React.string}</p> */
