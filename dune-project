@@ -1,6 +1,6 @@
 (lang dune 2.7)
 
-(name jsoo-react)
+(name gobview)
 
 (license MIT)
 
@@ -16,29 +16,16 @@
 (implicit_transitive_deps false)
 
 (package
- (name jsoo-react)
+ (name gobview)
  (synopsis "Bindings to ReactJS for js_of_ocaml, including JSX ppx")
  (depends
-  ;; General system dependencies
   (dune (and (>= 2) (< 3)))
   (ocaml (and (>= 4.10.0) (< 4.11.0)))
 
-  (js_of_ocaml (and (>= 3.7.0) (< 3.8.0)))
-  (gen_js_api (and (>= 1.0.6) (< 1.1.0)))
-  (ocaml-migrate-parsetree (and (>= 1.7.3) (< 2.0.0)))
+  xml-light
 
-  ;; Test dependencies
-  (webtest :with-test)
-  (webtest-js :with-test)
-  (js_of_ocaml-ppx :with-test)
-  (conf-npm :with-test)
+  zarith
+  zarith_stubs_js
 
-  ;; Dev dependencies
   (ocamlformat :dev)
-  (reason :dev)
-
-  ;; Example dependencies
-  (ppx_blob :dev)
-  (js_of_ocaml-lwt :dev)
-
 ))
