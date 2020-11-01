@@ -67,7 +67,7 @@ let make = () => {
             React.null 
           }
         }
-        <div style={ReactDOM.Style.make(~overflow="auto",~height="85vh", ())}>
+        <div style={React.Dom.Style.make(~overflow="auto",~height="85vh", ())}>
           { 
             switch selectedView {
             | Code => <CodeView dispatch=setLine calls={pdata |> Parse.get_calls} code=code line filepath warnings={pdata |> Parse.get_warnings} />
