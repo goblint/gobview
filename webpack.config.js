@@ -5,7 +5,7 @@ const outputDir = path.join(__dirname, 'build/');
 const isProd = process.env.NODE_ENV === 'production';
 
 module.exports = {
-  entry: '../_build/default/gobview/src/App.bc.js',
+  entry: './_build/default/src/App.bc.js',
   mode: isProd ? 'production' : 'development',
   resolve: {
     modules: [path.resolve(__dirname, 'node_modules'), 'node_modules']
