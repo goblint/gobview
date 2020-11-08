@@ -4,12 +4,14 @@
 
 (license MIT)
 
-(maintainers "Javier Chávarri <javier.chavarri@gmail.com>")
+(maintainers
+ "Kerem Cakirer <kerem.cakirer@tum.de>"
+ "Michael Schwarz <m.schwarz@tum.de>")
 
-(authors "Javier Chávarri <javier.chavarri@gmail.com>")
+(authors "Alex Micheli <c1707-fisch@yahoo.de>")
 
 (source
- (github jchavarri/jsoo-react))
+ (github keremc/goblint-webfrontend-jsoo))
 
 (generate_opam_files true)
 
@@ -17,7 +19,7 @@
 
 (package
  (name gobview)
- (synopsis "Bindings to ReactJS for js_of_ocaml, including JSX ppx")
+ (synopsis "Web frontend for Goblint")
  (depends
   (dune (and (>= 2) (< 3)))
   (ocaml (and (>= 4.10.0) (< 4.11.0)))
