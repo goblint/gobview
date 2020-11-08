@@ -1,11 +1,18 @@
 (executables
  (names App)
  (modes js)
- (libraries  gen_js_api lwt js_of_ocaml-lwt jsoo-react.lib xml-light zarith zarith_stubs_js)
+ (libraries gen_js_api lwt js_of_ocaml-lwt jsoo-react.lib xml-light zarith
+   zarith_stubs_js)
  (js_of_ocaml
   (javascript_files react-requires.js static-requires.js))
  (preprocess
   (pps gen_js_api.ppx ppx_blob js_of_ocaml-ppx jsoo-react.ppx)))
+
+(rule
+ (targets Graphviz.ml)
+ (deps Graphviz.mli)
+ (action
+  (run %{bin:gen_js_api} -o %{targets} %{deps})))
 
 (alias
  (name default)
