@@ -22,6 +22,8 @@
   (dune (and (>= 2) (< 3)))
   (ocaml (and (>= 4.10.0) (< 4.11.0)))
 
+  jsoo-react
+
   xml-light
 
   zarith
