@@ -1,5 +1,15 @@
+open Js_of_ocaml;
+
 [@react.component]
-let make = () => {
+let make = (~dispatch) => {
+  let show_info = a => dispatch(a);
+
+  /*
+   * Don't remove the underscore at the end of `show_info_`.
+   * Otherwise, the function is mapped as `show`.
+   */
+  Js.(Unsafe.global##.show_info_ := wrap_callback(show_info));
+
   <Graphviz
     dot={
       {|digraph cfg {
