@@ -5,7 +5,7 @@
     "webpack": "webpack",
     "webpack:production": "webpack --mode=production",
     "server": "webpack serve",
-    "analyze": "webpack --mode=production --profile --json > stats.json && webpack-bundle-analyzer stats.json"
+    "analyze": "webpack --analyze"
   },
   "license": "MIT",
   "devDependencies": {
