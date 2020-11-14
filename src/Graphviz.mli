@@ -23,6 +23,6 @@ val make :
          Js_of_ocaml.Js.t
          React.component = "%identity"
 
-    val makeInternal : Ojs.t [@@js.global "Graphviz"]
+    val make_internal : Ojs.t [@@js.global "Graphviz"]
 
-    let make = to_component makeInternal]
+    let make = to_component make_internal]
