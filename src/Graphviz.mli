@@ -5,7 +5,10 @@ val makeProps :
          Js_of_ocaml.Js.js_string Js_of_ocaml.Js.t Js_of_ocaml.Js.readonly_prop >
      Js_of_ocaml.Js.t
   [@@js.custom
-    let makeProps ~dot () = Js_of_ocaml.Js.Unsafe.(obj [|("dot", inject dot)|])]
+    let makeProps ~dot () =
+      object%js
+        val dot = dot
+      end]
 
 val make :
   < dot: Js_of_ocaml.Js.js_string Js_of_ocaml.Js.t Js_of_ocaml.Js.readonly_prop >
