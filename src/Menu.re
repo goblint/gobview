@@ -17,7 +17,7 @@ let make = (~selectedView, ~setSelectedView) => {
      |> List.mapi((i, (v, n)) => {
           <li key={string_of_int(i)} className="nav-item">
             <a
-              className={"nav-link" ++ (selectedView == v ? "active" : "")}
+              className={"nav-link " ++ (selectedView == v ? "active" : "")}
               onClick={_ => setSelectedView(_ => v)}>
               {n |> React.string}
             </a>
