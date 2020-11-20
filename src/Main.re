@@ -65,23 +65,23 @@ let make = () => {
     [|file|],
   );
 
-  <div className="relative">
-    <div className="sidebar">
-      <h2 className="title"> {"Gobview" |> React.string} </h2>
-      <StateView
-        selectedView
-        id
-        line
-        calls={pdata |> Parse.get_calls}
-        filepath
-      />
-    </div>
-    <div className="sidebar globsidebar">
-      <h2 className="title"> {"Globals" |> React.string} </h2>
-      <GlobView globs={pdata |> Parse.get_globs} />
-    </div>
-    <div className="content-wrapper">
-      <div className="content">
+  <div className="container-fluid">
+    <div className="row">
+      <div className="col-3 border-right">
+        <h2> {"State" |> React.string} </h2>
+        <StateView
+          selectedView
+          id
+          line
+          calls={pdata |> Parse.get_calls}
+          filepath
+        />
+      </div>
+      <div className="col-3 order-last border-left">
+        <h2> {"Globals" |> React.string} </h2>
+        <GlobView globs={pdata |> Parse.get_globs} />
+      </div>
+      <div className="col-6">
         <Menu selectedView setSelectedView />
         {if (selectedView == Code) {
            <div> <h3 className="filename"> {file |> React.string} </h3> </div>;
