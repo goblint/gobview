@@ -65,75 +65,85 @@ let make = () => {
     [|file|],
   );
 
-  <div className="relative">
-    <div className="sidebar">
-      <h2 className="title"> {"Gobview" |> React.string} </h2>
-      <StateView
-        selectedView
-        id
-        line
-        calls={pdata |> Parse.get_calls}
-        filepath
-      />
-    </div>
-    <div className="sidebar globsidebar">
-      <h2 className="title"> {"Globals" |> React.string} </h2>
-      <GlobView globs={pdata |> Parse.get_globs} />
-    </div>
-    <div className="content-wrapper">
-      <div className="content">
-        <Menu selectedView setSelectedView />
-        {if (selectedView == Code) {
-           <div> <h3 className="filename"> {file |> React.string} </h3> </div>;
-         } else {
-           React.null;
-         }}
-        <div
-          style={React.Dom.Style.make(~overflow="auto", ~height="85vh", ())}>
-          {switch (selectedView) {
-           | Code =>
-             <CodeView
-               dispatch=setLine
-               calls={pdata |> Parse.get_calls}
-               code
-               line
-               filepath
-               warnings={pdata |> Parse.get_warnings}
-             />
-           | Node => <NodeView dispatch=setId />
-           | Warning =>
-             <WarningView
-               setFile
-               setFilepath
-               setSelectedView
-               setLine
-               warnings={pdata |> Parse.get_warnings}
-             />
-           | File =>
-             <FileList
-               files={pdata |> Parse.get_files}
-               setFile
-               setFilepath
-               setSelectedView
-             />
-           | Parameters =>
-             <ParameterView parameters={pdata |> Parse.get_parameters} />
-           | DeadCode =>
-             <DeadCodeView
-               setFile
-               setFilepath
-               setSelectedView
-               setLine
-               calls={
-                 pdata
-                 |> Parse.get_calls
-                 |> List.filter(Parse.has_dead_code)
-                 |> Parse.sort_calls_by_line
-               }
-             />
-           | Statistics =>
-             <StatisticsView statistics={pdata |> Parse.get_statistics} />
-           }}
+  <div className="container-fluid">
+    <div className="row">
+      <div className="relative">
+        <div className="sidebar">
+          <h2 className="title"> {"Gobview" |> React.string} </h2>
+          <StateView
+            selectedView
+            id
+            line
+            calls={pdata |> Parse.get_calls}
+            filepath
+          />
+        </div>
+        <div className="sidebar globsidebar">
+          <h2 className="title"> {"Globals" |> React.string} </h2>
+          <GlobView globs={pdata |> Parse.get_globs} />
+        </div>
+        <div className="content-wrapper">
+          <div className="content">
+            <Menu selectedView setSelectedView />
+            {if (selectedView == Code) {
+               <div>
+                 <h3 className="filename"> {file |> React.string} </h3>
+               </div>;
+             } else {
+               React.null;
+             }}
+            <div
+              style={React.Dom.Style.make(
+                ~overflow="auto",
+                ~height="85vh",
+                (),
+              )}>
+              {switch (selectedView) {
+               | Code =>
+                 <CodeView
+                   dispatch=setLine
+                   calls={pdata |> Parse.get_calls}
+                   code
+                   line
+                   filepath
+                   warnings={pdata |> Parse.get_warnings}
+                 />
+               | Node => <NodeView dispatch=setId />
+               | Warning =>
+                 <WarningView
+                   setFile
+                   setFilepath
+                   setSelectedView
+                   setLine
+                   warnings={pdata |> Parse.get_warnings}
+                 />
+               | File =>
+                 <FileList
+                   files={pdata |> Parse.get_files}
+                   setFile
+                   setFilepath
+                   setSelectedView
+                 />
+               | Parameters =>
+                 <ParameterView parameters={pdata |> Parse.get_parameters} />
+               | DeadCode =>
+                 <DeadCodeView
+                   setFile
+                   setFilepath
+                   setSelectedView
+                   setLine
+                   calls={
+                     pdata
+                     |> Parse.get_calls
+                     |> List.filter(Parse.has_dead_code)
+                     |> Parse.sort_calls_by_line
+                   }
+                 />
+               | Statistics =>
+                 <StatisticsView statistics={pdata |> Parse.get_statistics} />
+               }}
+            </div>
+          </div>
         </div>
       </div>
     </div>
