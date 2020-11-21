@@ -1,8 +1,9 @@
 open Js_of_ocaml;
+open State;
 
 [@react.component]
-let make = (~pdata, ~dispatch) => {
-  let show_info = a => dispatch(a);
+let make = (~state, ~dispatch) => {
+  let show_info = a => dispatch @@ Set_id(a);
 
   /*
    * Don't remove the underscore at the end of `show_info_`.
@@ -11,7 +12,7 @@ let make = (~pdata, ~dispatch) => {
   Js.(Unsafe.global##.show_info_ := wrap_callback(show_info));
 
   <>
-    <NodeViewFuncList pdata />
+    <NodeViewFuncList pdata={state.pdata} />
     <Graphviz
       dot={
         {|digraph cfg {

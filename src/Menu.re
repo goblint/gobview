@@ -1,4 +1,5 @@
 open SelectedView;
+open State;
 
 let views = [
   (Code, "Code View"),
@@ -11,14 +12,16 @@ let views = [
 ];
 
 [@react.component]
-let make = (~selectedView, ~setSelectedView) => {
+let make = (~state, ~dispatch) => {
   <ul className="nav nav-tabs">
     {views
      |> List.mapi((i, (v, n)) => {
           <li key={string_of_int(i)} className="nav-item">
             <a
-              className={"nav-link " ++ (selectedView == v ? "active" : "")}
-              onClick={_ => setSelectedView(_ => v)}>
+              className={
+                "nav-link " ++ (state.selected_view == v ? "active" : "")
+              }
+              onClick={_ => dispatch @@ Set_selected_view(v)}>
               {n |> React.string}
             </a>
           </li>

@@ -1,14 +1,15 @@
+open State;
+
 [@react.component]
-let make =
-    (~selectedView: SelectedView.t, ~id, ~line, ~calls, ~filepath: string) => {
+let make = (~state, ~calls) => {
   calls
   |> (
-    switch (selectedView) {
-    | Node => List.filter(c => Parse.get_id(c) == string_of_int(id))
+    switch (state.selected_view) {
+    | Node => List.filter(c => Parse.get_id(c) == string_of_int(state.id))
     | _ =>
       List.filter(c =>
-        Parse.get_file(c) == filepath
-        && Parse.get_line(c) == string_of_int(line)
+        Parse.get_file(c) == state.file_path
+        && Parse.get_line(c) == string_of_int(state.line)
       )
     }
   )

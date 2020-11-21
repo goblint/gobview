@@ -1,22 +1,17 @@
-open Util;
 open SelectedView;
+open State;
+open Util;
 
 [@react.component]
 let make = () => {
-  let (id, setId) = React.useState(() => (-1));
-  let (line, setLine) = React.useState(() => (-1));
-  let (file, setFile) = React.useState(() => "");
-  let (filepath, setFilepath) = React.useState(() => "");
-  let (pdata, setPdata) = React.useState(() => Parse.empty_run);
-  let (code, setCode) = React.useState(() => "");
-  let (selectedView, setSelectedView) = React.useState(() => Code);
+  let (state, dispatch) = React.useReducer(reducer, default);
 
   let fetchCode = s => {
     let _ =
       Lwt.bind(
         Datafetcher.http_get_with_base(s),
         s => {
-          setCode(_ => s);
+          dispatch @@ Set_code(s);
           Lwt.return();
         },
       );
@@ -30,7 +25,7 @@ let make = () => {
         s => {
           log("Parse data");
           let data = Parse.parse_string(s);
-          setPdata(_ => data);
+          dispatch @@ Set_pdata(data);
           log("Parse data done");
           log("Search main");
           let (xfile, xfilepath) =
@@ -40,8 +35,8 @@ let make = () => {
           } else {
             log("Found main file: " ++ xfile);
           };
-          setFile(_ => xfile);
-          setFilepath(_ => xfilepath);
+          dispatch @@ Set_file_name(xfile);
+          dispatch @@ Set_file_name(xfilepath);
           Lwt.return();
         },
       );
@@ -56,83 +51,68 @@ let make = () => {
 
   React.useEffect1(
     () => {
-      if (!String.equal(file, "")) {
-        fetchCode(file);
-        log("Fetched code: " ++ file);
+      if (!String.equal(state.file_name, "")) {
+        fetchCode(state.file_name);
+        log("Fetched code: " ++ state.file_name);
       };
       None;
     },
-    [|file|],
+    [|state.file_name|],
   );
 
   <div className="container-fluid">
     <div className="row">
       <div className="col-3 border-right">
         <h2> {"State" |> React.string} </h2>
-        <StateView
-          selectedView
-          id
-          line
-          calls={pdata |> Parse.get_calls}
-          filepath
-        />
+        <StateView state calls={state.pdata |> Parse.get_calls} />
       </div>
       <div className="col-3 order-last border-left">
         <h2> {"Globals" |> React.string} </h2>
-        <GlobView globs={pdata |> Parse.get_globs} />
+        <GlobView globs={state.pdata |> Parse.get_globs} />
       </div>
       <div className="col-6">
-        <Menu selectedView setSelectedView />
-        {if (selectedView == Code) {
-           <div> <h3 className="filename"> {file |> React.string} </h3> </div>;
+        <Menu state dispatch />
+        {if (state.selected_view == Code) {
+           <div>
+             <h3 className="filename"> {state.file_name |> React.string} </h3>
+           </div>;
          } else {
            React.null;
          }}
         <div
           style={React.Dom.Style.make(~overflow="auto", ~height="85vh", ())}>
-          {switch (selectedView) {
+          {switch (state.selected_view) {
            | Code =>
              <CodeView
-               dispatch=setLine
-               calls={pdata |> Parse.get_calls}
-               code
-               line
-               filepath
-               warnings={pdata |> Parse.get_warnings}
+               state
+               dispatch
+               calls={state.pdata |> Parse.get_calls}
+               warnings={state.pdata |> Parse.get_warnings}
              />
-           | Node => <NodeView pdata dispatch=setId />
+           | Node => <NodeView state dispatch />
            | Warning =>
              <WarningView
-               setFile
-               setFilepath
-               setSelectedView
-               setLine
-               warnings={pdata |> Parse.get_warnings}
+               dispatch
+               warnings={state.pdata |> Parse.get_warnings}
              />
            | File =>
-             <FileList
-               files={pdata |> Parse.get_files}
-               setFile
-               setFilepath
-               setSelectedView
-             />
+             <FileList dispatch files={state.pdata |> Parse.get_files} />
            | Parameters =>
-             <ParameterView parameters={pdata |> Parse.get_parameters} />
+             <ParameterView parameters={state.pdata |> Parse.get_parameters} />
            | DeadCode =>
              <DeadCodeView
-               setFile
-               setFilepath
-               setSelectedView
-               setLine
+               dispatch
                calls={
-                 pdata
+                 state.pdata
                  |> Parse.get_calls
                  |> List.filter(Parse.has_dead_code)
                  |> Parse.sort_calls_by_line
                }
              />
            | Statistics =>
-             <StatisticsView statistics={pdata |> Parse.get_statistics} />
+             <StatisticsView
+               statistics={state.pdata |> Parse.get_statistics}
+             />
            }}
         </div>
       </div>
