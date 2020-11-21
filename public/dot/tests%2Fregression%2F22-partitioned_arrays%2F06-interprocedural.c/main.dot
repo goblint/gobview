@@ -1,0 +1,15 @@
+digraph cfg {
+	3 -> ret285 [label = "return 0
+"] ;
+	2 -> 3 [label = "example2()
+"] ;
+	1 -> 2 [label = "example1()
+"] ;
+	fun285 -> 1 [label = "(body)
+"] ;
+	1 [id="1",URL="javascript:show_info('\N');",fillcolor=white,style=filled,];
+	ret285 [id="ret285",URL="javascript:show_info('\N');",fillcolor=white,style=filled,label ="return of main()",shape=box];
+	2 [id="2",URL="javascript:show_info('\N');",fillcolor=white,style=filled,];
+	3 [id="3",URL="javascript:show_info('\N');",fillcolor=white,style=filled,];
+	fun285 [id="fun285",URL="javascript:show_info('\N');",fillcolor=white,style=filled,label ="main()",shape=box];
+}
