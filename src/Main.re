@@ -60,6 +60,37 @@ let make = () => {
     [|state.file_name|],
   );
 
+  React.useEffect2(
+    () => {
+      let file_path = state.file_path;
+      if (String.length(file_path) > 0) {
+        switch (State.function_name_opt(state)) {
+        | Some(func) =>
+          let pattern = Js_of_ocaml.Regexp.regexp("/");
+          let url =
+            "dot/"
+            ++ Js_of_ocaml.Regexp.global_replace(pattern, file_path, "%252F")
+            ++ "/"
+            ++ func
+            ++ ".dot";
+          log("Fetching " ++ url);
+          let _ =
+            Lwt.bind(
+              Datafetcher.http_get_with_base(url),
+              dot => {
+                dispatch @@ Update_dot(dot);
+                Lwt.return();
+              },
+            );
+          ();
+        | _ => ()
+        };
+      };
+      None;
+    },
+    (state.file_path, state.function_name),
+  );
+
   <div className="container-fluid">
     <div className="row">
       <div className="col-3 border-right">

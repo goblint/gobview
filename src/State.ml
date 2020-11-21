@@ -5,6 +5,8 @@ type t =
   ; file_path: string
   ; pdata: Parse.run
   ; code: string
+  ; function_name: string option
+  ; dot: string option
   ; selected_view: SelectedView.t }
 
 let default =
@@ -14,7 +16,17 @@ let default =
   ; file_path= ""
   ; pdata= Parse.empty_run
   ; code= ""
+  ; function_name= None
+  ; dot= None
   ; selected_view= SelectedView.Code }
+
+let function_name state = Option.get state.function_name
+
+let function_name_opt state = state.function_name
+
+let dot state = Option.get state.dot
+
+let dot_opt state = state.dot
 
 type action =
   | Set_id of int
@@ -24,6 +36,8 @@ type action =
   | Set_pdata of Parse.run
   | Set_code of string
   | Set_selected_view of SelectedView.t
+  | Inspect_function of string * string
+  | Update_dot of string
 
 let reducer (state : t) (act : action) =
   match act with
@@ -41,3 +55,8 @@ let reducer (state : t) (act : action) =
       {state with code}
   | Set_selected_view selected_view ->
       {state with selected_view}
+  | Inspect_function (file_path, f) ->
+      let function_name = Some f in
+      {state with file_path; function_name}
+  | Update_dot d ->
+      {state with dot= Some d}
