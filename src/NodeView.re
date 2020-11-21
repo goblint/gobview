@@ -1,7 +1,7 @@
 open Js_of_ocaml;
 
 [@react.component]
-let make = (~dispatch) => {
+let make = (~pdata, ~dispatch) => {
   let show_info = a => dispatch(a);
 
   /*
@@ -10,9 +10,11 @@ let make = (~dispatch) => {
    */
   Js.(Unsafe.global##.show_info_ := wrap_callback(show_info));
 
-  <Graphviz
-    dot={
-      {|digraph cfg {
+  <>
+    <NodeViewFuncList pdata />
+    <Graphviz
+      dot={
+        {|digraph cfg {
         44 -> ret545 [label = "return
 "] ;
         43 -> 44 [label = "assert(a[41] == 0)
@@ -59,7 +61,8 @@ let make = (~dispatch) => {
         37 [id="37",URL="javascript:show_info('\N');",fillcolor=white,style=filled,];
         30 [id="30",URL="javascript:show_info('\N');",fillcolor=orange,style=filled,];
 }|}
-      |> Js_of_ocaml.Js.string
-    }
-  />;
+        |> Js_of_ocaml.Js.string
+      }
+    />
+  </>;
 };

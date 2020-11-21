@@ -100,7 +100,7 @@ let make = () => {
                filepath
                warnings={pdata |> Parse.get_warnings}
              />
-           | Node => <NodeView dispatch=setId />
+           | Node => <NodeView pdata dispatch=setId />
            | Warning =>
              <WarningView
                setFile
