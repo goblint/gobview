@@ -35,6 +35,8 @@ type action =
   | Set_pdata of Parse.run
   | Set_code of string
   | Set_selected_view of SelectedView.t
+  | Inspect_file of string * string
+  | Update_code of string
   | Inspect_function of string * string * string
   | Update_dot of string
 
@@ -54,13 +56,25 @@ let reducer (state : t) (act : action) =
       {state with code}
   | Set_selected_view selected_view ->
       {state with selected_view}
+  | Inspect_file (name, path) ->
+      let inspect = Some (File {name; path; code= None}) in
+      {state with file_name= name; file_path= path; inspect}
+  | Update_code code -> (
+    match state.inspect with
+    | Some (File f) ->
+        let code = Some code in
+        let inspect = Some (File {f with code}) in
+        {state with inspect}
+    | _ ->
+        state )
   | Inspect_function (name, file_name, file_path) ->
       let inspect = Some (Func {name; file_name; file_path; dot= None}) in
       {state with inspect}
   | Update_dot dot -> (
     match state.inspect with
     | Some (Func f) ->
-        let inspect = Some (Func {f with dot= Some dot}) in
+        let dot = Some dot in
+        let inspect = Some (Func {f with dot}) in
         {state with inspect}
     | _ ->
         state )

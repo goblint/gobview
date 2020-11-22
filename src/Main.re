@@ -35,8 +35,7 @@ let make = () => {
           } else {
             log("Found main file: " ++ xfile);
           };
-          dispatch @@ Set_file_name(xfile);
-          dispatch @@ Set_file_name(xfilepath);
+          dispatch @@ Inspect_file(xfile, xfilepath);
           Lwt.return();
         },
       );
