@@ -1,13 +1,15 @@
 module Inspect = struct
-  type t = Function of {name: string; file_path: string; dot: string option}
+  module Function = struct
+    type t = {name: string; file_path: string; dot: string option}
 
-  let name inspect = match inspect with Function {name; _} -> name
+    let name f = f.name
 
-  let name_opt inspect = match inspect with Function {name; _} -> Some name
+    let dot_opt f = f.dot
+  end
 
-  let dot inspect = match inspect with Function {dot; _} -> Option.get dot
+  type t = Function of Function.t
 
-  let dot_opt inspect = match inspect with Function {dot; _} -> dot
+  let function_opt i = match i with Function f -> Some f
 end
 
 type t =
@@ -30,9 +32,9 @@ let default =
   ; inspect= None
   ; selected_view= SelectedView.Code }
 
-let inspect state = Option.get state.inspect
+let inspect i = Option.get i.inspect
 
-let inspect_opt state = state.inspect
+let inspect_opt i = i.inspect
 
 type action =
   | Set_id of int
