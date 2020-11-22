@@ -12,14 +12,15 @@ let make = (~state, ~dispatch) => {
   Js.(Unsafe.global##.show_info_ := wrap_callback(show_info));
 
   let dot =
-    State.inspect_opt(state)
-    |> (s => Option.bind(s, Inspect.function_opt))
-    |> (f => Option.bind(f, Inspect.Function.dot_opt));
+    switch (state.inspect) {
+    | Some(Func(f)) => f.dot
+    | _ => None
+    };
 
   <>
     <NodeViewFuncList dispatch pdata={state.pdata} />
     {switch (dot) {
-     | Some(dot) => <Graphviz dot={dot |> Js_of_ocaml.Js.string} />
+     | Some(dot) => <Graphviz dot={dot |> Js.string} />
      | _ => React.null
      }}
   </>;

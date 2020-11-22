@@ -63,7 +63,7 @@ let make = () => {
   React.useEffect1(
     () => {
       switch (state.inspect) {
-      | Some(Function(f)) =>
+      | Some(Func(f)) =>
         if (Option.is_none(f.dot)) {
           let pattern = Js_of_ocaml.Regexp.regexp("/");
           let url =
@@ -91,7 +91,7 @@ let make = () => {
       };
       None;
     },
-    [|State.inspect_opt(state)|],
+    [|state.inspect|],
   );
 
   <div className="container-fluid">

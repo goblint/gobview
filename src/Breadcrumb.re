@@ -3,7 +3,7 @@ open State;
 [@react.component]
 let make = (~state, ~dispatch) => {
   switch (state.inspect) {
-  | Some(Function(f)) =>
+  | Some(Func(f)) =>
     <>
       <nav>
         <ol className="breadcrumb">
