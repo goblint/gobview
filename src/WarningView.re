@@ -20,7 +20,7 @@ let make = (~dispatch, ~warnings: list(Parse.warning)) => {
                   Parse.warning_to_file(c) |> Parse.get_file_from_filepath,
                 );
                 dispatch @@ Set_file_path(Parse.warning_to_file(c));
-                dispatch @@ Set_selected_view(Code);
+                dispatch @@ Set_selected_view(Content);
                 dispatch @@
                 Set_line(int_of_string(Parse.warning_to_line(c)));
               }}>

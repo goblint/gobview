@@ -5,7 +5,7 @@ let make = (~state, ~calls) => {
   calls
   |> (
     switch (state.selected_view) {
-    | Node => List.filter(c => Parse.get_id(c) == string_of_int(state.id))
+    | Content => List.filter(c => Parse.get_id(c) == string_of_int(state.id))
     | _ =>
       List.filter(c =>
         Parse.get_file(c) == state.file_path

@@ -31,7 +31,7 @@ let default =
     pdata = Parse.empty_run;
     code = "";
     inspect = None;
-    selected_view = SelectedView.Code;
+    selected_view = SelectedView.Content;
   }
 
 type action =

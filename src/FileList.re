@@ -15,7 +15,7 @@ let make = (~dispatch, ~files) => {
               onClick={_ => {
                 dispatch @@ Set_file_name(Parse.file_to_name(c));
                 dispatch @@ Set_file_path(Parse.file_to_path(c));
-                dispatch @@ Set_selected_view(Code);
+                dispatch @@ Set_selected_view(Content);
               }}>
               {Parse.file_to_path(c) |> React.string}
             </li>

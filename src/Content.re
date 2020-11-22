@@ -4,10 +4,16 @@ open State;
 let make = (~state, ~dispatch) => {
   <>
     <Breadcrumb state dispatch />
-    {if (Option.is_none(state.inspect)) {
-       <Navigation state dispatch />;
-     } else {
-       React.null;
+    {switch (state.inspect) {
+     | None => <Navigation state dispatch />
+     | Some(File(_)) =>
+       <CodeView
+         state
+         dispatch
+         calls={state.pdata |> Parse.get_calls}
+         warnings={state.pdata |> Parse.get_warnings}
+       />
+     | Some(Func(_)) => <NodeView state dispatch />
      }}
   </>;
 };

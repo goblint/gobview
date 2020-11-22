@@ -2,8 +2,7 @@ open SelectedView;
 open State;
 
 let views = [
-  (Code, "Code View"),
-  (Node, "Node View"),
+  (Content, "Content View"),
   (Warning, "Warnings"),
   (DeadCode, "Dead Code"),
   (File, "Select File"),

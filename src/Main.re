@@ -105,25 +105,10 @@ let make = () => {
       // </div>
       <div className="col-9">
         <Menu state dispatch />
-        <Content state dispatch />
-        {if (state.selected_view == Code) {
-           <div>
-             <h3 className="filename"> {state.file_name |> React.string} </h3>
-           </div>;
-         } else {
-           React.null;
-         }}
         <div
           style={React.Dom.Style.make(~overflow="auto", ~height="85vh", ())}>
           {switch (state.selected_view) {
-           | Code =>
-             <CodeView
-               state
-               dispatch
-               calls={state.pdata |> Parse.get_calls}
-               warnings={state.pdata |> Parse.get_warnings}
-             />
-           | Node => <NodeView state dispatch />
+           | Content => <Content state dispatch />
            | Warning =>
              <WarningView
                dispatch
