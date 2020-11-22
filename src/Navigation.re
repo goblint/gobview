@@ -1,3 +1,5 @@
+open State;
+
 let makeFuncList = (dispatch, f) => {
   let file_name = Parse.file_to_name(f);
   let file_path = Parse.file_to_path(f);
@@ -20,10 +22,10 @@ let makeFuncList = (dispatch, f) => {
 };
 
 [@react.component]
-let make = (~dispatch, ~pdata) => {
+let make = (~state, ~dispatch) => {
   <div className="container-fluid">
     <ul>
-      {pdata
+      {state.pdata
        |> Parse.get_files
        |> List.filter(f => !Parse.file_is_empty(f))
        |> List.mapi((i, f) => {

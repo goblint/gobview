@@ -17,11 +17,8 @@ let make = (~state, ~dispatch) => {
     | _ => None
     };
 
-  <>
-    <NodeViewFuncList dispatch pdata={state.pdata} />
-    {switch (dot) {
-     | Some(dot) => <Graphviz dot={dot |> Js.string} />
-     | _ => React.null
-     }}
-  </>;
+  switch (dot) {
+  | Some(dot) => <Graphviz dot={dot |> Js.string} />
+  | _ => React.null
+  };
 };
