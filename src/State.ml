@@ -1,4 +1,8 @@
 module Inspect = struct
+  module File = struct
+    type t = {name: string; path: string; code: string option}
+  end
+
   module Function = struct
     type t = {name: string; file_path: string; dot: string option}
 
@@ -7,9 +11,9 @@ module Inspect = struct
     let dot_opt f = f.dot
   end
 
-  type t = Function of Function.t
+  type t = File of File.t | Function of Function.t
 
-  let function_opt i = match i with Function f -> Some f
+  let function_opt i = match i with Function f -> Some f | _ -> None
 end
 
 type t =
