@@ -1,31 +1,38 @@
 module Inspect = struct
-  type file = {name: string; path: string; code: string option}
+  type file = { name : string; path : string; code : string option }
 
-  type func =
-    {name: string; file_name: string; file_path: string; dot: string option}
+  type func = {
+    name : string;
+    file_name : string;
+    file_path : string;
+    dot : string option;
+  }
 end
 
 type inspect = File of Inspect.file | Func of Inspect.func
 
-type t =
-  { id: int
-  ; line: int
-  ; file_name: string
-  ; file_path: string
-  ; pdata: Parse.run
-  ; code: string
-  ; inspect: inspect option
-  ; selected_view: SelectedView.t }
+type t = {
+  id : int;
+  line : int;
+  file_name : string;
+  file_path : string;
+  pdata : Parse.run;
+  code : string;
+  inspect : inspect option;
+  selected_view : SelectedView.t;
+}
 
 let default =
-  { id= -1
-  ; line= -1
-  ; file_name= ""
-  ; file_path= ""
-  ; pdata= Parse.empty_run
-  ; code= ""
-  ; inspect= None
-  ; selected_view= SelectedView.Code }
+  {
+    id = -1;
+    line = -1;
+    file_name = "";
+    file_path = "";
+    pdata = Parse.empty_run;
+    code = "";
+    inspect = None;
+    selected_view = SelectedView.Code;
+  }
 
 type action =
   | Set_id of int
@@ -39,42 +46,33 @@ type action =
   | Update_code of string
   | Inspect_function of string * string * string
   | Update_dot of string
+  | Reset_inspect
 
 let reducer (state : t) (act : action) =
   match act with
-  | Set_id id ->
-      {state with id}
-  | Set_line line ->
-      {state with line}
-  | Set_file_name file_name ->
-      {state with file_name}
-  | Set_file_path file_path ->
-      {state with file_path}
-  | Set_pdata pdata ->
-      {state with pdata}
-  | Set_code code ->
-      {state with code}
-  | Set_selected_view selected_view ->
-      {state with selected_view}
+  | Set_id id -> { state with id }
+  | Set_line line -> { state with line }
+  | Set_file_name file_name -> { state with file_name }
+  | Set_file_path file_path -> { state with file_path }
+  | Set_pdata pdata -> { state with pdata }
+  | Set_code code -> { state with code }
+  | Set_selected_view selected_view -> { state with selected_view }
   | Inspect_file (name, path) ->
-      let inspect = Some (File {name; path; code= None}) in
-      {state with file_name= name; file_path= path; inspect}
+      let inspect = Some (File { name; path; code = None }) in
+      { state with file_name = name; file_path = path; inspect }
   | Update_code code -> (
-    match state.inspect with
-    | Some (File f) ->
-        let code = Some code in
-        let inspect = Some (File {f with code}) in
-        {state with inspect}
-    | _ ->
-        state )
+      match state.inspect with
+      | Some (File f) ->
+          let inspect = Some (File { f with code = Some code }) in
+          { state with code; inspect }
+      | _ -> state )
   | Inspect_function (name, file_name, file_path) ->
-      let inspect = Some (Func {name; file_name; file_path; dot= None}) in
-      {state with inspect}
+      let inspect = Some (Func { name; file_name; file_path; dot = None }) in
+      { state with inspect }
   | Update_dot dot -> (
-    match state.inspect with
-    | Some (Func f) ->
-        let dot = Some dot in
-        let inspect = Some (Func {f with dot}) in
-        {state with inspect}
-    | _ ->
-        state )
+      match state.inspect with
+      | Some (Func f) ->
+          let inspect = Some (Func { f with dot = Some dot }) in
+          { state with inspect }
+      | _ -> state )
+  | Reset_inspect -> { state with inspect = None }
