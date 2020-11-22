@@ -4,7 +4,8 @@ module Inspect = struct
   end
 
   module Function = struct
-    type t = {name: string; file_path: string; dot: string option}
+    type t =
+      {name: string; file_name: string; file_path: string; dot: string option}
 
     let name f = f.name
 
@@ -48,7 +49,7 @@ type action =
   | Set_pdata of Parse.run
   | Set_code of string
   | Set_selected_view of SelectedView.t
-  | Inspect_function of string * string
+  | Inspect_function of string * string * string
   | Update_dot of string
 
 let reducer (state : t) (act : action) =
@@ -67,8 +68,10 @@ let reducer (state : t) (act : action) =
       {state with code}
   | Set_selected_view selected_view ->
       {state with selected_view}
-  | Inspect_function (name, file_path) ->
-      let inspect = Some (Inspect.Function {name; file_path; dot= None}) in
+  | Inspect_function (name, file_name, file_path) ->
+      let inspect =
+        Some (Inspect.Function {name; file_name; file_path; dot= None})
+      in
       {state with inspect}
   | Update_dot dot -> (
     match state.inspect with

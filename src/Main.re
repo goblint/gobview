@@ -100,12 +100,13 @@ let make = () => {
         <h2> {"State" |> React.string} </h2>
         <StateView state calls={state.pdata |> Parse.get_calls} />
       </div>
-      <div className="col-3 order-last border-left">
-        <h2> {"Globals" |> React.string} </h2>
-        <GlobView globs={state.pdata |> Parse.get_globs} />
-      </div>
-      <div className="col-6">
+      // <div className="col-3 order-last border-left">
+      //   <h2> {"Globals" |> React.string} </h2>
+      //   <GlobView globs={state.pdata |> Parse.get_globs} />
+      // </div>
+      <div className="col-9">
         <Menu state dispatch />
+        <Content state dispatch />
         {if (state.selected_view == Code) {
            <div>
              <h3 className="filename"> {state.file_name |> React.string} </h3>

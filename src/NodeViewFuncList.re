@@ -1,9 +1,10 @@
 let makeFuncList = (dispatch, f) => {
+  let file_name = Parse.file_to_name(f);
   let file_path = Parse.file_to_path(f);
   let Parse.File(funcs, _) = f;
 
   let onClick = (func, _) => {
-    dispatch @@ State.Inspect_function(func, file_path);
+    dispatch @@ State.Inspect_function(func, file_name, file_path);
   };
 
   <ul>
