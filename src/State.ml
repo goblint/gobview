@@ -1,3 +1,6 @@
+type inspection =
+  | Function of {name: string; file_path: string; dot: string option}
+
 type t =
   { id: int
   ; line: int
@@ -5,8 +8,7 @@ type t =
   ; file_path: string
   ; pdata: Parse.run
   ; code: string
-  ; function_name: string option
-  ; dot: string option
+  ; inspect: inspection option
   ; selected_view: SelectedView.t }
 
 let default =
@@ -16,17 +18,24 @@ let default =
   ; file_path= ""
   ; pdata= Parse.empty_run
   ; code= ""
-  ; function_name= None
-  ; dot= None
+  ; inspect= None
   ; selected_view= SelectedView.Code }
 
-let function_name state = Option.get state.function_name
+let inspect state = Option.get state.inspect
 
-let function_name_opt state = state.function_name
+let inspect_opt state = state.inspect
 
-let dot state = Option.get state.dot
+let function_name state =
+  match Option.get state.inspect with Function {name; _} -> name
 
-let dot_opt state = state.dot
+let function_name_opt state =
+  Option.map (fun (Function {name; _}) -> name) state.inspect
+
+let function_dot state =
+  match Option.get state.inspect with Function {dot; _} -> Option.get dot
+
+let function_dot_opt state =
+  match state.inspect with Some (Function {dot; _}) -> dot | _ -> None
 
 type action =
   | Set_id of int
@@ -55,8 +64,13 @@ let reducer (state : t) (act : action) =
       {state with code}
   | Set_selected_view selected_view ->
       {state with selected_view}
-  | Inspect_function (file_path, f) ->
-      let function_name = Some f in
-      {state with file_path; function_name}
-  | Update_dot d ->
-      {state with dot= Some d}
+  | Inspect_function (name, file_path) ->
+      let inspect = Some (Function {name; file_path; dot= None}) in
+      {state with inspect}
+  | Update_dot dot -> (
+    match state.inspect with
+    | Some (Function f) ->
+        let inspect = Some (Function {f with dot= Some dot}) in
+        {state with inspect}
+    | _ ->
+        state )

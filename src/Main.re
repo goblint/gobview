@@ -60,18 +60,21 @@ let make = () => {
     [|state.file_name|],
   );
 
-  React.useEffect2(
+  React.useEffect1(
     () => {
-      let file_path = state.file_path;
-      if (String.length(file_path) > 0) {
-        switch (State.function_name_opt(state)) {
-        | Some(func) =>
+      switch (state.inspect) {
+      | Some(Function(f)) =>
+        if (Option.is_none(f.dot)) {
           let pattern = Js_of_ocaml.Regexp.regexp("/");
           let url =
             "dot/"
-            ++ Js_of_ocaml.Regexp.global_replace(pattern, file_path, "%252F")
+            ++ Js_of_ocaml.Regexp.global_replace(
+                 pattern,
+                 f.file_path,
+                 "%252F",
+               )
             ++ "/"
-            ++ func
+            ++ f.name
             ++ ".dot";
           log("Fetching " ++ url);
           let _ =
@@ -83,12 +86,12 @@ let make = () => {
               },
             );
           ();
-        | _ => ()
-        };
+        }
+      | _ => ()
       };
       None;
     },
-    (state.file_path, state.function_name),
+    [|State.inspect_opt(state)|],
   );
 
   <div className="container-fluid">

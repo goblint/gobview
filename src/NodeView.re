@@ -13,7 +13,7 @@ let make = (~state, ~dispatch) => {
 
   <>
     <NodeViewFuncList dispatch pdata={state.pdata} />
-    {switch (State.dot_opt(state)) {
+    {switch (State.function_dot_opt(state)) {
      | Some(dot) => <Graphviz dot={dot |> Js_of_ocaml.Js.string} />
      | _ => React.null
      }}
