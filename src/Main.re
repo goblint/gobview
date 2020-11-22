@@ -114,8 +114,6 @@ let make = () => {
                dispatch
                warnings={state.pdata |> Parse.get_warnings}
              />
-           | File =>
-             <FileList dispatch files={state.pdata |> Parse.get_files} />
            | Parameters =>
              <ParameterView parameters={state.pdata |> Parse.get_parameters} />
            | DeadCode =>

@@ -5,7 +5,6 @@ let views = [
   (Content, "Content View"),
   (Warning, "Warnings"),
   (DeadCode, "Dead Code"),
-  (File, "Select File"),
   (Parameters, "Parameters"),
   (Statistics, "Statistics"),
 ];
