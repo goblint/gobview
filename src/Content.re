@@ -3,7 +3,7 @@ open State;
 [@react.component]
 let make = (~state, ~dispatch) => {
   <>
-    <Breadcrumb state dispatch />
+    <Breadcrumb inspect={State.inspect_opt(state)} dispatch />
     {switch (state.inspect) {
      | None => <Navigation state dispatch />
      | Some(File(_)) =>

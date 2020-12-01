@@ -42,8 +42,8 @@ let makeBreadcrumb = (inspect, dispatch) => {
 };
 
 [@react.component]
-let make = (~state, ~dispatch) => {
-  switch (state.inspect) {
+let make = (~inspect, ~dispatch) => {
+  switch (inspect) {
   | Some(i) => makeBreadcrumb(i, dispatch)
   | _ =>
     <nav>
