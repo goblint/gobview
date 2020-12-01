@@ -6,47 +6,52 @@ let makeBreadcrumb = (inspect, dispatch) => {
     dispatch @@ act;
   };
 
-  <>
-    <nav>
-      <ol className="breadcrumb">
-        <li className="breadcrumb-item">
-          <a href="#" onClick={onClick(Reset_inspect)}>
-            {"Analysis" |> React.string}
-          </a>
-        </li>
-        {switch (inspect) {
-         | Inspect.File(f) =>
-           <li className="breadcrumb-item active">
-             {Inspect.File.name(f) |> React.string}
+  <nav>
+    <ol className="breadcrumb">
+      <li className="breadcrumb-item">
+        <a href="#" onClick={onClick(Reset_inspect)}>
+          {"Analysis" |> React.string}
+        </a>
+      </li>
+      {switch (inspect) {
+       | Inspect.File(f) =>
+         <li className="breadcrumb-item active">
+           {Inspect.File.name(f) |> React.string}
+         </li>
+       | Inspect.Func(f) =>
+         <>
+           <li className="breadcrumb-item">
+             <a
+               href="#"
+               onClick={onClick(
+                 Inspect_file(
+                   Inspect.Func.file_name(f),
+                   Inspect.Func.file_path(f),
+                 ),
+               )}>
+               {Inspect.Func.file_name(f) |> React.string}
+             </a>
            </li>
-         | Inspect.Func(f) =>
-           <>
-             <li className="breadcrumb-item">
-               <a
-                 href="#"
-                 onClick={onClick(
-                   Inspect_file(
-                     Inspect.Func.file_name(f),
-                     Inspect.Func.file_path(f),
-                   ),
-                 )}>
-                 {Inspect.Func.file_name(f) |> React.string}
-               </a>
-             </li>
-             <li className="breadcrumb-item active">
-               {Inspect.Func.name(f) |> React.string}
-             </li>
-           </>
-         }}
-      </ol>
-    </nav>
-  </>;
+           <li className="breadcrumb-item active">
+             {Inspect.Func.name(f) |> React.string}
+           </li>
+         </>
+       }}
+    </ol>
+  </nav>;
 };
 
 [@react.component]
 let make = (~state, ~dispatch) => {
   switch (state.inspect) {
   | Some(i) => makeBreadcrumb(i, dispatch)
-  | _ => React.null
+  | _ =>
+    <nav>
+      <ol className="breadcrumb">
+        <li className="breadcrumb-item active">
+          {"Analysis" |> React.string}
+        </li>
+      </ol>
+    </nav>
   };
 };
