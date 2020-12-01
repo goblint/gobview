@@ -15,21 +15,26 @@ let makeBreadcrumb = (inspect, dispatch) => {
           </a>
         </li>
         {switch (inspect) {
-         | File(f) =>
+         | Inspect.File(f) =>
            <li className="breadcrumb-item active">
-             {f.name |> React.string}
+             {Inspect.File.name(f) |> React.string}
            </li>
-         | Func(f) =>
+         | Inspect.Func(f) =>
            <>
              <li className="breadcrumb-item">
                <a
                  href="#"
-                 onClick={onClick(Inspect_file(f.file_name, f.file_path))}>
-                 {f.file_name |> React.string}
+                 onClick={onClick(
+                   Inspect_file(
+                     Inspect.Func.file_name(f),
+                     Inspect.Func.file_path(f),
+                   ),
+                 )}>
+                 {Inspect.Func.file_name(f) |> React.string}
                </a>
              </li>
              <li className="breadcrumb-item active">
-               {f.name |> React.string}
+               {Inspect.Func.name(f) |> React.string}
              </li>
            </>
          }}

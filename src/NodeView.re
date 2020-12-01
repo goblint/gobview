@@ -13,7 +13,7 @@ let make = (~state, ~dispatch) => {
 
   let dot =
     switch (state.inspect) {
-    | Some(Func(f)) => f.dot
+    | Some(Func(f)) => Inspect.Func.dot_opt(f)
     | _ => None
     };
 

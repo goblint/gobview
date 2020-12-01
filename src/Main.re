@@ -63,17 +63,17 @@ let make = () => {
     () => {
       switch (state.inspect) {
       | Some(Func(f)) =>
-        if (Option.is_none(f.dot)) {
+        if (Option.is_none(Inspect.Func.dot_opt(f))) {
           let pattern = Js_of_ocaml.Regexp.regexp("/");
           let url =
             "dot/"
             ++ Js_of_ocaml.Regexp.global_replace(
                  pattern,
-                 f.file_path,
+                 Inspect.Func.file_path(f),
                  "%252F",
                )
             ++ "/"
-            ++ f.name
+            ++ Inspect.Func.name(f)
             ++ ".dot";
           log("Fetching " ++ url);
           let _ =
