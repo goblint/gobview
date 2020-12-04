@@ -13,7 +13,7 @@ let make_nav_pills = (current, dispatch) => {
     dispatch @@ act;
   };
 
-  <ul className="nav nav-pills">
+  <ul className="nav nav-pills border-top border-bottom">
     {views
      |> List.mapi((i, (v, n)) => {
           <li key={string_of_int(i)} className="nav-item">
@@ -40,7 +40,7 @@ let make_nav_pills = (current, dispatch) => {
 [@react.component]
 let make = (~state, ~dispatch) => {
   let current = selected_panel_opt(state);
-  <>
+  <div className="border-right border-left">
     {make_nav_pills(current, dispatch)}
     <div className="tab-content">
       <div className="tab-pane active">
@@ -69,5 +69,5 @@ let make = (~state, ~dispatch) => {
          }}
       </div>
     </div>
-  </>;
+  </div>;
 };
