@@ -45,6 +45,12 @@ end
 
 type selected_sidebar = Selected_sidebar.t
 
+module Selected_panel = struct
+  type t = Warnings | Dead_code | Parameters | Statistics
+end
+
+type selected_panel = Selected_panel.t
+
 type t = {
   id : int;
   line : int;
@@ -55,6 +61,7 @@ type t = {
   inspect : inspect option;
   selected_view : SelectedView.t;
   selected_sidebar : selected_sidebar;
+  selected_panel : selected_panel option;
 }
 
 let default =
@@ -68,6 +75,7 @@ let default =
     inspect = None;
     selected_view = SelectedView.Content;
     selected_sidebar = Selected_sidebar.State;
+    selected_panel = None;
   }
 
 let pdata state = state.pdata
@@ -79,6 +87,10 @@ let inspect_opt state = state.inspect
 let selected_view state = state.selected_view
 
 let selected_sidebar state = state.selected_sidebar
+
+let selected_panel state = Option.get state.selected_panel
+
+let selected_panel_opt state = state.selected_panel
 
 type action =
   | Set_id of int
@@ -94,6 +106,7 @@ type action =
   | Update_dot of string
   | Reset_inspect
   | Switch_sidebar of selected_sidebar
+  | Switch_panel of selected_panel option
 
 let reducer (state : t) (act : action) =
   match act with
@@ -126,3 +139,4 @@ let reducer (state : t) (act : action) =
       | _ -> state )
   | Reset_inspect -> { state with inspect = None }
   | Switch_sidebar selected_sidebar -> { state with selected_sidebar }
+  | Switch_panel selected_panel -> { state with selected_panel }

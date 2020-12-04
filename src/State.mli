@@ -40,6 +40,12 @@ end
 
 type selected_sidebar = Selected_sidebar.t
 
+module Selected_panel : sig
+  type t = Warnings | Dead_code | Parameters | Statistics
+end
+
+type selected_panel = Selected_panel.t
+
 type t = {
   id : int;
   line : int;
@@ -50,6 +56,7 @@ type t = {
   inspect : inspect option;
   selected_view : SelectedView.t;
   selected_sidebar : selected_sidebar;
+  selected_panel : selected_panel option;
 }
 
 val default : t
@@ -63,6 +70,10 @@ val inspect_opt : t -> inspect option
 val selected_view : t -> SelectedView.t
 
 val selected_sidebar : t -> selected_sidebar
+
+val selected_panel : t -> selected_panel
+
+val selected_panel_opt : t -> selected_panel option
 
 type action =
   | Set_id of int
@@ -78,5 +89,6 @@ type action =
   | Update_dot of string
   | Reset_inspect
   | Switch_sidebar of selected_sidebar
+  | Switch_panel of selected_panel option
 
 val reducer : t -> action -> t

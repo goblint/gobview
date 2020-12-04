@@ -1,4 +1,3 @@
-open SelectedView;
 open State;
 open Util;
 
@@ -97,34 +96,8 @@ let make = () => {
     <div className="row">
       <div className="col-3 border-right"> <Sidebar state dispatch /> </div>
       <div className="col-9">
-        <Menu state dispatch />
-        <div
-          style={React.Dom.Style.make(~overflow="auto", ~height="85vh", ())}>
-          {switch (state.selected_view) {
-           | Content => <Content state dispatch />
-           | Warning =>
-             <WarningView
-               dispatch
-               warnings={state.pdata |> Parse.get_warnings}
-             />
-           | Parameters =>
-             <ParameterView parameters={state.pdata |> Parse.get_parameters} />
-           | DeadCode =>
-             <DeadCodeView
-               dispatch
-               calls={
-                 state.pdata
-                 |> Parse.get_calls
-                 |> List.filter(Parse.has_dead_code)
-                 |> Parse.sort_calls_by_line
-               }
-             />
-           | Statistics =>
-             <StatisticsView
-               statistics={state.pdata |> Parse.get_statistics}
-             />
-           }}
-        </div>
+        <Content state dispatch />
+        <Panel state dispatch />
       </div>
     </div>
   </div>;
