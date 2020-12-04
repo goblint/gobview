@@ -39,6 +39,12 @@ end
 
 type inspect = Inspect.t
 
+module Selected_sidebar = struct
+  type t = State | Globals
+end
+
+type selected_sidebar = Selected_sidebar.t
+
 type t = {
   id : int;
   line : int;
@@ -48,6 +54,7 @@ type t = {
   code : string;
   inspect : inspect option;
   selected_view : SelectedView.t;
+  selected_sidebar : selected_sidebar;
 }
 
 let default =
@@ -60,13 +67,18 @@ let default =
     code = "";
     inspect = None;
     selected_view = SelectedView.Content;
+    selected_sidebar = Selected_sidebar.State;
   }
+
+let pdata state = state.pdata
 
 let inspect state = Option.get state.inspect
 
 let inspect_opt state = state.inspect
 
 let selected_view state = state.selected_view
+
+let selected_sidebar state = state.selected_sidebar
 
 type action =
   | Set_id of int
@@ -81,6 +93,7 @@ type action =
   | Inspect_function of string * string * string
   | Update_dot of string
   | Reset_inspect
+  | Switch_sidebar of selected_sidebar
 
 let reducer (state : t) (act : action) =
   match act with
@@ -112,3 +125,4 @@ let reducer (state : t) (act : action) =
           { state with inspect }
       | _ -> state )
   | Reset_inspect -> { state with inspect = None }
+  | Switch_sidebar selected_sidebar -> { state with selected_sidebar }

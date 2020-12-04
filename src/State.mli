@@ -34,6 +34,12 @@ end
 
 type inspect = Inspect.t
 
+module Selected_sidebar : sig
+  type t = State | Globals
+end
+
+type selected_sidebar = Selected_sidebar.t
+
 type t = {
   id : int;
   line : int;
@@ -43,15 +49,20 @@ type t = {
   code : string;
   inspect : inspect option;
   selected_view : SelectedView.t;
+  selected_sidebar : selected_sidebar;
 }
 
 val default : t
+
+val pdata : t -> Parse.run
 
 val inspect : t -> inspect
 
 val inspect_opt : t -> inspect option
 
 val selected_view : t -> SelectedView.t
+
+val selected_sidebar : t -> selected_sidebar
 
 type action =
   | Set_id of int
@@ -66,5 +77,6 @@ type action =
   | Inspect_function of string * string * string
   | Update_dot of string
   | Reset_inspect
+  | Switch_sidebar of selected_sidebar
 
 val reducer : t -> action -> t
