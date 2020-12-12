@@ -1,7 +1,9 @@
+(include_subdirs unqualified)
+
 (executables
  (names App)
  (modes js)
- (libraries gen_js_api lwt js_of_ocaml-lwt jsoo-react.lib xml-light zarith
+ (libraries gen_js_api js_of_ocaml-lwt jsoo-react.lib lwt xml-light zarith
    zarith_stubs_js)
  (js_of_ocaml
   (javascript_files react-requires.js static-requires.js))
