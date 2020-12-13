@@ -14,7 +14,7 @@ type t = dom_parser Js.t
 
 let create () = new%js constr
 
-let parse_from_string p s mime =
+let parse_from_string p s m =
   let s = Js.string s in
-  let mime = Js.string mime in
-  p##parseFromString s mime
+  let m = Js.string m in
+  p##parseFromString s m
