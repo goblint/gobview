@@ -108,8 +108,8 @@ let parse_call c =
         []
     | x :: xl, y :: yl ->
         [(x, y)] @ combine (xl, yl)
-    | [x], [] ->
-        [(x, None)]
+    | x :: xl, [] ->
+        [(x, None)] @ combine (xl, [])
     | _ ->
         error "Alex expected for each context a path"
   in
