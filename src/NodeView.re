@@ -25,7 +25,14 @@ let make = (~state, ~dispatch) => {
     };
 
   switch (dot) {
-  | Some(dot) => <Graphviz dot={dot |> Js.string} />
+  | Some(dot) =>
+    <ErrorBoundary
+      message={
+        "Cannot display graph. The generated DOT file is probably too large."
+        |> Js.string
+      }>
+      <Graphviz dot={dot |> Js.string} />
+    </ErrorBoundary>
   | _ => React.null
   };
 };
