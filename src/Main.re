@@ -8,7 +8,7 @@ let make = () => {
   let fetchCode = s => {
     let _ =
       Lwt.bind(
-        Datafetcher.http_get_with_base(s),
+        HttpClient.get("/" ++ s),
         s => {
           dispatch @@ Set_code(s);
           Lwt.return();
@@ -20,7 +20,7 @@ let make = () => {
   let fetchData = s => {
     let _ =
       Lwt.bind(
-        Datafetcher.http_get_with_base(s),
+        HttpClient.get("/" ++ s),
         s => {
           log("Parse data");
           let data = Parse.parse_string(s);
@@ -58,6 +58,29 @@ let make = () => {
     [|state.file_name|],
   );
 
+  React.useEffect0(() => {
+    log("Fetching CIL dump");
+    let _ =
+      Lwt.bind(
+        HttpClient.get("/cilfile.dump"),
+        s => {
+          log("Fetched CIL dump");
+          Js_of_ocaml.Js.Unsafe.global##.dump := s;
+          let cil =
+            try(Marshal.from_string(s, 0)) {
+            | ex =>
+              log(Printexc.to_string(ex));
+              failwith("Cannot deserialize");
+            };
+          Cil.dumpFile(Cil.defaultCilPrinter, stdout, "main.c", cil);
+          log("Printed " ++ cil.Cil.fileName);
+          dispatch @@ Set_cil(cil);
+          Lwt.return();
+        },
+      );
+    None;
+  });
+
   React.useEffect1(
     () => {
       switch (state.inspect) {
@@ -77,7 +100,7 @@ let make = () => {
           log("Fetching " ++ url);
           let _ =
             Lwt.bind(
-              Datafetcher.http_get_with_base(url),
+              HttpClient.get("/" ++ url),
               dot => {
                 dispatch @@ Update_dot(dot);
                 Lwt.return();

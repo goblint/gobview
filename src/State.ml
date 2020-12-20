@@ -56,6 +56,7 @@ type t = {
   line : int;
   file_name : string;
   file_path : string;
+  cil : Cil.file option;
   pdata : Parse.run;
   code : string;
   inspect : inspect option;
@@ -70,6 +71,7 @@ let default =
     line = -1;
     file_name = "";
     file_path = "";
+    cil = None;
     pdata = Parse.empty_run;
     code = "";
     inspect = None;
@@ -97,6 +99,7 @@ type action =
   | Set_line of int
   | Set_file_name of string
   | Set_file_path of string
+  | Set_cil of Cil.file
   | Set_pdata of Parse.run
   | Set_code of string
   | Set_selected_view of SelectedView.t
@@ -114,6 +117,7 @@ let reducer (state : t) (act : action) =
   | Set_line line -> { state with line }
   | Set_file_name file_name -> { state with file_name }
   | Set_file_path file_path -> { state with file_path }
+  | Set_cil cil -> { state with cil = Some cil }
   | Set_pdata pdata -> { state with pdata }
   | Set_code code -> { state with code }
   | Set_selected_view selected_view -> { state with selected_view }

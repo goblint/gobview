@@ -1,4 +1,5 @@
 pin-depends: [
   ["gen_js_api.1.0.6" "git+https://github.com/jchavarri/gen_js_api.git#typ_var"]
   ["jsoo-react.dev" "git+https://github.com/jchavarri/jsoo-react.git#a013cf2"]
+  ["goblint-cil.1.7.8" "git+https://github.com/keremc/cil.git#improve_js_compat"]
 ]
