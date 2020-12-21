@@ -80,6 +80,8 @@ let default =
     selected_panel = None;
   }
 
+let cil state = state.cil
+
 let pdata state = state.pdata
 
 let inspect state = Option.get state.inspect

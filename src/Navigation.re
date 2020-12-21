@@ -38,11 +38,17 @@ let make_file_list_item = (dispatch, i, file) => {
 
 [@react.component]
 let make = (~state, ~dispatch) => {
-  <ul>
-    {state.pdata
-     |> Parse.get_files
-     |> List.filter(f => !Parse.file_is_empty(f))
-     |> List.mapi(make_file_list_item(dispatch))
-     |> React.list}
-  </ul>;
+  <>
+    <ul>
+      {state.pdata
+       |> Parse.get_files
+       |> List.filter(f => !Parse.file_is_empty(f))
+       |> List.mapi(make_file_list_item(dispatch))
+       |> React.list}
+    </ul>
+    {switch (State.cil(state)) {
+     | Some(cil) => <Syntactic_search_view cil />
+     | _ => React.null
+     }}
+  </>;
 };
