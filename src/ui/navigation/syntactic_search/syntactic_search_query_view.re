@@ -11,8 +11,8 @@ let make = (~query_text, ~query, ~dispatch) => {
     dispatch @@ S.Update_query(v);
   };
 
-  let onSubmit = ev => {
-    React.Event.Form.preventDefault(ev);
+  let onClick = ev => {
+    React.Event.Synthetic.preventDefault(ev);
     dispatch @@ S.Execute_query;
   };
 
@@ -25,34 +25,24 @@ let make = (~query_text, ~query, ~dispatch) => {
     | _ => ""
     };
 
-  <div className="card">
-    <div className="card-body">
-      <h5 className="card-title"> {"Syntactic Search" |> React.string} </h5>
-      <form className="needs-validation" noValidate=true onSubmit>
-        <div className="mb-3">
-          <label htmlFor="syntacticSearchQueryInput" className="form-label">
-            {"Enter a query:" |> React.string}
-          </label>
-          <textarea
-            id="syntacticSearchQueryInput"
-            className={
-              "form-control" ++ (is_error(query) ? " is-invalid" : "")
-            }
-            rows=10
-            value=query_text
-            onChange
-          />
-          <div className="invalid-feedback">
-            {"Invalid query: " ++ get_error(query) |> React.string}
-          </div>
-        </div>
-        <button
-          type_="submit"
-          className="btn btn-primary"
-          disabled={Option.is_none(query) || is_error(query)}>
-          {"Execute" |> React.string}
-        </button>
-      </form>
+  <>
+    <h5 className="card-title"> {"Enter a query" |> React.string} </h5>
+    <textarea
+      id="syntacticSearchQueryInput"
+      className={"form-control" ++ (is_error(query) ? " is-invalid" : "")}
+      rows=10
+      value=query_text
+      onChange
+    />
+    <div className="invalid-feedback">
+      {"Invalid query: " ++ get_error(query) |> React.string}
     </div>
-  </div>;
+    <button
+      type_="button"
+      className="btn btn-primary mt-3"
+      disabled={Option.is_none(query) || is_error(query)}
+      onClick>
+      {"Execute" |> React.string}
+    </button>
+  </>;
 };

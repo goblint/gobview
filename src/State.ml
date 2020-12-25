@@ -148,6 +148,7 @@ type action =
   | Switch_panel of selected_panel option
   | Update_query of string
   | Execute_query
+  | Clear_matches
 
 let reducer (state : t) (act : action) =
   match act with
@@ -194,3 +195,6 @@ let reducer (state : t) (act : action) =
           let ss' = { ss with matches = Some m } in
           { state with syntactic_search = ss' }
       | _ -> state )
+  | Clear_matches ->
+      let ss = { state.syntactic_search with matches = None } in
+      { state with syntactic_search = ss }
