@@ -28,7 +28,6 @@ let make = (~query_text, ~query, ~dispatch) => {
   <>
     <h5 className="card-title"> {"Enter a query" |> React.string} </h5>
     <textarea
-      id="syntacticSearchQueryInput"
       className={"form-control" ++ (is_error(query) ? " is-invalid" : "")}
       rows=10
       value=query_text
