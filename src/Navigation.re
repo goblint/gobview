@@ -38,6 +38,7 @@ let make_file_list_item = (dispatch, i, file) => {
 
 [@react.component]
 let make = (~state, ~dispatch) => {
+  let syntactic_search = get_syntactic_search(state);
   <>
     <ul>
       {state.pdata
@@ -46,9 +47,6 @@ let make = (~state, ~dispatch) => {
        |> List.mapi(make_file_list_item(dispatch))
        |> React.list}
     </ul>
-    {switch (State.cil(state)) {
-     | Some(cil) => <Syntactic_search_view cil />
-     | _ => React.null
-     }}
+    <Syntactic_search_view syntactic_search dispatch />
   </>;
 };

@@ -1,62 +1,29 @@
-type error =
-  | Not_initialized_yet
-  | Parse_error(string);
-
-let string_of_error = e =>
-  switch (e) {
-  | Not_initialized_yet => "Not initialized yet"
-  | Parse_error(e) => e
-  };
-
-let parse = s => {
-  switch (Yojson.Safe.from_string(s)) {
-  | json =>
-    switch (CodeQuery.query_of_yojson(json)) {
-    | Ppx_deriving_yojson_runtime.Result.Ok(q) => Ok(q)
-    | Ppx_deriving_yojson_runtime.Result.Error(e) => Error(Parse_error(e))
-    }
-  | exception (Yojson.Json_error(e)) => Error(Parse_error(e))
-  };
-};
+module S = State;
+module SS = S.Syntactic_search;
 
 [@react.component]
-let make = (~cil) => {
-  let (query, set_query) = React.useState(() => "");
-  let (parse_result, set_parse_result) =
-    React.useState(() => Error(Not_initialized_yet));
-
+let make = (~query_text, ~query, ~dispatch) => {
   let onChange = ev => {
     let v =
       React.Event.Synthetic.target(ev)
       |> Ojs.get(_, "value")
       |> Ojs.string_of_js;
-    set_query(_ => v);
-    set_parse_result(_ => parse(v));
+    dispatch @@ S.Update_query(v);
   };
 
   let onSubmit = ev => {
     React.Event.Form.preventDefault(ev);
-    parse_result
-    |> Result.iter(q =>
-         QueryMapping.map_query(q, cil)
-         |> ResultPrinter.print_result(_, q)
-         |> Util.log
-       );
+    dispatch @@ S.Execute_query;
   };
 
-  let is_actual_error =
-    Result.fold(
-      ~error=
-        e =>
-          switch (e) {
-          | Not_initialized_yet => false
-          | _ => true
-          },
-      ~ok=_ => false,
-      _,
-    );
+  let is_error = q =>
+    Option.map(Result.is_error, q) |> Option.value(~default=false);
 
-  let get_error_msg = Result.fold(~error=string_of_error, ~ok=_ => "", _);
+  let get_error = q =>
+    switch (q) {
+    | Some(Error(e)) => SS.string_of_error(e)
+    | _ => ""
+    };
 
   <div className="card">
     <div className="card-body">
@@ -69,21 +36,20 @@ let make = (~cil) => {
           <textarea
             id="syntacticSearchQueryInput"
             className={
-              "form-control"
-              ++ (is_actual_error(parse_result) ? " is-invalid" : "")
+              "form-control" ++ (is_error(query) ? " is-invalid" : "")
             }
             rows=10
-            value=query
+            value=query_text
             onChange
           />
           <div className="invalid-feedback">
-            {"Invalid query: " ++ get_error_msg(parse_result) |> React.string}
+            {"Invalid query: " ++ get_error(query) |> React.string}
           </div>
         </div>
         <button
           type_="submit"
           className="btn btn-primary"
-          disabled={Result.is_error(parse_result)}>
+          disabled={Option.is_none(query) || is_error(query)}>
           {"Execute" |> React.string}
         </button>
       </form>
