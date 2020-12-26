@@ -1,13 +1,11 @@
 module S = State;
 
-[@react.component]
-let make = (~matches, ~dispatch) => {
+let make_result_list = (matches, dispatch) => {
   let clear = _ => {
     dispatch @@ S.Clear_matches;
   };
 
   <>
-    <h5 className="card-title"> {"Results" |> React.string} </h5>
     <button
       type_="button" className="btn btn-outline-danger my-2" onClick=clear>
       {"Clear results" |> React.string}
@@ -42,5 +40,24 @@ let make = (~matches, ~dispatch) => {
          |> React.list}
       </tbody>
     </table>
+  </>;
+};
+
+[@react.component]
+let make = (~matches, ~dispatch) => {
+  let onClick = _ => {
+    dispatch @@ S.Clear_matches;
+  };
+
+  <>
+    <h5 className="card-title"> {"Results" |> React.string} </h5>
+    {if (List.length(matches) > 0) {
+       make_result_list(matches, dispatch);
+     } else {
+       <div className="alert alert-warning alert-dismissible">
+         {"No results found" |> React.string}
+         <button type_="button" className="btn-close" onClick />
+       </div>;
+     }}
   </>;
 };
