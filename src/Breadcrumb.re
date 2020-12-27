@@ -1,6 +1,4 @@
-module S = State;
-
-let make_breadcrumb = (inspect, dispatch) => {
+let make_breadcrumb = (inspect: State.Inspect.t, dispatch) => {
   let on_click = (act, e) => {
     React.Event.Mouse.preventDefault(e);
     dispatch @@ act;
@@ -9,33 +7,24 @@ let make_breadcrumb = (inspect, dispatch) => {
   <nav>
     <ol className="breadcrumb">
       <li className="breadcrumb-item">
-        <a href="#" onClick={on_click(`Reset_inspect)}>
+        <a href="#" onClick={on_click(`ResetInspect)}>
           {"Analysis" |> React.string}
         </a>
       </li>
       {switch (inspect) {
-       | S.Inspect.File(f) =>
-         <li className="breadcrumb-item active">
-           {S.Inspect.File.name(f) |> React.string}
-         </li>
-       | S.Inspect.Func(f) =>
+       | File(f) =>
+         <li className="breadcrumb-item active"> {f.name |> React.string} </li>
+       | Func(f) =>
          <>
            <li className="breadcrumb-item">
              <a
                href="#"
-               onClick={on_click(
-                 `Inspect_file(
-                   S.Inspect.File.Direct_location(
-                     S.Inspect.Func.get_file_name(f),
-                     S.Inspect.Func.get_file_path(f),
-                   ),
-                 ),
-               )}>
-               {S.Inspect.Func.get_file_name(f) |> React.string}
+               onClick={on_click(`InspectFile((f.file_name, f.file_path)))}>
+               {f.file_name |> React.string}
              </a>
            </li>
            <li className="breadcrumb-item active">
-             {S.Inspect.Func.get_name(f) |> React.string}
+             {f.name |> React.string}
            </li>
          </>
        }}

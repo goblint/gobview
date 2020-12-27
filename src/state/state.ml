@@ -1,4 +1,4 @@
-module Inspect = Inspect_state
+module Inspect = InspectState
 
 type inspect = Inspect.t
 
@@ -50,16 +50,6 @@ let default =
 let cil state = state.cil
 
 let pdata state = state.pdata
-
-let get_inspect state = state.inspect
-
-let inspect state = Option.get state.inspect
-
-[@@@ocaml.deprecated "Don't use"]
-
-let inspect_opt = get_inspect
-
-[@@@ocaml.deprecated "Use get_inspect"]
 
 let selected_sidebar state = state.selected_sidebar
 

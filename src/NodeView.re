@@ -1,8 +1,7 @@
 open Js_of_ocaml;
-open State;
 
 [@react.component]
-let make = (~state, ~dispatch) => {
+let make = (~state: State.t, ~dispatch) => {
   let show_info = id => {
     dispatch @@ `Set_id(id);
     // When you click on a link like `javascript:show_info('42')` in Firefox, it
@@ -20,7 +19,7 @@ let make = (~state, ~dispatch) => {
 
   let dot =
     switch (state.inspect) {
-    | Some(Func(f)) => Inspect.Func.dot_opt(f)
+    | Some(Func(f)) => f.dot
     | _ => None
     };
 

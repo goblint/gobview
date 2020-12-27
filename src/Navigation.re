@@ -1,12 +1,10 @@
-module S = State;
-
 let make_func_list_item = (dispatch, file, i, Parse.Funct(_, func)) => {
   let file_name = Parse.file_to_name(file);
   let file_path = Parse.file_to_path(file);
 
   let onClick = e => {
     React.Event.Mouse.preventDefault(e);
-    dispatch @@ `Inspect_function((func, file_name, file_path));
+    dispatch @@ `InspectFunc((func, file_name, file_path));
   };
 
   <li key={string_of_int(i)}>
@@ -27,8 +25,7 @@ let make_file_list_item = (dispatch, i, file) => {
 
   let onClick = e => {
     React.Event.Mouse.preventDefault(e);
-    dispatch @@
-    `Inspect_file(S.Inspect.File.Direct_location(file_name, file_path));
+    dispatch @@ `InspectFile((file_name, file_path));
   };
 
   <li key={string_of_int(i)}>

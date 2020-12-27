@@ -1,5 +1,3 @@
-module I = State.Inspect;
-
 let make_result_list = (matches, dispatch) => {
   let clear = _ => {
     dispatch @@ `ClearSearchMatches;
@@ -7,7 +5,7 @@ let make_result_list = (matches, dispatch) => {
 
   let on_click = (loc, ev) => {
     React.Event.Mouse.preventDefault(ev);
-    dispatch @@ `Inspect_file(I.File.Cil_location(loc));
+    dispatch @@ `InspectCilLocation(loc);
     dispatch @@ `Set_line(loc.Cil.line);
   };
 

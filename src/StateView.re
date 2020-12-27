@@ -1,11 +1,9 @@
-module S = State;
-
 [@react.component]
-let make = (~state, ~calls) => {
+let make = (~state: State.t, ~calls) => {
   calls
   |> (
-    switch (S.get_inspect(state)) {
-    | Some(S.Inspect.Func(_)) =>
+    switch (state.inspect) {
+    | Some(Func(_)) =>
       List.filter(c => Parse.get_id(c) == string_of_int(state.id))
     | _ =>
       List.filter(c =>

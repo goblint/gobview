@@ -1,10 +1,9 @@
-open Reducer;
 open State;
 open Util;
 
 [@react.component]
 let make = () => {
-  let (state, dispatch) = React.useReducer(reducer, default);
+  let (state, dispatch) = React.useReducer(Reducer.reducer, default);
 
   let fetchCode = s => {
     let _ =
@@ -36,7 +35,7 @@ let make = () => {
             log("Found main file: " ++ xfile);
           };
           dispatch @@
-          `Inspect_file(Inspect.File.Direct_location(xfile, xfilepath));
+          `InspectFile(xfile, xfilepath);
           Lwt.return();
         },
       );
@@ -87,24 +86,24 @@ let make = () => {
     () => {
       switch (state.inspect) {
       | Some(Func(f)) =>
-        if (Option.is_none(Inspect.Func.dot_opt(f))) {
+        if (Option.is_none(f.dot)) {
           let pattern = Js_of_ocaml.Regexp.regexp("/");
           let url =
             "dot/"
             ++ Js_of_ocaml.Regexp.global_replace(
                  pattern,
-                 Inspect.Func.file_path(f),
+                 f.file_path,
                  "%252F",
                )
             ++ "/"
-            ++ Inspect.Func.name(f)
+            ++ f.name
             ++ ".dot";
           log("Fetching " ++ url);
           let _ =
             Lwt.bind(
               HttpClient.get("/" ++ url),
               dot => {
-                dispatch @@ `Update_dot(dot);
+                dispatch @@ `UpdateDot(dot);
                 Lwt.return();
               },
             );

@@ -1,9 +1,7 @@
-open State;
-
 [@react.component]
-let make = (~state, ~dispatch) => {
+let make = (~state: State.t, ~dispatch) => {
   <>
-    <Breadcrumb inspect={State.inspect_opt(state)} dispatch />
+    <Breadcrumb inspect={state.inspect} dispatch />
     <div className="flex-fill overflow-auto">
       {switch (state.inspect) {
        | None => <Navigation state dispatch />
