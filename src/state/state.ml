@@ -1,45 +1,4 @@
-module Inspect = struct
-  module File = struct
-    type t = { name : string; path : string; code : string option }
-
-    type location =
-      | By_parse_file of Parse.file
-      | By_cil_location of Cil.location
-
-    let name f = f.name
-
-    let path f = f.path
-
-    let code f = Option.get f.code
-
-    let code_opt f = f.code
-  end
-
-  module Func = struct
-    type t = {
-      name : string;
-      file_name : string;
-      file_path : string;
-      dot : string option;
-    }
-
-    let name f = f.name
-
-    let file_name f = f.file_name
-
-    let file_path f = f.file_path
-
-    let dot f = Option.get f.dot
-
-    let dot_opt f = f.dot
-  end
-
-  type file = File.t
-
-  type func = Func.t
-
-  type t = File of file | Func of func
-end
+module Inspect = Inspect_state
 
 type inspect = Inspect.t
 
@@ -55,6 +14,10 @@ end
 
 type selected_panel = Selected_panel.t
 
+module Syntactic_search = Syntactic_search_state
+
+type syntactic_search = Syntactic_search.t
+
 type t = {
   id : int;
   line : int;
@@ -67,7 +30,7 @@ type t = {
   selected_view : SelectedView.t;
   selected_sidebar : selected_sidebar;
   selected_panel : selected_panel option;
-  syntactic_search : Syntactic_search_state.t;
+  syntactic_search : syntactic_search;
 }
 
 let default =
@@ -83,16 +46,22 @@ let default =
     selected_view = SelectedView.Content;
     selected_sidebar = Selected_sidebar.State;
     selected_panel = None;
-    syntactic_search = Syntactic_search_state.default;
+    syntactic_search = Syntactic_search.default;
   }
 
 let cil state = state.cil
 
 let pdata state = state.pdata
 
+let get_inspect state = state.inspect
+
 let inspect state = Option.get state.inspect
 
-let inspect_opt state = state.inspect
+[@@@ocaml.deprecated "Don't use"]
+
+let inspect_opt = get_inspect
+
+[@@@ocaml.deprecated "Use get_inspect"]
 
 let selected_view state = state.selected_view
 
