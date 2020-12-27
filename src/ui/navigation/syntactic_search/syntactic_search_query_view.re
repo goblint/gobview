@@ -1,8 +1,7 @@
 module S = State;
-module SS = S.Syntactic_search;
 
 [@react.component]
-let make = (~query_text, ~query, ~dispatch) => {
+let make = (~query_string, ~query, ~query_error, ~dispatch) => {
   let onChange = ev => {
     let v =
       React.Event.Synthetic.target(ev)
@@ -16,30 +15,27 @@ let make = (~query_text, ~query, ~dispatch) => {
     dispatch @@ S.Execute_query;
   };
 
-  let is_error = q =>
-    Option.map(Result.is_error, q) |> Option.value(~default=false);
-
-  let get_error = q =>
-    switch (q) {
-    | Some(Error(e)) => SS.string_of_error(e)
-    | _ => ""
-    };
+  let string_of_error = e =>
+    Option.map(Syntactic_search_state.Query.string_of_error, e)
+    |> Option.value(~default="");
 
   <>
     <h5 className="card-title"> {"Enter a query" |> React.string} </h5>
     <textarea
-      className={"form-control" ++ (is_error(query) ? " is-invalid" : "")}
+      className={
+        "form-control" ++ (Option.is_some(query_error) ? " is-invalid" : "")
+      }
       rows=10
-      value=query_text
+      value=query_string
       onChange
     />
     <div className="invalid-feedback">
-      {"Invalid query: " ++ get_error(query) |> React.string}
+      {"Invalid query: " ++ string_of_error(query_error) |> React.string}
     </div>
     <button
       type_="button"
       className="btn btn-primary mt-3"
-      disabled={Option.is_none(query) || is_error(query)}
+      disabled={Option.is_none(query)}
       onClick>
       {"Execute" |> React.string}
     </button>

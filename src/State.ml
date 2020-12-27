@@ -51,36 +51,6 @@ end
 
 type selected_panel = Selected_panel.t
 
-module Syntactic_search = struct
-  type error = Parse_error of string
-
-  let string_of_error e = match e with Parse_error s -> s
-
-  type t = {
-    query_text : string;
-    query : (CodeQuery.query, error) result option;
-    matches : (string * Cil.location * string * int) list option;
-  }
-
-  let default = { query_text = ""; query = None; matches = None }
-
-  let get_query_text ss = ss.query_text
-
-  let get_query ss = ss.query
-
-  let get_matches ss = ss.matches
-
-  let try_to_parse json =
-    try
-      let parsed = Yojson.Safe.from_string json in
-      match CodeQuery.query_of_yojson parsed with
-      | Ppx_deriving_yojson_runtime.Result.Ok q -> Ok q
-      | Ppx_deriving_yojson_runtime.Result.Error e -> Error (Parse_error e)
-    with Yojson.Json_error e -> Error (Parse_error e)
-end
-
-type syntactic_search = Syntactic_search.t
-
 type t = {
   id : int;
   line : int;
@@ -93,7 +63,7 @@ type t = {
   selected_view : SelectedView.t;
   selected_sidebar : selected_sidebar;
   selected_panel : selected_panel option;
-  syntactic_search : syntactic_search;
+  syntactic_search : Syntactic_search_state.t;
 }
 
 let default =
@@ -109,7 +79,7 @@ let default =
     selected_view = SelectedView.Content;
     selected_sidebar = Selected_sidebar.State;
     selected_panel = None;
-    syntactic_search = Syntactic_search.default;
+    syntactic_search = Syntactic_search_state.default;
   }
 
 let cil state = state.cil
@@ -150,51 +120,51 @@ type action =
   | Execute_query
   | Clear_matches
 
-let reducer (state : t) (act : action) =
-  match act with
-  | Set_id id -> { state with id }
-  | Set_line line -> { state with line }
-  | Set_file_name file_name -> { state with file_name }
-  | Set_file_path file_path -> { state with file_path }
-  | Set_cil cil -> { state with cil = Some cil }
-  | Set_pdata pdata -> { state with pdata }
-  | Set_code code -> { state with code }
-  | Set_selected_view selected_view -> { state with selected_view }
+let reducer (s : t) (a : action) =
+  match a with
+  | Set_id id -> { s with id }
+  | Set_line line -> { s with line }
+  | Set_file_name file_name -> { s with file_name }
+  | Set_file_path file_path -> { s with file_path }
+  | Set_cil cil -> { s with cil = Some cil }
+  | Set_pdata pdata -> { s with pdata }
+  | Set_code code -> { s with code }
+  | Set_selected_view selected_view -> { s with selected_view }
   | Inspect_file (name, path) ->
       let inspect = Some (Inspect.File { name; path; code = None }) in
-      { state with file_name = name; file_path = path; inspect }
+      { s with file_name = name; file_path = path; inspect }
   | Update_code code -> (
-      match state.inspect with
+      match s.inspect with
       | Some (File f) ->
           let inspect = Some (Inspect.File { f with code = Some code }) in
-          { state with code; inspect }
-      | _ -> state )
+          { s with code; inspect }
+      | _ -> s )
   | Inspect_function (name, file_name, file_path) ->
       let inspect =
         Some (Inspect.Func { name; file_name; file_path; dot = None })
       in
-      { state with inspect }
+      { s with inspect }
   | Update_dot dot -> (
-      match state.inspect with
+      match s.inspect with
       | Some (Func f) ->
           let inspect = Some (Inspect.Func { f with dot = Some dot }) in
-          { state with inspect }
-      | _ -> state )
-  | Reset_inspect -> { state with inspect = None }
-  | Switch_sidebar selected_sidebar -> { state with selected_sidebar }
-  | Switch_panel selected_panel -> { state with selected_panel }
-  | Update_query query_text ->
-      let q = Syntactic_search.try_to_parse query_text in
-      let ss = { state.syntactic_search with query_text; query = Some q } in
-      { state with syntactic_search = ss }
+          { s with inspect }
+      | _ -> s )
+  | Reset_inspect -> { s with inspect = None }
+  | Switch_sidebar selected_sidebar -> { s with selected_sidebar }
+  | Switch_panel selected_panel -> { s with selected_panel }
+  | Update_query q ->
+      let ss = s.syntactic_search in
+      { s with syntactic_search = Syntactic_search_state.update_query ss q }
   | Execute_query -> (
-      let ss = state.syntactic_search in
-      match (state.cil, ss.query) with
-      | Some c, Some (Ok q) ->
-          let m = QueryMapping.map_query q c in
-          let ss' = { ss with matches = Some m } in
-          { state with syntactic_search = ss' }
-      | _ -> state )
+      let ss = s.syntactic_search in
+      match s.cil with
+      | Some c ->
+          {
+            s with
+            syntactic_search = Syntactic_search_state.execute_query ss c;
+          }
+      | _ -> s )
   | Clear_matches ->
-      let ss = { state.syntactic_search with matches = None } in
-      { state with syntactic_search = ss }
+      let ss = s.syntactic_search in
+      { s with syntactic_search = Syntactic_search_state.clear_matches ss }
