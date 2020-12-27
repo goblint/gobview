@@ -35,7 +35,8 @@ let make = () => {
           } else {
             log("Found main file: " ++ xfile);
           };
-          dispatch @@ Inspect_file(xfile, xfilepath);
+          dispatch @@
+          Inspect_file(Inspect.File.Direct_location(xfile, xfilepath));
           Lwt.return();
         },
       );

@@ -1,8 +1,9 @@
 open Reducer;
-open State;
 
-let makeBreadcrumb = (inspect, dispatch) => {
-  let onClick = (act, e) => {
+module S = State;
+
+let make_breadcrumb = (inspect, dispatch) => {
+  let on_click = (act, e) => {
     React.Event.Mouse.preventDefault(e);
     dispatch @@ act;
   };
@@ -10,31 +11,33 @@ let makeBreadcrumb = (inspect, dispatch) => {
   <nav>
     <ol className="breadcrumb">
       <li className="breadcrumb-item">
-        <a href="#" onClick={onClick(Reset_inspect)}>
+        <a href="#" onClick={on_click(Reset_inspect)}>
           {"Analysis" |> React.string}
         </a>
       </li>
       {switch (inspect) {
-       | Inspect.File(f) =>
+       | S.Inspect.File(f) =>
          <li className="breadcrumb-item active">
-           {Inspect.File.name(f) |> React.string}
+           {S.Inspect.File.name(f) |> React.string}
          </li>
-       | Inspect.Func(f) =>
+       | S.Inspect.Func(f) =>
          <>
            <li className="breadcrumb-item">
              <a
                href="#"
-               onClick={onClick(
+               onClick={on_click(
                  Inspect_file(
-                   Inspect.Func.file_name(f),
-                   Inspect.Func.file_path(f),
+                   S.Inspect.File.Direct_location(
+                     S.Inspect.Func.get_file_name(f),
+                     S.Inspect.Func.get_file_path(f),
+                   ),
                  ),
                )}>
-               {Inspect.Func.file_name(f) |> React.string}
+               {S.Inspect.Func.get_file_name(f) |> React.string}
              </a>
            </li>
            <li className="breadcrumb-item active">
-             {Inspect.Func.name(f) |> React.string}
+             {S.Inspect.Func.get_name(f) |> React.string}
            </li>
          </>
        }}
@@ -45,7 +48,7 @@ let makeBreadcrumb = (inspect, dispatch) => {
 [@react.component]
 let make = (~inspect, ~dispatch) => {
   switch (inspect) {
-  | Some(i) => makeBreadcrumb(i, dispatch)
+  | Some(i) => make_breadcrumb(i, dispatch)
   | _ =>
     <nav>
       <ol className="breadcrumb">

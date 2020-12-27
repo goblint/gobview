@@ -1,8 +1,16 @@
+open Reducer;
+
 module S = State;
 
 let make_result_list = (matches, dispatch) => {
   let clear = _ => {
-    dispatch @@ S.Clear_matches;
+    dispatch @@ Clear_matches;
+  };
+
+  let on_click = (loc, ev) => {
+    React.Event.Mouse.preventDefault(ev);
+    dispatch @@ Inspect_file(S.Inspect.File.Cil_location(loc));
+    dispatch @@ Set_line(loc.Cil.line);
   };
 
   <>
@@ -17,24 +25,24 @@ let make_result_list = (matches, dispatch) => {
           <th scope="col"> {"Name" |> React.string} </th>
           <th scope="col"> {"Signature" |> React.string} </th>
           <th scope="col"> {"Location" |> React.string} </th>
-          <th scope="col"> {"ID" |> React.string} </th>
         </tr>
       </thead>
       <tbody>
         {matches
          |> List.mapi((i, m) => {
-              let (name, loc, signature, id) = m;
+              let (name, loc, signature, _) = m;
               <tr key={string_of_int(i)}>
                 <th scope="row"> {i |> string_of_int |> React.string} </th>
                 <td> {name |> React.string} </td>
                 <td> {signature |> React.string} </td>
                 <td>
-                  {loc.Cil.file
-                   ++ ":"
-                   ++ string_of_int(loc.Cil.line)
-                   |> React.string}
+                  <a href="#" onClick={on_click(loc)}>
+                    {loc.Cil.file
+                     ++ ":"
+                     ++ string_of_int(loc.Cil.line)
+                     |> React.string}
+                  </a>
                 </td>
-                <td> {id |> string_of_int |> React.string} </td>
               </tr>;
             })
          |> React.list}
@@ -46,7 +54,7 @@ let make_result_list = (matches, dispatch) => {
 [@react.component]
 let make = (~matches, ~dispatch) => {
   let onClick = _ => {
-    dispatch @@ S.Clear_matches;
+    dispatch @@ Clear_matches;
   };
 
   <>

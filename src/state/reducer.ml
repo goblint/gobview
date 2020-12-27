@@ -9,7 +9,7 @@ type action =
   | Set_pdata of Parse.run
   | Set_code of string
   | Set_selected_view of SelectedView.t
-  | Inspect_file of string * string
+  | Inspect_file of Inspect.File.location
   | Update_code of string
   | Inspect_function of string * string * string
   | Update_dot of string
@@ -30,9 +30,20 @@ let reducer (s : t) (a : action) =
   | Set_pdata pdata -> { s with pdata }
   | Set_code code -> { s with code }
   | Set_selected_view selected_view -> { s with selected_view }
-  | Inspect_file (name, path) ->
-      let inspect = Some (Inspect.File { name; path; code = None }) in
-      { s with file_name = name; file_path = path; inspect }
+  | Inspect_file (Direct_location (n, p)) ->
+      let inspect = Some (Inspect.open_file_direct n p) in
+      { s with file_name = n; file_path = p; inspect }
+  | Inspect_file (Cil_location l) ->
+      let inspect = Inspect.open_file_cil l s.pdata in
+      let file_name, file_path =
+        inspect
+        |> Option.map (function
+             | Inspect.File f ->
+                 (Inspect.File.get_name f, Inspect.File.get_path f)
+             | _ -> ("", ""))
+        |> Option.value ~default:("", "")
+      in
+      { s with file_name; file_path; inspect }
   | Update_code code -> (
       match s.inspect with
       | Some (File f) ->

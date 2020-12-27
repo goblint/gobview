@@ -1,5 +1,6 @@
 open Reducer;
-open State;
+
+module S = State;
 
 let make_func_list_item = (dispatch, file, i, Parse.Funct(_, func)) => {
   let file_name = Parse.file_to_name(file);
@@ -28,7 +29,8 @@ let make_file_list_item = (dispatch, i, file) => {
 
   let onClick = e => {
     React.Event.Mouse.preventDefault(e);
-    dispatch @@ Inspect_file(file_name, file_path);
+    dispatch @@
+    Inspect_file(S.Inspect.File.Direct_location(file_name, file_path));
   };
 
   <li key={string_of_int(i)}>
@@ -39,7 +41,7 @@ let make_file_list_item = (dispatch, i, file) => {
 
 [@react.component]
 let make = (~state, ~dispatch) => {
-  let syntactic_search = get_syntactic_search(state);
+  let syntactic_search = S.get_syntactic_search(state);
   <>
     <ul>
       {state.pdata
