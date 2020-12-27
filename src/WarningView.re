@@ -1,5 +1,5 @@
 open SelectedView;
-open State;
+open Reducer;
 
 [@react.component]
 let make = (~dispatch, ~warnings: list(Parse.warning)) => {

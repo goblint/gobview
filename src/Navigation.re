@@ -1,3 +1,4 @@
+open Reducer;
 open State;
 
 let make_func_list_item = (dispatch, file, i, Parse.Funct(_, func)) => {

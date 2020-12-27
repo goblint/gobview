@@ -1,3 +1,5 @@
+open Reducer;
+
 module S = State;
 
 [@react.component]
@@ -7,12 +9,12 @@ let make = (~query_string, ~query, ~query_error, ~dispatch) => {
       React.Event.Synthetic.target(ev)
       |> Ojs.get(_, "value")
       |> Ojs.string_of_js;
-    dispatch @@ S.Update_query(v);
+    dispatch @@ Update_query(v);
   };
 
   let onClick = ev => {
     React.Event.Synthetic.preventDefault(ev);
-    dispatch @@ S.Execute_query;
+    dispatch @@ Execute_query;
   };
 
   let string_of_error = e =>

@@ -1,3 +1,4 @@
+open Reducer;
 open State;
 
 let makeBreadcrumb = (inspect, dispatch) => {

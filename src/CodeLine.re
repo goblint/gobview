@@ -1,5 +1,5 @@
 open Js_of_ocaml;
-open State;
+open Reducer;
 
 let insert_space = i => (i < 10 ? "  " : " ") |> React.string;
 
