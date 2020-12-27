@@ -25,4 +25,3 @@ let reducer (s : State.t) = function
           { s with inspect }
       | _ -> s )
   | `ResetInspect -> { s with inspect = None }
-  | _ -> s

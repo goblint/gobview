@@ -18,6 +18,5 @@ let reducer (s : State.t) a =
             { ss with matches }
         | _ -> ss )
     | `ClearSearchMatches -> { ss with matches = None }
-    | _ -> ss
   in
   { s with syntactic_search }
