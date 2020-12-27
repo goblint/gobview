@@ -19,7 +19,7 @@ let make = (~state: State.t, ~dispatch) => {
 
   let dot =
     switch (state.inspect) {
-    | Some(Func(f)) => f.dot
+    | Some(Graph(f)) => f.dot
     | _ => None
     };
 

@@ -3,7 +3,7 @@ let make = (~state: State.t, ~calls) => {
   calls
   |> (
     switch (state.inspect) {
-    | Some(Func(_)) =>
+    | Some(Graph(_)) =>
       List.filter(c => Parse.get_id(c) == string_of_int(state.id))
     | _ =>
       List.filter(c =>

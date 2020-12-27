@@ -14,7 +14,7 @@ let make_breadcrumb = (inspect: State.Inspect.t, dispatch) => {
       {switch (inspect) {
        | File(f) =>
          <li className="breadcrumb-item active"> {f.name |> React.string} </li>
-       | Func(f) =>
+       | Graph(f) =>
          <>
            <li className="breadcrumb-item">
              <a

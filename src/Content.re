@@ -12,7 +12,7 @@ let make = (~state: State.t, ~dispatch) => {
            calls={state.pdata |> Parse.get_calls}
            warnings={state.pdata |> Parse.get_warnings}
          />
-       | Some(Func(_)) => <NodeView state dispatch />
+       | Some(Graph(_)) => <NodeView state dispatch />
        }}
     </div>
   </>;

@@ -4,7 +4,7 @@ let make_func_list_item = (dispatch, file, i, Parse.Funct(_, func)) => {
 
   let onClick = e => {
     React.Event.Mouse.preventDefault(e);
-    dispatch @@ `InspectFunc((func, file_name, file_path));
+    dispatch @@ `InspectGraph((func, file_name, file_path));
   };
 
   <li key={string_of_int(i)}>

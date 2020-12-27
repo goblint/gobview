@@ -15,13 +15,13 @@ let reducer (s : State.t) = function
           let inspect = Some (I.File { f with code = Some code }) in
           { s with code; inspect }
       | _ -> s )
-  | `InspectFunc (name, file_name, file_path) ->
-      let inspect = Some (I.Func { name; file_name; file_path; dot = None }) in
+  | `InspectGraph (name, file_name, file_path) ->
+      let inspect = Some (I.Graph { name; file_name; file_path; dot = None }) in
       { s with inspect }
   | `UpdateDot dot -> (
       match s.inspect with
-      | Some (Func f) ->
-          let inspect = Some (I.Func { f with dot = Some dot }) in
+      | Some (Graph f) ->
+          let inspect = Some (I.Graph { f with dot = Some dot }) in
           { s with inspect }
       | _ -> s )
   | `ResetInspect -> { s with inspect = None }

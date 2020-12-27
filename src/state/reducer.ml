@@ -1,5 +1,5 @@
 let map = function
-  | `InspectFile _ | `InspectCilLocation _ | `UpdateCode _ | `InspectFunc _
+  | `InspectFile _ | `InspectCilLocation _ | `UpdateCode _ | `InspectGraph _
   | `UpdateDot _ | `ResetInspect ->
       InspectReducer.reducer
   | `UpdateSearchQuery _ | `ExecuteSearchQuery | `ClearSearchMatches ->

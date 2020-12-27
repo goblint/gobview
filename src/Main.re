@@ -85,7 +85,7 @@ let make = () => {
   React.useEffect1(
     () => {
       switch (state.inspect) {
-      | Some(Func(f)) =>
+      | Some(Graph(f)) =>
         if (Option.is_none(f.dot)) {
           let pattern = Js_of_ocaml.Regexp.regexp("/");
           let url =

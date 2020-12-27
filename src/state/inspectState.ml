@@ -2,7 +2,7 @@ module File = struct
   type t = { name : string; path : string; code : string option }
 end
 
-module Func = struct
+module Graph = struct
   type t = {
     name : string;
     file_name : string;
@@ -13,14 +13,13 @@ end
 
 type file = File.t
 
-type func = Func.t
+type graph = Graph.t
 
-type t = File of file | Func of func
+type t = File of file | Graph of graph
 
-let from_cil_location l p =
+let from_cil_location (l : Cil.location) p =
   let files =
-    Parse.get_files p
-    |> List.filter (fun f -> Parse.file_to_name f = l.Cil.file)
+    Parse.get_files p |> List.filter (fun f -> Parse.file_to_name f = l.file)
   in
   match files with
   | f :: _ ->
