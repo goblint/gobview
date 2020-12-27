@@ -30,14 +30,6 @@ type t = {
 let default =
   { query_string = ""; query = None; query_error = None; matches = None }
 
-let get_query_string s = s.query_string
-
-let get_query s = s.query
-
-let get_query_error s = s.query_error
-
-let get_matches s = s.matches
-
 let update_query s q =
   let s = { s with query_string = q } in
   if String.length q > 0 then

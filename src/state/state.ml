@@ -66,5 +66,3 @@ let selected_sidebar state = state.selected_sidebar
 let selected_panel state = Option.get state.selected_panel
 
 let selected_panel_opt state = state.selected_panel
-
-let get_syntactic_search state = state.syntactic_search

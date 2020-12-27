@@ -40,8 +40,8 @@ let make_file_list_item = (dispatch, i, file) => {
 };
 
 [@react.component]
-let make = (~state, ~dispatch) => {
-  let syntactic_search = S.get_syntactic_search(state);
+let make = (~state: State.t, ~dispatch) => {
+  let syntactic_search = state.syntactic_search;
   <>
     <ul>
       {state.pdata

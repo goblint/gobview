@@ -1,13 +1,12 @@
 [@react.component]
-let make = (~syntactic_search, ~dispatch) => {
-  let query_string =
-    Syntactic_search_state.get_query_string(syntactic_search);
-  let query = Syntactic_search_state.get_query(syntactic_search);
-  let query_error = Syntactic_search_state.get_query_error(syntactic_search);
+let make = (~syntactic_search: State.syntactic_search, ~dispatch) => {
+  let query_string = syntactic_search.query_string;
+  let query = syntactic_search.query;
+  let query_error = syntactic_search.query_error;
   <div className="card">
     <div className="card-header"> {"Syntactic Search" |> React.string} </div>
     <div className="card-body">
-      {switch (Syntactic_search_state.get_matches(syntactic_search)) {
+      {switch (syntactic_search.matches) {
        | Some(matches) => <Syntactic_search_result_view matches dispatch />
        | _ =>
          <Syntactic_search_query_view
