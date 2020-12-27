@@ -48,6 +48,6 @@ let make = (~state: State.t, ~dispatch) => {
        |> List.mapi(make_file_list_item(dispatch))
        |> React.list}
     </ul>
-    <Syntactic_search_view syntactic_search dispatch />
+    <SyntacticSearchView syntactic_search dispatch />
   </>;
 };

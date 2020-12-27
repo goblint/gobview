@@ -1,4 +1,4 @@
-module S = State;
+module S = State.SyntacticSearch;
 
 [@react.component]
 let make = (~query_string, ~query, ~query_error, ~dispatch) => {
@@ -7,17 +7,16 @@ let make = (~query_string, ~query, ~query_error, ~dispatch) => {
       React.Event.Synthetic.target(ev)
       |> Ojs.get(_, "value")
       |> Ojs.string_of_js;
-    dispatch @@ `Update_query(v);
+    dispatch @@ `UpdateSearchQuery(v);
   };
 
   let onClick = ev => {
     React.Event.Synthetic.preventDefault(ev);
-    dispatch @@ `Execute_query;
+    dispatch @@ `ExecuteSearchQuery;
   };
 
   let string_of_error = e =>
-    Option.map(Syntactic_search_state.Query.string_of_error, e)
-    |> Option.value(~default="");
+    Option.map(S.Query.string_of_error, e) |> Option.value(~default="");
 
   <>
     <h5 className="card-title"> {"Enter a query" |> React.string} </h5>

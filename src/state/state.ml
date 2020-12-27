@@ -14,9 +14,9 @@ end
 
 type selected_panel = Selected_panel.t
 
-module Syntactic_search = Syntactic_search_state
+module SyntacticSearch = SyntacticSearchState
 
-type syntactic_search = Syntactic_search.t
+type syntactic_search = SyntacticSearch.t
 
 type t = {
   id : int;
@@ -44,7 +44,7 @@ let default =
     inspect = None;
     selected_sidebar = Selected_sidebar.State;
     selected_panel = None;
-    syntactic_search = Syntactic_search.default;
+    syntactic_search = SyntacticSearch.default;
   }
 
 let cil state = state.cil

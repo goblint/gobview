@@ -7,14 +7,9 @@ let make = (~syntactic_search: State.syntactic_search, ~dispatch) => {
     <div className="card-header"> {"Syntactic Search" |> React.string} </div>
     <div className="card-body">
       {switch (syntactic_search.matches) {
-       | Some(matches) => <Syntactic_search_result_view matches dispatch />
+       | Some(matches) => <SyntacticSearchResultView matches dispatch />
        | _ =>
-         <Syntactic_search_query_view
-           query_string
-           query
-           query_error
-           dispatch
-         />
+         <SyntacticSearchQueryView query_string query query_error dispatch />
        }}
     </div>
   </div>;

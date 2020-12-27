@@ -1,13 +1,13 @@
-module S = State;
+module I = State.Inspect;
 
 let make_result_list = (matches, dispatch) => {
   let clear = _ => {
-    dispatch @@ `Clear_matches;
+    dispatch @@ `ClearSearchMatches;
   };
 
   let on_click = (loc, ev) => {
     React.Event.Mouse.preventDefault(ev);
-    dispatch @@ `Inspect_file(S.Inspect.File.Cil_location(loc));
+    dispatch @@ `Inspect_file(I.File.Cil_location(loc));
     dispatch @@ `Set_line(loc.Cil.line);
   };
 
@@ -52,7 +52,7 @@ let make_result_list = (matches, dispatch) => {
 [@react.component]
 let make = (~matches, ~dispatch) => {
   let onClick = _ => {
-    dispatch @@ `Clear_matches;
+    dispatch @@ `ClearSearchMatches;
   };
 
   <>
