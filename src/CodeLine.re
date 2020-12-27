@@ -1,5 +1,4 @@
 open Js_of_ocaml;
-open Reducer;
 
 let insert_space = i => (i < 10 ? "  " : " ") |> React.string;
 
@@ -40,7 +39,7 @@ let make =
       )}
       onClick={_ =>
         if (hasc) {
-          dispatch @@ Set_line(numb);
+          dispatch @@ `Set_line(numb);
         }
       }>
       {let line_number = string_of_int(numb) |> React.string;

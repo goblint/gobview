@@ -1,5 +1,3 @@
-open Reducer;
-
 [@react.component]
 let make = (~dispatch, ~calls: list(Parse.call)) => {
   <div className="filebox">
@@ -15,11 +13,11 @@ let make = (~dispatch, ~calls: list(Parse.call)) => {
               key={string_of_int(i)}
               onClick={_ => {
                 dispatch @@
-                Set_file_name(
+                `Set_file_name(
                   Parse.get_file(c) |> Parse.get_file_from_filepath,
                 );
-                dispatch @@ Set_file_path(Parse.get_file(c));
-                dispatch @@ Set_line(int_of_string(Parse.get_line(c)));
+                dispatch @@ `Set_file_path(Parse.get_file(c));
+                dispatch @@ `Set_line(int_of_string(Parse.get_line(c)));
               }}>
               {Parse.get_line(c)
                ++ " : "

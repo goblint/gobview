@@ -11,7 +11,7 @@ let make = () => {
       Lwt.bind(
         HttpClient.get("/" ++ s),
         s => {
-          dispatch @@ Set_code(s);
+          dispatch @@ `Set_code(s);
           Lwt.return();
         },
       );
@@ -25,7 +25,7 @@ let make = () => {
         s => {
           log("Parse data");
           let data = Parse.parse_string(s);
-          dispatch @@ Set_pdata(data);
+          dispatch @@ `Set_pdata(data);
           log("Parse data done");
           log("Search main");
           let (xfile, xfilepath) =
@@ -36,7 +36,7 @@ let make = () => {
             log("Found main file: " ++ xfile);
           };
           dispatch @@
-          Inspect_file(Inspect.File.Direct_location(xfile, xfilepath));
+          `Inspect_file(Inspect.File.Direct_location(xfile, xfilepath));
           Lwt.return();
         },
       );
@@ -76,7 +76,7 @@ let make = () => {
             };
           Cil.dumpFile(Cil.defaultCilPrinter, stdout, "main.c", cil);
           log("Printed " ++ cil.Cil.fileName);
-          dispatch @@ Set_cil(cil);
+          dispatch @@ `Set_cil(cil);
           Lwt.return();
         },
       );
@@ -104,7 +104,7 @@ let make = () => {
             Lwt.bind(
               HttpClient.get("/" ++ url),
               dot => {
-                dispatch @@ Update_dot(dot);
+                dispatch @@ `Update_dot(dot);
                 Lwt.return();
               },
             );

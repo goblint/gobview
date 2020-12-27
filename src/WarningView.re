@@ -1,5 +1,3 @@
-open Reducer;
-
 [@react.component]
 let make = (~dispatch, ~warnings: list(Parse.warning)) => {
   <div className="filebox">
@@ -15,12 +13,12 @@ let make = (~dispatch, ~warnings: list(Parse.warning)) => {
               key={string_of_int(i)}
               onClick={_ => {
                 dispatch @@
-                Set_file_name(
+                `Set_file_name(
                   Parse.warning_to_file(c) |> Parse.get_file_from_filepath,
                 );
-                dispatch @@ Set_file_path(Parse.warning_to_file(c));
+                dispatch @@ `Set_file_path(Parse.warning_to_file(c));
                 dispatch @@
-                Set_line(int_of_string(Parse.warning_to_line(c)));
+                `Set_line(int_of_string(Parse.warning_to_line(c)));
               }}>
               <b> {Parse.warning_to_text(c) |> React.string} </b>
               <br />

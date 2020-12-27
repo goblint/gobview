@@ -1,4 +1,3 @@
-open Reducer;
 open State;
 
 let views = [
@@ -21,7 +20,7 @@ let make_nav_pills = (current, dispatch) => {
             <a
               href="#"
               className={"nav-link" ++ (current == Some(v) ? " active" : "")}
-              onClick={on_click(Switch_panel(Some(v)))}>
+              onClick={on_click(`Switch_panel(Some(v)))}>
               {n |> React.string}
             </a>
           </li>
@@ -29,7 +28,9 @@ let make_nav_pills = (current, dispatch) => {
      |> React.list}
     <li className="nav-item">
       <a
-        href="#" className="nav-link" onClick={on_click(Switch_panel(None))}>
+        href="#"
+        className="nav-link"
+        onClick={on_click(`Switch_panel(None))}>
         {"✖" |> React.string}
       </a>
     </li>

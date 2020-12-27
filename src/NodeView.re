@@ -1,11 +1,10 @@
 open Js_of_ocaml;
-open Reducer;
 open State;
 
 [@react.component]
 let make = (~state, ~dispatch) => {
   let show_info = id => {
-    dispatch @@ Set_id(id);
+    dispatch @@ `Set_id(id);
     // When you click on a link like `javascript:show_info('42')` in Firefox, it
     // replaces the contents of the current page with the return value of
     // `show_info('42')`. Therefore, this function must explicitly return

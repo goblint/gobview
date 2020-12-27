@@ -1,5 +1,3 @@
-open Reducer;
-
 module S = State;
 
 let make_breadcrumb = (inspect, dispatch) => {
@@ -11,7 +9,7 @@ let make_breadcrumb = (inspect, dispatch) => {
   <nav>
     <ol className="breadcrumb">
       <li className="breadcrumb-item">
-        <a href="#" onClick={on_click(Reset_inspect)}>
+        <a href="#" onClick={on_click(`Reset_inspect)}>
           {"Analysis" |> React.string}
         </a>
       </li>
@@ -26,7 +24,7 @@ let make_breadcrumb = (inspect, dispatch) => {
              <a
                href="#"
                onClick={on_click(
-                 Inspect_file(
+                 `Inspect_file(
                    S.Inspect.File.Direct_location(
                      S.Inspect.Func.get_file_name(f),
                      S.Inspect.Func.get_file_path(f),

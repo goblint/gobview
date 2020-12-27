@@ -1,4 +1,3 @@
-open Reducer;
 open State;
 
 let views = [
@@ -19,7 +18,7 @@ let make_nav_tabs = (side_panel, dispatch) => {
             <a
               href="#"
               className={"nav-link" ++ (side_panel == v ? " active" : "")}
-              onClick={on_click(Switch_sidebar(v))}>
+              onClick={on_click(`Switch_sidebar(v))}>
               {n |> React.string}
             </a>
           </li>
