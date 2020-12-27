@@ -40,18 +40,8 @@ let reducer (s : State.t) a =
   | `Reset_inspect -> { s with inspect = None }
   | `Switch_sidebar selected_sidebar -> { s with selected_sidebar }
   | `Switch_panel selected_panel -> { s with selected_panel }
-  | `Update_query q ->
-      let ss = s.syntactic_search in
-      { s with syntactic_search = Syntactic_search_state.update_query ss q }
-  | `Execute_query -> (
-      let ss = s.syntactic_search in
-      match s.cil with
-      | Some c ->
-          {
-            s with
-            syntactic_search = Syntactic_search_state.execute_query ss c;
-          }
-      | _ -> s )
-  | `Clear_matches ->
-      let ss = s.syntactic_search in
-      { s with syntactic_search = Syntactic_search_state.clear_matches ss }
+  | (`Update_query _ | `Execute_query | `Clear_matches) as a ->
+      {
+        s with
+        syntactic_search = SyntacticSearchReducer.reducer s s.syntactic_search a;
+      }

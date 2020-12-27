@@ -29,20 +29,3 @@ type t = {
 
 let default =
   { query_string = ""; query = None; query_error = None; matches = None }
-
-let update_query s q =
-  let s = { s with query_string = q } in
-  if String.length q > 0 then
-    match Query.parse_string q with
-    | Ok q -> { s with query = Some q; query_error = None }
-    | Error e -> { s with query = None; query_error = Some e }
-  else { s with query = None; query_error = None }
-
-let execute_query s cil =
-  match s.query with
-  | Some q ->
-      let matches = Some (QueryMapping.map_query q cil) in
-      { s with matches }
-  | _ -> s
-
-let clear_matches s = { s with matches = None }
