@@ -1,4 +1,10 @@
-module I = State.Inspect
+let map = function
+  | `InspectFile _ | `InspectCilLocation _ | `UpdateCode _ | `InspectFunc _
+  | `UpdateDot _ | `ResetInspect ->
+      InspectReducer.reducer
+  | `UpdateSearchQuery _ | `ExecuteSearchQuery | `ClearSearchMatches ->
+      SyntacticSearchReducer.reducer
+  | _ -> failwith "Unrecognized reducer action"
 
 let reducer (s : State.t) a =
   match a with
@@ -9,13 +15,6 @@ let reducer (s : State.t) a =
   | `Set_cil cil -> { s with cil = Some cil }
   | `Set_pdata pdata -> { s with pdata }
   | `Set_code code -> { s with code }
-  | ( `InspectFile _ | `InspectCilLocation _ | `UpdateCode _ | `InspectFunc _
-    | `UpdateDot _ | `ResetInspect ) as a ->
-      InspectReducer.reducer s a
   | `Switch_sidebar selected_sidebar -> { s with selected_sidebar }
   | `Switch_panel selected_panel -> { s with selected_panel }
-  | (`UpdateSearchQuery _ | `ExecuteSearchQuery | `ClearSearchMatches) as a ->
-      {
-        s with
-        syntactic_search = SyntacticSearchReducer.reducer s s.syntactic_search a;
-      }
+  | _ as a -> map a s a
