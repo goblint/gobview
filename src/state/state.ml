@@ -27,7 +27,6 @@ type t = {
   pdata : Parse.run;
   code : string;
   inspect : inspect option;
-  selected_view : SelectedView.t;
   selected_sidebar : selected_sidebar;
   selected_panel : selected_panel option;
   syntactic_search : syntactic_search;
@@ -43,7 +42,6 @@ let default =
     pdata = Parse.empty_run;
     code = "";
     inspect = None;
-    selected_view = SelectedView.Content;
     selected_sidebar = Selected_sidebar.State;
     selected_panel = None;
     syntactic_search = Syntactic_search.default;
@@ -62,8 +60,6 @@ let inspect state = Option.get state.inspect
 let inspect_opt = get_inspect
 
 [@@@ocaml.deprecated "Use get_inspect"]
-
-let selected_view state = state.selected_view
 
 let selected_sidebar state = state.selected_sidebar
 

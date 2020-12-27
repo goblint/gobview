@@ -1,11 +1,12 @@
-open State;
+module S = State;
 
 [@react.component]
 let make = (~state, ~calls) => {
   calls
   |> (
-    switch (state.selected_view) {
-    | Content => List.filter(c => Parse.get_id(c) == string_of_int(state.id))
+    switch (S.get_inspect(state)) {
+    | Some(S.Inspect.Func(_)) =>
+      List.filter(c => Parse.get_id(c) == string_of_int(state.id))
     | _ =>
       List.filter(c =>
         Parse.get_file(c) == state.file_path

@@ -8,7 +8,6 @@ type action =
   | Set_cil of Cil.file
   | Set_pdata of Parse.run
   | Set_code of string
-  | Set_selected_view of SelectedView.t
   | Inspect_file of Inspect.File.location
   | Update_code of string
   | Inspect_function of string * string * string
@@ -29,7 +28,6 @@ let reducer (s : t) (a : action) =
   | Set_cil cil -> { s with cil = Some cil }
   | Set_pdata pdata -> { s with pdata }
   | Set_code code -> { s with code }
-  | Set_selected_view selected_view -> { s with selected_view }
   | Inspect_file (Direct_location (n, p)) ->
       let inspect = Some (Inspect.open_file_direct n p) in
       { s with file_name = n; file_path = p; inspect }
