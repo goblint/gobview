@@ -10,8 +10,17 @@ let index_by_value = v =>
     }
   );
 
+// jsoo-react seems to have some trouble with
+// non-mandatory component properties. This is a
+// workaround until the issue is resolved.
+let make_props = (~id=?, ~options, ~value, ~on_change=?, ()) => {
+  (id, options, value, on_change);
+};
+
 [@react.component]
-let make = (~options, ~value, ~on_change=?) => {
+let make = (~props) => {
+  let (id, options, value, on_change) = props;
+
   let options = options |> List.mapi((i, e) => (i, e));
 
   let i =
@@ -30,7 +39,7 @@ let make = (~options, ~value, ~on_change=?) => {
        });
   };
 
-  <select className="form-select" value=i onChange>
+  <select ?id className="form-select" value=i onChange>
     {options
      |> List.map(((i, (_, l))) => {
           let key = string_of_int(i);
