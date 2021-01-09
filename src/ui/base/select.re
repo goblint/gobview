@@ -10,17 +10,8 @@ let index_by_value = v =>
     }
   );
 
-// jsoo-react seems to have some trouble with
-// non-mandatory component properties. This is a
-// workaround until the issue is resolved.
-let make_optionals = (~id=?, ~on_change=?, ()) => {
-  (id, on_change);
-};
-
 [@react.component]
-let make = (~options, ~value, ~optionals) => {
-  let (id, on_change) = optionals;
-
+let make = (~options, ~value, ~on_change) => {
   let options = options |> List.mapi((i, e) => (i, e));
 
   let i =
@@ -29,17 +20,16 @@ let make = (~options, ~value, ~optionals) => {
     |> string_of_int;
 
   let onChange = ev => {
-    on_change
-    |> Option.iter(cb => {
-         let i =
-           React.Event.Synthetic.target(ev)
-           |> Ojs.get(_, "value")
-           |> Ojs.int_of_js;
-         value_by_index(i, options) |> Option.iter(cb);
-       });
+    React.Event.Synthetic.preventDefault(ev);
+    let i =
+      React.Event.Synthetic.target(ev)
+      |> Ojs.get(_, "value")
+      |> Ojs.string_of_js
+      |> int_of_string;
+    Option.iter(on_change, value_by_index(i, options));
   };
 
-  <select ?id className="form-select" value=i onChange>
+  <select className="form-select" value=i onChange>
     {options
      |> List.map(((i, (_, l))) => {
           let key = string_of_int(i);

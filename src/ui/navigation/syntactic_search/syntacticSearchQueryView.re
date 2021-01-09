@@ -18,6 +18,20 @@ let make = (~query_string, ~query, ~query_error, ~dispatch) => {
   let string_of_error = e =>
     Option.map(S.Query.string_of_error, e) |> Option.value(~default="");
 
+  let (target, set_target) = React.useState(() => Ok(CodeQuery.Name_t("")));
+
+  React.useEffect1(
+    () => {
+      switch (target) {
+      | Ok(t) =>
+        CodeQuery.target_to_yojson(t) |> Yojson.Safe.to_string |> Util.log
+      | _ => ()
+      };
+      None;
+    },
+    [|target|],
+  );
+
   <>
     <h5 className="card-title"> {"Enter a query" |> React.string} </h5>
     <textarea
@@ -38,5 +52,11 @@ let make = (~query_string, ~query, ~query_error, ~dispatch) => {
       onClick>
       {"Execute" |> React.string}
     </button>
+    <Form on_submit={() => ()}>
+      <SyntacticSearchTargetBuilder
+        value=target
+        on_change={v => set_target(_ => v)}
+      />
+    </Form>
   </>;
 };
