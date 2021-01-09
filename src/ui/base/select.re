@@ -13,13 +13,13 @@ let index_by_value = v =>
 // jsoo-react seems to have some trouble with
 // non-mandatory component properties. This is a
 // workaround until the issue is resolved.
-let make_props = (~id=?, ~options, ~value, ~on_change=?, ()) => {
-  (id, options, value, on_change);
+let make_optionals = (~id=?, ~on_change=?, ()) => {
+  (id, on_change);
 };
 
 [@react.component]
-let make = (~props) => {
-  let (id, options, value, on_change) = props;
+let make = (~options, ~value, ~optionals) => {
+  let (id, on_change) = optionals;
 
   let options = options |> List.mapi((i, e) => (i, e));
 
