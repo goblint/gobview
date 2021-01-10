@@ -7,14 +7,15 @@ let make_extras =
       ~class_=["form-control"],
       ~from_string=s => s,
       ~to_string=s => s,
+      ~on_submit=?,
       (),
     ) => {
-  (type_, class_, from_string, to_string);
+  (type_, class_, from_string, to_string, on_submit);
 };
 
 [@react.component]
 let make = (~value, ~on_change, ~extras) => {
-  let (type_, class_, from_string, to_string) = extras;
+  let (type_, class_, from_string, to_string, on_submit) = extras;
 
   let type_ =
     switch (type_) {
@@ -34,5 +35,10 @@ let make = (~value, ~on_change, ~extras) => {
     |> on_change;
   };
 
-  <input type_ className value onChange />;
+  let onKeyUp = ev =>
+    if (React.Event.Keyboard.key(ev) == "Enter") {
+      Option.iter(cb => cb(), on_submit);
+    };
+
+  <input type_ className value onChange onKeyUp />;
 };
