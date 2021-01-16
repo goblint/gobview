@@ -36,11 +36,7 @@ let make = (~value, ~on_change) => {
      |> React.list}
     <li className="list-group-item p-0">
       <div className="input-group">
-        <Input
-          value=new_elem
-          on_change=on_type
-          extras={Input.make_extras(~on_submit=on_add, ())}
-        />
+        <Input value=new_elem on_change=on_type on_submit=on_add />
         <button
           type_="button" className="btn btn-outline-secondary" onClick=on_add>
           {"Add" |> React.string}
