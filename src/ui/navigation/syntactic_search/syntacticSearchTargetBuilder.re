@@ -24,12 +24,12 @@ let compare = (a, b) =>
 
 [@react.component]
 let make = (~value, ~on_change) => {
-  let on_select = k => {
-    on_change(k);
+  let on_select = r => {
+    on_change(r);
   };
 
-  let on_change_name = n => {
-    on_change(Ok(CodeQuery.Name_t(n)));
+  let on_change_name = s => {
+    on_change(Ok(CodeQuery.Name_t(s)));
   };
 
   let on_change_id = s => {
@@ -59,8 +59,8 @@ let make = (~value, ~on_change) => {
       <Select options compare value on_change=on_select />
     </div>
     {switch (value) {
-     | Ok(Name_t(n)) =>
-       <div className="mt-2"> <Input value=n on_change=on_change_name /> </div>
+     | Ok(Name_t(s)) =>
+       <div className="mt-2"> <Input value=s on_change=on_change_name /> </div>
      | Ok(ID_t(_))
      | Error(ID(_)) =>
        let value =

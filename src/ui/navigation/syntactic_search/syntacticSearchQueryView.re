@@ -19,17 +19,30 @@ let make = (~query_string, ~query, ~query_error, ~dispatch) => {
     Option.map(S.Query.string_of_error, e) |> Option.value(~default="");
 
   let (target, set_target) = React.useState(() => Ok(CodeQuery.Name_t("")));
+  let (typ, set_typ) = React.useState(() => CodeQuery.Var_k);
+  let (find, set_find) = React.useState(() => CodeQuery.Uses_f);
+  let (structure, set_structure) = React.useState(() => CodeQuery.None_s);
 
-  React.useEffect1(
+  React.useEffect4(
     () => {
       switch (target) {
       | Ok(t) =>
-        CodeQuery.target_to_yojson(t) |> Yojson.Safe.to_string |> Util.log
+        {
+          CodeQuery.sel: [Name_sel, Location_sel, Type_sel, ID_sel],
+          k: typ,
+          tar: t,
+          f: find,
+          str: structure,
+          lim: None_c,
+        }
+        |> CodeQuery.query_to_yojson
+        |> Yojson.Safe.to_string
+        |> Util.log
       | _ => ()
       };
       None;
     },
-    [|target|],
+    (target, typ, find, structure),
   );
 
   <>
@@ -53,9 +66,18 @@ let make = (~query_string, ~query, ~query_error, ~dispatch) => {
       {"Execute" |> React.string}
     </button>
     <Form on_submit={() => ()}>
+      <SyntacticSearchFindBuilder
+        value=find
+        on_change={v => set_find(_ => v)}
+      />
+      <SyntacticSearchKindBuilder value=typ on_change={v => set_typ(_ => v)} />
       <SyntacticSearchTargetBuilder
         value=target
         on_change={v => set_target(_ => v)}
+      />
+      <SyntacticSearchStructureBuilder
+        value=structure
+        on_change={v => set_structure(_ => v)}
       />
     </Form>
   </>;
