@@ -1,13 +1,9 @@
-// jsoo-react seems to have some trouble with
-// non-mandatory component properties. This is a
-// workaround until the issue is resolved.
-let make_extras = (~type_=`Text, ~class_=["form-control"], ~on_submit=?, ()) => {
-  (type_, class_, on_submit);
-};
-
 [@react.component]
-let make = (~value, ~on_change, ~extras) => {
-  let (type_, class_, on_submit) = extras;
+let make = (~type_=?, ~class_=?, ~value, ~on_change, ~on_submit=?) => {
+  let (type_, class_, on_submit) =
+    Utils.fix_opt_args3((type_, class_, on_submit));
+  let type_ = Option.value(type_, ~default=`Text);
+  let class_ = Option.value(class_, ~default=["form-control"]);
 
   let type_ =
     switch (type_) {

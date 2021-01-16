@@ -1,13 +1,7 @@
-// jsoo-react seems to have some trouble with
-// non-mandatory component properties. This is a
-// workaround until the issue is resolved.
-let make_extras = (~class_=["form-control"], ()) => {
-  class_;
-};
-
 [@react.component]
-let make = (~value, ~on_change, ~extras, ~children) => {
-  let class_ = extras;
+let make = (~class_=?, ~value, ~on_change, ~children) => {
+  let class_ =
+    Utils.fix_opt_arg(class_) |> Option.value(~default=["form-control"]);
 
   let input_class =
     if (Result.is_error(value)) {
@@ -18,10 +12,8 @@ let make = (~value, ~on_change, ~extras, ~children) => {
 
   let value = Result.fold(~ok=s => s, ~error=s => s, value);
 
-  let extras = Input.make_extras(~class_=input_class, ());
-
   <>
-    <Input value on_change extras />
+    <Input class_=input_class value on_change />
     <InvalidFeedback> children </InvalidFeedback>
   </>;
 };
