@@ -1,23 +1,12 @@
-let value_by_index = (i, options) =>
-  List.assoc_opt(i, options) |> Option.map(((v, _)) => v);
-
-let index_by_value = v =>
-  List.find_map(((i, (v', _))) =>
-    if (v' == v) {
-      Some(i);
-    } else {
-      None;
-    }
-  );
-
 [@react.component]
-let make = (~options, ~value, ~on_change) => {
+let make = (~options, ~compare=?, ~value, ~on_change) => {
+  let compare = Utils.fix_opt_arg(compare) |> Option.value(~default=(==));
   let options = options |> List.mapi((i, e) => (i, e));
 
   let i =
-    index_by_value(value, options)
-    |> Option.value(~default=0)
-    |> string_of_int;
+    options
+    |> List.find_opt(((_, (v, _))) => compare(v, value))
+    |> Option.map(((i, _)) => string_of_int(i));
 
   let onChange = ev => {
     React.Event.Synthetic.preventDefault(ev);
@@ -26,10 +15,13 @@ let make = (~options, ~value, ~on_change) => {
       |> Ojs.get(_, "value")
       |> Ojs.string_of_js
       |> int_of_string;
-    Option.iter(on_change, value_by_index(i, options));
+    options
+    |> List.assoc_opt(i)
+    |> Option.map(((v, _)) => v)
+    |> Option.iter(on_change);
   };
 
-  <select className="form-select" value=i onChange>
+  <select className="form-select" value=?i onChange>
     {options
      |> List.map(((i, (_, l))) => {
           let key = string_of_int(i);
