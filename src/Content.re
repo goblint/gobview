@@ -2,7 +2,7 @@
 let make = (~state: State.t, ~dispatch) => {
   <>
     <Breadcrumb inspect={state.inspect} dispatch />
-    <div className="flex-fill overflow-auto">
+    <div className="flex-fill overflow-scroll">
       {switch (state.inspect) {
        | None => <Navigation state dispatch />
        | Some(File(_)) =>

@@ -31,7 +31,9 @@ let get_all_warnings = (warnings, line, filepath) => {
 };
 [@react.component]
 let make = (~state, ~dispatch, ~calls, ~warnings) => {
-  <div>
+  <div
+    className="d-inline-block"
+    style={React.Dom.Style.make(~backgroundColor="#f5f2f0", ())}>
     {String.split_on_char('\n', state.code)
      |> List.mapi((i, l) => {
           <CodeLine
