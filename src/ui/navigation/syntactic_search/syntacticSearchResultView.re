@@ -1,6 +1,6 @@
 let make_result_list = (matches, dispatch) => {
   let clear = _ => {
-    dispatch @@ `ClearSearchMatches;
+    dispatch @@ `ClearSynSearchMatches;
   };
 
   let on_click = (loc, ev) => {
@@ -50,7 +50,7 @@ let make_result_list = (matches, dispatch) => {
 [@react.component]
 let make = (~matches, ~dispatch) => {
   let onClick = _ => {
-    dispatch @@ `ClearSearchMatches;
+    dispatch @@ `ClearSynSearchMatches;
   };
 
   <>

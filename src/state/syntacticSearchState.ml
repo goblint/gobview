@@ -5,8 +5,8 @@ module Query = struct
 
   let from_string s =
     try
-      let y = Yojson.Safe.from_string s in
-      match CodeQuery.query_of_yojson y with
+      let json = Yojson.Safe.from_string s in
+      match CodeQuery.query_of_yojson json with
       | Ppx_deriving_yojson_runtime.Result.Ok q -> Ok q
       | Ppx_deriving_yojson_runtime.Result.Error e -> Error (Parse_error e)
     with Yojson.Json_error e -> Error (Parse_error e)
@@ -17,11 +17,39 @@ end
 type query = Query.t
 
 type t = {
-  query_string : string;
+  show_json : bool;
+  (* UI mode *)
+  kind : CodeQuery.kind;
+  target : (CodeQuery.target, SyntacticSearchTargetBuilder.error) result;
+  find : CodeQuery.find;
+  structure : CodeQuery.structure;
+  (* JSON mode *)
   query : query option;
-  query_error : Query.error option;
+  query_json : string;
+  query_json_error : Query.error option;
+  (* Search results *)
   matches : (string * Cil.location * string * int) list option;
 }
 
 let default =
-  { query_string = ""; query = None; query_error = None; matches = None }
+  {
+    show_json = false;
+    kind = Var_k;
+    target = Ok (Name_t "");
+    find = Uses_f;
+    structure = None_s;
+    query = None;
+    query_json = "";
+    query_json_error = None;
+    matches = None;
+  }
+
+let to_query s =
+  {
+    CodeQuery.sel = [];
+    k = s.kind;
+    tar = Result.value s.target ~default:(CodeQuery.Name_t "");
+    f = s.find;
+    str = s.structure;
+    lim = None_c;
+  }

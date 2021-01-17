@@ -7,12 +7,12 @@ let make = (~query_string, ~query, ~query_error, ~dispatch) => {
       React.Event.Synthetic.target(ev)
       |> Ojs.get(_, "value")
       |> Ojs.string_of_js;
-    dispatch @@ `UpdateSearchQuery(v);
+    dispatch @@ `ParseSynSearchQuery(v);
   };
 
   let onClick = ev => {
     React.Event.Synthetic.preventDefault(ev);
-    dispatch @@ `ExecuteSearchQuery;
+    dispatch @@ `PerformSynSearch;
   };
 
   let string_of_error = e =>
