@@ -34,8 +34,7 @@ let make = () => {
           } else {
             log("Found main file: " ++ xfile);
           };
-          dispatch @@
-          `InspectFile(xfile, xfilepath);
+          dispatch @@ `InspectFile((xfile, xfilepath));
           Lwt.return();
         },
       );
@@ -66,7 +65,6 @@ let make = () => {
         HttpClient.get("/cilfile.dump"),
         s => {
           log("Fetched CIL dump");
-          Js_of_ocaml.Js.Unsafe.global##.dump := s;
           let cil =
             try(Marshal.from_string(s, 0)) {
             | ex =>
