@@ -1,7 +1,5 @@
 [@react.component]
 let make = (~kind, ~target, ~find, ~structure, ~dispatch) => {
-  let on_submit = () => dispatch @@ `PerformSynSearch;
-
   let on_change_kind = k => {
     dispatch @@ `UpdateSynSearchField(`Kind(k));
   };
@@ -18,7 +16,9 @@ let make = (~kind, ~target, ~find, ~structure, ~dispatch) => {
     dispatch @@ `UpdateSynSearchField(`Structure(s));
   };
 
-  <Form on_submit>
+  let on_click = () => dispatch @@ `PerformSynSearch;
+
+  <>
     <SyntacticSearchKindBuilder value=kind on_change=on_change_kind />
     <SyntacticSearchTargetBuilder value=target on_change=on_change_target />
     <SyntacticSearchFindBuilder value=find on_change=on_change_find />
@@ -26,8 +26,8 @@ let make = (~kind, ~target, ~find, ~structure, ~dispatch) => {
       value=structure
       on_change=on_change_structure
     />
-    <Button type_=`Submit disabled={Result.is_error(target)}>
+    <Button type_=`Button on_click disabled={Result.is_error(target)}>
       {"Execute" |> React.string}
     </Button>
-  </Form>;
+  </>;
 };

@@ -5,10 +5,6 @@ let string_of_error = e =>
 
 [@react.component]
 let make = (~query_json, ~query, ~query_json_error, ~dispatch) => {
-  let on_submit = () => {
-    dispatch @@ `PerformSynSearch;
-  };
-
   let text_area_class = [
     "form-control",
     ...Option.is_some(query_json_error) ? ["is-invalid"] : [],
@@ -18,7 +14,11 @@ let make = (~query_json, ~query, ~query_json_error, ~dispatch) => {
     dispatch @@ `ParseSynSearchQuery(s);
   };
 
-  <Form on_submit>
+  let on_click = () => {
+    dispatch @@ `PerformSynSearch;
+  };
+
+  <>
     <div className="mb-3">
       <TextArea class_=text_area_class value=query_json on_change />
       <InvalidFeedback>
@@ -27,8 +27,8 @@ let make = (~query_json, ~query, ~query_json_error, ~dispatch) => {
          |> React.string}
       </InvalidFeedback>
     </div>
-    <Button type_=`Submit disabled={Option.is_none(query)}>
+    <Button type_=`Button on_click disabled={Option.is_none(query)}>
       {"Execute" |> React.string}
     </Button>
-  </Form>;
+  </>;
 };
