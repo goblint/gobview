@@ -24,8 +24,8 @@ type t = {
   find : CodeQuery.find;
   structure : CodeQuery.structure;
   (* JSON mode *)
-  query : query option;
   query_json : string;
+  query : query option;
   query_json_error : Query.error option;
   (* Search results *)
   matches : (string * Cil.location * string * int) list option;
@@ -38,8 +38,8 @@ let default =
     target = Ok (Name_t "");
     find = Uses_f;
     structure = None_s;
-    query = None;
     query_json = "";
+    query = None;
     query_json_error = None;
     matches = None;
   }

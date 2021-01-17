@@ -1,42 +1,41 @@
-module S = State.SyntacticSearch;
-
 [@react.component]
-let make = (~query_string, ~query, ~query_error, ~dispatch) => {
-  let onChange = ev => {
-    let v =
-      React.Event.Synthetic.target(ev)
-      |> Ojs.get(_, "value")
-      |> Ojs.string_of_js;
-    dispatch @@ `ParseSynSearchQuery(v);
-  };
+let make = (~search: State.syntactic_search, ~dispatch) => {
+  let kind = search.kind;
+  let target = search.target;
+  let find = search.find;
+  let structure = search.structure;
 
-  let onClick = ev => {
-    React.Event.Synthetic.preventDefault(ev);
-    dispatch @@ `PerformSynSearch;
-  };
+  let query_json = search.query_json;
+  let query = search.query;
+  let query_json_error = search.query_json_error;
 
-  let string_of_error = e =>
-    Option.map(S.Query.string_of_error, e) |> Option.value(~default="");
+  let on_click = () => {
+    dispatch @@ `ShowSynSearchQueryAsJSON(!search.show_json);
+  };
 
   <>
-    <h5 className="card-title"> {"Enter a query" |> React.string} </h5>
-    <textarea
-      className={
-        "form-control" ++ (Option.is_some(query_error) ? " is-invalid" : "")
-      }
-      rows=10
-      value=query_string
-      onChange
-    />
-    <div className="invalid-feedback">
-      {"Invalid query: " ++ string_of_error(query_error) |> React.string}
-    </div>
-    <button
-      type_="button"
-      className="btn btn-primary mt-3"
-      disabled={Option.is_none(query)}
-      onClick>
-      {"Execute" |> React.string}
-    </button>
+    {if (search.show_json) {
+       <SyntacticSearchQueryEditor
+         query_json
+         query
+         query_json_error
+         dispatch
+       />;
+     } else {
+       <SyntacticSearchQueryBuilder kind target find structure dispatch />;
+     }}
+    <Link on_click>
+      <div className="mt-4">
+        {"Switch to "
+         ++ (
+           if (search.show_json) {
+             "graphical editor";
+           } else {
+             "JSON editor";
+           }
+         )
+         |> React.string}
+      </div>
+    </Link>
   </>;
 };
