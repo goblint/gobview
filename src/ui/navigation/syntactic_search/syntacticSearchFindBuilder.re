@@ -23,13 +23,13 @@ let make = (~value, ~on_change) => {
   };
 
   <>
-    <div>
+    <div className="mb-3">
       <label className="form-label"> {"Find" |> React.string} </label>
       <Select options compare value on_change=on_select />
     </div>
     {switch (value) {
      | UsesWithVar_f(s) =>
-       <div className="mt-2">
+       <div className="mb-3">
          <Input value=s on_change=on_change_uses_with_var />
        </div>
      | _ => React.null

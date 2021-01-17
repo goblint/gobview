@@ -54,13 +54,13 @@ let make = (~value, ~on_change) => {
   };
 
   <>
-    <div>
+    <div className="mb-3">
       <label className="form-label"> {"Target" |> React.string} </label>
       <Select options compare value on_change=on_select />
     </div>
     {switch (value) {
      | Ok(Name_t(s)) =>
-       <div className="mt-2"> <Input value=s on_change=on_change_name /> </div>
+       <div className="mb-3"> <Input value=s on_change=on_change_name /> </div>
      | Ok(ID_t(_))
      | Error(ID(_)) =>
        let value =
@@ -69,7 +69,7 @@ let make = (~value, ~on_change) => {
          | Error(ID(s)) => Error(s)
          | _ => Error("") // This should never happen
          };
-       <div className="mt-2">
+       <div className="mb-3">
          <ValidatedInput value on_change=on_change_id>
            {"An ID must be an integer greater than or equal to zero."
             |> React.string}
@@ -77,7 +77,7 @@ let make = (~value, ~on_change) => {
        </div>;
      | Ok(Or_t(l) as t)
      | Ok(And_t(l) as t) =>
-       <div className="mt-2">
+       <div className="mb-3">
          <ListInput value=l on_change={on_change_or_and(t)} />
        </div>
      | _ => React.null

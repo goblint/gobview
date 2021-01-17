@@ -10,7 +10,7 @@ let make = (~value, ~on_change) => {
     on_change(k);
   };
 
-  <div>
+  <div className="mb-3">
     <label className="form-label"> {"Type" |> React.string} </label>
     <Select options value on_change=on_select />
   </div>;
