@@ -73,6 +73,34 @@ let make = () => {
             };
           Cil.dumpFile(Cil.defaultCilPrinter, stdout, "main.c", cil);
           log("Printed " ++ cil.Cil.fileName);
+
+          Js_of_ocaml.Sys_js.unmount(~path="/");
+          // Useful for seeing what Goblint is trying to access
+          Js_of_ocaml.Sys_js.mount(~path="/", (~prefix, ~path) => {
+            print_endline(
+              "Trying to access: " ++ Filename.concat(prefix, path),
+            );
+            None;
+          });
+
+          Sys.chdir("/");
+
+          GobConfig.set_bool("dbg.verbose", true);
+          GobConfig.set_string("load_run", "run");
+
+          Cilfacade.init();
+          Maingoblint.handle_extraspecials();
+          Maingoblint.handle_flags();
+
+          let cil = Cilfacade.callConstructors(cil);
+          Cilfacade.createCFG(cil);
+          Cilfacade.ugglyImperativeHack := cil;
+
+          try(Maingoblint.do_analyze(Analyses.empty_increment_data(), cil)) {
+          | e => log(Printexc.to_string(e))
+          };
+          log("Goblint analysis is complete!");
+
           dispatch @@ `Set_cil(cil);
           Lwt.return();
         },
