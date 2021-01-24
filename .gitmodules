@@ -1,0 +1,3 @@
+[submodule "vendor/goblint"]
+	path = vendor/goblint
+	url = https://github.com/keremc/analyzer.git

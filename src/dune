@@ -3,7 +3,7 @@
 (executables
  (names App)
  (modes js)
- (libraries gen_js_api goblint-cil goblint-cil.syntacticsearch
+ (libraries gen_js_api goblint goblint-cil goblint-cil.syntacticsearch
    js_of_ocaml-lwt jsoo-react.lib lwt ppx_deriving_yojson.runtime xml-light
    yojson zarith zarith_stubs_js)
  (js_of_ocaml
