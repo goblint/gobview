@@ -97,6 +97,7 @@ HttpClient.get("/test")
 );
 
 Lwt.all([
+  HttpClient.get_opt("/cilenvironment.dump"),
   HttpClient.get_opt("/run/solver.marshalled"),
   HttpClient.get_opt("/run/config.json"),
   HttpClient.get_opt("/run/meta.json"),
@@ -104,7 +105,13 @@ Lwt.all([
 >>= (
   l =>
     switch (l) {
-    | [Some(s), Some(c), Some(m)] =>
+    | [Some(e), Some(s), Some(c), Some(m)] =>
+      // TODO: Do this in a cleaner fashion
+      Marshal.from_string(e, 0)
+      |> Hashtbl.to_seq
+      |> Hashtbl.add_seq(Cabs2cil.environment);
+      print_endline("Restored CIL environment");
+
       Js_of_ocaml.Sys_js.create_file(
         ~name="/run/solver.marshalled",
         ~content=s,
