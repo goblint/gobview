@@ -10,7 +10,7 @@ let make = () => {
       Lwt.bind(
         HttpClient.get("/" ++ s),
         s => {
-          dispatch @@ `Set_code(s);
+          dispatch @@ `Set_code(Result.get_ok(s));
           Lwt.return();
         },
       );
@@ -23,7 +23,7 @@ let make = () => {
         HttpClient.get("/" ++ s),
         s => {
           log("Parse data");
-          let data = Parse.parse_string(s);
+          let data = Parse.parse_string(Result.get_ok(s));
           dispatch @@ `Set_pdata(data);
           log("Parse data done");
           log("Search main");
@@ -66,13 +66,34 @@ let make = () => {
         s => {
           log("Fetched CIL dump");
           let cil =
-            try(Marshal.from_string(s, 0)) {
+            try(Marshal.from_string(Result.get_ok(s), 0)) {
             | ex =>
               log(Printexc.to_string(ex));
               failwith("Cannot deserialize");
             };
-          Cil.dumpFile(Cil.defaultCilPrinter, stdout, "main.c", cil);
-          log("Printed " ++ cil.Cil.fileName);
+          log("Loaded " ++ cil.Cil.fileName);
+
+          let query =
+            {|{"select":[["name"],["location"],["type"],["id"]],"type":["var"],"target":["name","x"],"find":["uses"]}|}
+            |> Yojson.Safe.from_string
+            |> CodeQuery.query_of_yojson
+            |> (
+              r => {
+                switch (r) {
+                | Ppx_deriving_yojson_runtime.Result.Ok(q) => Ok(q)
+                | Ppx_deriving_yojson_runtime.Result.Error(e) => Error(e)
+                };
+              }
+            )
+            |> Result.get_ok;
+          let results =
+            try(QueryMapping.map_query(query, cil)) {
+            | e =>
+              print_endline(Printexc.to_string(e));
+              raise(e);
+            };
+          print_endline(ResultPrinter.print_result(results, query));
+          flush(stdout);
 
           // Js_of_ocaml.Sys_js.unmount(~path="/");
           // Useful for seeing what Goblint is trying to access
@@ -149,7 +170,7 @@ let make = () => {
             Lwt.bind(
               HttpClient.get("/" ++ url),
               dot => {
-                dispatch @@ `UpdateDot(dot);
+                dispatch @@ `UpdateDot(Result.get_ok(dot));
                 Lwt.return();
               },
             );

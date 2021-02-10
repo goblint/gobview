@@ -2,17 +2,16 @@ open Js_of_ocaml
 open Js_of_ocaml_lwt
 open Lwt
 
-let get_opt url =
+type error = HttpFailure of int | NoContentAvailable
+
+let get url =
   XmlHttpRequest.perform_raw ~response_type:XmlHttpRequest.ArrayBuffer url
   >>= fun r ->
   let code = r.code in
-  if code <> 200 then Lwt.return_none
+  if code < 200 || code >= 400 then Lwt.return (Error (HttpFailure code))
   else
-    r.content |> Js.Opt.to_option
-    |> Option.map Typed_array.String.of_arrayBuffer
-    |> Lwt.return
+    Js.Opt.case r.content
+      (fun () -> Lwt.return (Error NoContentAvailable))
+      (fun c -> Lwt.return (Ok (Typed_array.String.of_arrayBuffer c)))
 
-let get url =
-  get_opt url >>= function
-  | Some r -> Lwt.return r
-  | None -> Lwt.fail_with ("Cannot fetch resource: " ^ url)
+let get_opt url = get url >>= fun resp -> Lwt.return (Result.to_option resp)
