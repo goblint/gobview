@@ -2,7 +2,8 @@ open Util;
 
 [@react.component]
 let make = (~pdata, ~cil) => {
-  let (state, dispatch) = React.useReducer(Reducer.reducer, State.default);
+  let (state, dispatch) =
+    React.useReducer(Reducer.reducer, State.create(~pdata, ~cil, ()));
 
   let fetchCode = s => {
     let _ =
@@ -23,7 +24,6 @@ let make = (~pdata, ~cil) => {
         s => {
           log("Parse data");
           let data = Parse.parse_string(Result.get_ok(s));
-          dispatch @@ `Set_pdata(data);
           log("Parse data done");
           log("Search main");
           let (xfile, xfilepath) =
@@ -107,7 +107,6 @@ let make = (~pdata, ~cil) => {
           };
           log("Second Goblint analysis is complete!");
 
-          dispatch @@ `Set_cil(cil);
           Lwt.return();
         },
       );

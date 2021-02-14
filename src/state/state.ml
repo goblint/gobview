@@ -38,14 +38,16 @@ let default =
     line = -1;
     file_name = "";
     file_path = "";
-    cil = None;
     pdata = Parse.empty_run;
     code = "";
+    cil = None;
     inspect = None;
     selected_sidebar = Selected_sidebar.State;
     selected_panel = None;
     syntactic_search = SyntacticSearch.default;
   }
+
+let create ~pdata ~cil () = { default with pdata; cil = Some cil }
 
 let cil state = state.cil
 
