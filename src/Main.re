@@ -1,9 +1,8 @@
-open State;
 open Util;
 
 [@react.component]
-let make = () => {
-  let (state, dispatch) = React.useReducer(Reducer.reducer, default);
+let make = (~pdata, ~cil) => {
+  let (state, dispatch) = React.useReducer(Reducer.reducer, State.default);
 
   let fetchCode = s => {
     let _ =
@@ -63,14 +62,8 @@ let make = () => {
     let _ =
       Lwt.bind(
         HttpClient.get("/cilfile.dump"),
-        s => {
+        _ => {
           log("Fetched CIL dump");
-          let cil =
-            try(Marshal.from_string(Result.get_ok(s), 0)) {
-            | ex =>
-              log(Printexc.to_string(ex));
-              failwith("Cannot deserialize");
-            };
           log("Loaded " ++ cil.Cil.fileName);
 
           let query =
@@ -95,52 +88,24 @@ let make = () => {
           print_endline(ResultPrinter.print_result(results, query));
           flush(stdout);
 
-          // Js_of_ocaml.Sys_js.unmount(~path="/");
-          // Useful for seeing what Goblint is trying to access
-          // Js_of_ocaml.Sys_js.mount(~path="/", (~prefix, ~path) => {
-          //   print_endline(
-          //     "Trying to access: " ++ Filename.concat(prefix, path),
-          //   );
-          //   None;
-          // });
-
-          Sys.chdir("/");
-
-          GobConfig.merge_file("/run/config.json");
-
-          // TODO: These should be removed at some point.
-          GobConfig.set_bool("dbg.verbose", true);
-          // GobConfig.set_bool("verify", false);
-          // GobConfig.set_bool("dump_globs", true);
-          // GobConfig.set_bool("ana.opt.hashcons", false);
-
-          // GobConfig.set_string("solver", "td3");
-          // GobConfig.set_bool("ana.int.interval", true);
-          // GobConfig.set_bool("ana.int.def_exc", false);
-          // GobConfig.set_bool("exp.fast_global_inits", false);
-          // GobConfig.set_bool("exp.partition-arrays.enabled", true);
-
-          GobConfig.set_string("load_run", "run");
-          GobConfig.set_string("save_run", "");
-
-          GobConfig.set_auto("trans.activated[+]", "'expeval'");
-          GobConfig.set_string(
-            "trans.expeval.query_file_name",
-            "/query.json",
-          );
-
-          Cilfacade.init();
-          Maingoblint.handle_extraspecials();
-          Maingoblint.handle_flags();
-
-          let cil = Cilfacade.callConstructors(cil);
-          Cilfacade.createCFG(cil);
-          Cilfacade.ugglyImperativeHack := cil;
-
-          try(Maingoblint.do_analyze(Analyses.empty_increment_data(), cil)) {
+          let query = {|{
+"kind": ["var"],
+"target": ["name", "x"],
+"find": ["uses"],
+"structure": ["none"],
+"limitation": ["none"],
+"expression": "x == 42",
+"mode": ["May"]
+}|};
+          Js_of_ocaml.Sys_js.create_file(~name="/query.json", ~content=query);
+          try(GobCli.do_analyze(Analyses.empty_increment_data(), cil)) {
           | e => log(Printexc.to_string(e))
           };
           log("Goblint analysis is complete!");
+          try(GobCli.do_analyze(Analyses.empty_increment_data(), cil)) {
+          | e => log(Printexc.to_string(e))
+          };
+          log("Second Goblint analysis is complete!");
 
           dispatch @@ `Set_cil(cil);
           Lwt.return();

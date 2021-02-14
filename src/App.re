@@ -1,127 +1,162 @@
-open Lwt;
+open Js_of_ocaml;
+open Lwt.Infix;
 
-let query = {|{
-"kind": ["var"],
-"target": ["name", "x"],
-"find": ["uses"],
-"structure": ["none"],
-"limitation": ["none"],
-"expression": "x == 42",
-"mode": ["May"]
-}|};
+exception InitFailed(string);
 
-let analysis_order = [
-  (0, "threadflag"),
-  (1, "threadid"),
-  (3, "base"),
-  (8, "mutex"),
-  (10, "expRelation"),
-  (17, "mallocWrapper"),
-  (33, "escape"),
-];
+let compose = (f, g, x) => f(g(x));
 
-// TODO: Each analysis is assigned an ID, and this ID is not guaranteed
-// to be stable across builds. This sync the JS build with the native
-// build on my device, but a more universal solution must be implemented
-// at some point.
-let rec fix_goblint_analysis_order = queue => {
-  switch (queue) {
-  | [] => ()
-  | [(id, ana), ...rest] =>
-    let (actual_id, _) =
-      List.find(((_, a)) => a == ana, MCP.analyses_table^);
+let init_cil = environment => {
+  // Restore the environment hash table, which
+  // syntacticsearch uses to map temporary variables created
+  // by CIL to their original counterparts.
+  environment |> Hashtbl.to_seq |> Hashtbl.add_seq(Cabs2cil.environment);
+};
+
+// Each Goblint analysis module is assigned an ID, and this
+// ID depends on the module registration order, which might
+// differ from build to build. This function reorders the
+// analysis list to match the native version of Goblint.
+let reorder_goblint_analysis_list =
+  List.iter(((id, ana)) => {
+    let (current_id, _) =
+      List.find(compose(String.equal(ana), snd), MCP.analyses_table^);
+    let spec = List.assoc(current_id, MCP.analyses_list'^);
+    let deps = List.assoc(current_id, MCP.dep_list'^);
 
     let actual_ana_with_id = List.assoc(id, MCP.analyses_table^);
-    let analyses_table =
+    MCP.analyses_table :=
       MCP.analyses_table^
       |> List.map(((i, a)) =>
            if (i == id) {
              (i, ana);
-           } else if (i == actual_id) {
+           } else if (i == current_id) {
              (i, actual_ana_with_id);
            } else {
              (i, a);
            }
          );
-    MCP.analyses_table := analyses_table;
 
-    let spec = List.assoc(actual_id, MCP.analyses_list'^);
     let actual_spec_with_id = List.assoc(id, MCP.analyses_list'^);
-    let analyses_list =
+    MCP.analyses_list' :=
       MCP.analyses_list'^
       |> List.map(((i, s)) =>
            if (i == id) {
              (i, spec);
-           } else if (i == actual_id) {
+           } else if (i == current_id) {
              (i, actual_spec_with_id);
            } else {
              (i, s);
            }
          );
-    MCP.analyses_list' := analyses_list;
 
-    let deps = List.assoc(actual_id, MCP.dep_list'^);
     let actual_deps_with_id = List.assoc(id, MCP.dep_list'^);
-    let dep_list =
+    MCP.dep_list' :=
       MCP.dep_list'^
       |> List.map(((i, d)) =>
            if (i == id) {
              (i, deps);
-           } else if (i == actual_id) {
+           } else if (i == current_id) {
              (i, actual_deps_with_id);
            } else {
              (i, d);
            }
          );
-    MCP.dep_list' := dep_list;
+  });
 
-    fix_goblint_analysis_order(rest);
+let init_goblint = (solver, table, config, cil) => {
+  reorder_goblint_analysis_list(table);
+  try(reorder_goblint_analysis_list(table)) {
+  | Not_found =>
+    raise(InitFailed("Failed to populate the Goblint analysis list"))
   };
+
+  Sys.chdir("/"); // Don't remove this
+
+  Sys_js.create_file(~name="/goblint/solver.marshalled", ~content=solver);
+  Sys_js.create_file(~name="/goblint/config.json", ~content=config);
+
+  GobConfig.merge_file("/goblint/config.json");
+
+  GobConfig.set_bool("dbg.verbose", true);
+  // TODO: Uncomment this to improve performance in future
+  // GobConfig.set_bool("verify", false);
+
+  GobConfig.set_string("load_run", "goblint");
+  GobConfig.set_string("save_run", ""); // This will be set by config.json. Reset it
+
+  GobConfig.set_auto("trans.activated[+]", "'expeval'");
+  GobConfig.set_string("trans.expeval.query_file_name", "/query.json");
+
+  Cilfacade.init();
+  GobCli.handle_extraspecials();
+  GobCli.handle_flags();
+
+  // Don't remove these either
+  let cil = Cilfacade.callConstructors(cil);
+  Cilfacade.createCFG(cil);
+  Cilfacade.ugglyImperativeHack := cil;
+
+  cil;
 };
 
-HttpClient.get("/test")
->>= (
-  s => {
-    print_endline(string_of_int(Sys.int_size));
-    print_endline(string_of_int(Int.max_int));
-    let _ =
-      try(Marshal.from_string(s, 0)) {
-      | e =>
-        let s = Printexc.to_string(e);
-        Printf.printf("Marshal failed: %s\n", Printexc.to_string(e));
-        failwith(s);
-      };
-    // print_endline(string_of_int(i));
-    Lwt.return_unit;
-  }
-);
+let init = (pdata, cil, solver, table, config) => {
+  let cil =
+    switch (cil) {
+    | Ok(s) =>
+      let (c, e) = Marshal.from_string(s, 0);
+      init_cil(e);
+      c;
+    | _ => raise(InitFailed("Failed to load CIL state"))
+    };
+  print_endline("Restored Cabs2cil.environment");
 
-Lwt.all([
-  HttpClient.get_opt("/cilenvironment.dump"),
-  HttpClient.get_opt("/run/solver.marshalled"),
-  HttpClient.get_opt("/run/config.json"),
-  HttpClient.get_opt("/run/meta.json"),
-])
+  let cil =
+    switch (solver, table, config) {
+    | (Ok(s), Ok(t), Ok(c)) =>
+      let t = Marshal.from_string(t, 0);
+      init_goblint(s, t, c, cil);
+    | _ => raise(InitFailed("Failed to load Goblint state"))
+    };
+  print_endline("Initialized Goblint");
+
+  let pdata =
+    switch (pdata) {
+    | Ok(s) => Parse.parse_string(s)
+    | _ => raise(InitFailed("Failed to load the analysis results"))
+    };
+  print_endline("Fetched the analysis results");
+
+  print_endline("Rendering app...");
+  React.Dom.renderToElementWithId(<Main pdata cil />, "app");
+};
+
+let handle_error = exc => {
+  let s =
+    switch (exc) {
+    | InitFailed(s) => s
+    | _ => Printexc.to_string(exc)
+    };
+  React.Dom.renderToElementWithId(s |> React.string, "app");
+};
+
+[
+  "/analysis.xml",
+  "/cil.marshalled",
+  "/goblint/solver.marshalled",
+  "/goblint/analyses.marshalled",
+  "/goblint/config.json",
+]
+|> List.map(HttpClient.get)
+|> Lwt.all
 >>= (
   l =>
-    switch (l) {
-    | [Some(e), Some(s), Some(c), Some(m)] =>
-      // TODO: Do this in a cleaner fashion
-      Marshal.from_string(e, 0)
-      |> Hashtbl.to_seq
-      |> Hashtbl.add_seq(Cabs2cil.environment);
-      print_endline("Restored CIL environment");
-
-      Js_of_ocaml.Sys_js.create_file(
-        ~name="/run/solver.marshalled",
-        ~content=s,
-      );
-      Js_of_ocaml.Sys_js.create_file(~name="/run/config.json", ~content=c);
-      Js_of_ocaml.Sys_js.create_file(~name="/run/meta.json", ~content=m);
-      Js_of_ocaml.Sys_js.create_file(~name="/query.json", ~content=query);
-      fix_goblint_analysis_order(analysis_order);
-      React.Dom.renderToElementWithId(<Main />, "app");
-      Lwt.return_unit;
-    | _ => Lwt.return_unit
-    }
+    Lwt.return(
+      switch (l) {
+      | [pdata, cil, solver, table, config] =>
+        try(init(pdata, cil, solver, table, config)) {
+        | exc => handle_error(exc)
+        }
+      | _ => ()
+      },
+    )
 );
