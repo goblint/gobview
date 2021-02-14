@@ -26,7 +26,8 @@
       "def_exc" : false,
       "enums" : false,
       "enums_max" : 1,
-      "interval" : true
+      "interval" : true,
+      "wrap_on_signed_overflow" : false
     },
     "mutex" : {
       "disjoint_types" : true
