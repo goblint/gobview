@@ -98,11 +98,11 @@ let make = (~pdata, ~cil) => {
 "mode": ["May"]
 }|};
           Js_of_ocaml.Sys_js.create_file(~name="/query.json", ~content=query);
-          try(GobCli.do_analyze(Analyses.empty_increment_data(), cil)) {
+          try(Maingoblint.do_analyze(Analyses.empty_increment_data(), cil)) {
           | e => log(Printexc.to_string(e))
           };
           log("Goblint analysis is complete!");
-          try(GobCli.do_analyze(Analyses.empty_increment_data(), cil)) {
+          try(Maingoblint.do_analyze(Analyses.empty_increment_data(), cil)) {
           | e => log(Printexc.to_string(e))
           };
           log("Second Goblint analysis is complete!");

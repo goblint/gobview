@@ -88,8 +88,8 @@ let init_goblint = (solver, table, config, cil) => {
   GobConfig.set_string("trans.expeval.query_file_name", "/query.json");
 
   Cilfacade.init();
-  GobCli.handle_extraspecials();
-  GobCli.handle_flags();
+  Maingoblint.handle_extraspecials();
+  Maingoblint.handle_flags();
 
   // Don't remove these either
   let cil = Cilfacade.callConstructors(cil);
