@@ -170,3 +170,7 @@
   .sameState {
     background-color: white;
   }
+
+.min-w-100 {
+  min-width: 100%;
+}
