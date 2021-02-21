@@ -33,8 +33,11 @@ module Query = struct
       Sys_js.create_file ~name:GvConstants.semantic_search_query_file ~content:(to_string q);
       Maingoblint.do_analyze (Analyses.empty_increment_data ()) cil;
       let data = Sys_js.read_file ~name:GvConstants.semantic_search_results_file in
-      Marshal.from_string data 0 |> List.map fst |> List.map (fun l -> ("", l, "", 0))
-      (* TODO: Return proper results. At the moment, it is just the CIL location. *) )
+      let results = Marshal.from_string data 0 in
+      let pred =
+        if q.mode = `Must then snd %> Option.default false else snd %> Option.default true
+      in
+      results |> List.filter pred |> List.map fst )
     else QueryMapping.map_query (to_syntactic_query q) cil
 
   let string_of_error e = match e with ParseError s -> s
