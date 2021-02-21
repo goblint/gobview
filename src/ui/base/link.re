@@ -13,7 +13,12 @@ let make = (~url=?, ~class_=?, ~on_click=?, ~children) => {
 
   let className = String.concat(" ", class_);
 
-  let onClick = _ => Option.may(cb => cb(), on_click);
+  let onClick =
+    on_click
+    |> Option.map((cb, ev) => {
+         React.Event.Mouse.preventDefault(ev);
+         cb();
+       });
 
-  <a href className onClick> children </a>;
+  <a href className ?onClick> children </a>;
 };
