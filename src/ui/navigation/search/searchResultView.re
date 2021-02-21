@@ -1,19 +1,17 @@
-let make_result_list = (matches, dispatch) => {
-  let clear = _ => {
-    dispatch @@ `ClearSynSearchMatches;
-  };
+open Batteries;
 
-  let on_click = (loc, ev) => {
-    React.Event.Mouse.preventDefault(ev);
+let make_result_list = (matches, dispatch) => {
+  let clear = () => dispatch @@ `ClearSearchMatches;
+
+  let on_click = (loc: Cil.location, ()) => {
     dispatch @@ `InspectCilLocation(loc);
-    dispatch @@ `Set_line(loc.Cil.line);
+    dispatch @@ `Set_line(loc.line);
   };
 
   <>
-    <button
-      type_="button" className="btn btn-outline-danger my-2" onClick=clear>
+    <Button class_=["btn", "my-2"] color=`Danger outline=true on_click=clear>
       {"Clear results" |> React.string}
-    </button>
+    </Button>
     <table className="table table-hover">
       <thead>
         <tr>
@@ -27,17 +25,18 @@ let make_result_list = (matches, dispatch) => {
         {matches
          |> List.mapi((i, m) => {
               let (name, loc, signature, _) = m;
-              <tr key={string_of_int(i)}>
-                <th scope="row"> {i |> string_of_int |> React.string} </th>
+              let key = string_of_int(i);
+              <tr key>
+                <th scope="row"> {key |> React.string} </th>
                 <td> {name |> React.string} </td>
                 <td> {signature |> React.string} </td>
                 <td>
-                  <a href="#" onClick={on_click(loc)}>
-                    {loc.Cil.file
+                  <Link on_click={on_click(loc)}>
+                    {loc.file
                      ++ ":"
-                     ++ string_of_int(loc.Cil.line)
+                     ++ string_of_int(loc.line)
                      |> React.string}
-                  </a>
+                  </Link>
                 </td>
               </tr>;
             })
@@ -49,8 +48,8 @@ let make_result_list = (matches, dispatch) => {
 
 [@react.component]
 let make = (~matches, ~dispatch) => {
-  let onClick = _ => {
-    dispatch @@ `ClearSynSearchMatches;
+  let on_click = _ => {
+    dispatch @@ `ClearSearchMatches;
   };
 
   <>
@@ -60,7 +59,9 @@ let make = (~matches, ~dispatch) => {
      } else {
        <div className="alert alert-warning alert-dismissible">
          {"No results found" |> React.string}
-         <button type_="button" className="btn-close" onClick />
+         <Button class_=["btn-close"] color=`None on_click>
+           React.null
+         </Button>
        </div>;
      }}
   </>;

@@ -1,9 +1,10 @@
-type error =
-  | ID(string); // This happens when we cannot convert the input into an integer
+open Batteries;
+
+module GUi = Search.GraphicalUi;
 
 let options = [
   (Ok(CodeQuery.Name_t("")), "Name"),
-  (Error(ID("")), "ID"),
+  (Error(GUi.ID_t("")), "ID"),
   (Ok(All_t), "All"),
   (Ok(AllGlobVar_t), "All globals"),
   (Ok(Or_t([])), "Or"),
@@ -13,8 +14,8 @@ let options = [
 let compare = (a, b) =>
   switch (a, b) {
   | (Ok(CodeQuery.Name_t(_)), Ok(CodeQuery.Name_t(_)))
-  | (Error(ID(_)), Error(ID(_)))
-  | (Error(ID(_)), Ok(ID_t(_)))
+  | (Error(GUi.ID_t(_)), Error(GUi.ID_t(_)))
+  | (Error(GUi.ID_t(_)), Ok(ID_t(_)))
   | (Ok(All_t), Ok(All_t))
   | (Ok(AllGlobVar_t), Ok(AllGlobVar_t))
   | (Ok(Or_t(_)), Ok(Or_t(_)))
@@ -35,12 +36,14 @@ let make = (~value, ~on_change) => {
   let on_change_id = s => {
     s
     |> int_of_string_opt
-    |> Option.fold(~none=Error(ID(s)), ~some=i =>
-         if (i >= 0) {
-           Ok(CodeQuery.ID_t(i));
-         } else {
-           Error(ID(s));
-         }
+    |> Option.map_default(
+         i =>
+           if (i >= 0) {
+             Ok(CodeQuery.ID_t(i));
+           } else {
+             Error(GUi.ID_t(s));
+           },
+         Error(GUi.ID_t(s)),
        )
     |> on_change;
   };
@@ -49,25 +52,25 @@ let make = (~value, ~on_change) => {
     switch (t) {
     | CodeQuery.Or_t(_) => on_change(Ok(Or_t(l)))
     | CodeQuery.And_t(_) => on_change(Ok(And_t(l)))
-    | _ => ()
+    | _ => failwith("t should be Or_t(_) or Or_t(_)")
     };
   };
 
   <>
     <div className="mb-3">
-      <label className="form-label"> {"Target" |> React.string} </label>
+      <Label> {"Target" |> React.string} </Label>
       <Select options compare value on_change=on_select />
     </div>
     {switch (value) {
      | Ok(Name_t(s)) =>
        <div className="mb-3"> <Input value=s on_change=on_change_name /> </div>
      | Ok(ID_t(_))
-     | Error(ID(_)) =>
+     | Error(GUi.ID_t(_)) =>
        let value =
          switch (value) {
          | Ok(ID_t(i)) => Ok(string_of_int(i))
-         | Error(ID(s)) => Error(s)
-         | _ => Error("") // This should never happen
+         | Error(GUi.ID_t(s)) => Error(s)
+         | _ => failwith("value should be Ok(ID_t(_)) or Error(GUi.ID_t(_))")
          };
        <div className="mb-3">
          <ValidatedInput value on_change=on_change_id>

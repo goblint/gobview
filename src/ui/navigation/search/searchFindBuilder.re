@@ -1,3 +1,5 @@
+open Batteries;
+
 let options = [
   (CodeQuery.Uses_f, "Uses"),
   (Decl_f, "Declarations"),
@@ -24,7 +26,7 @@ let make = (~value, ~on_change) => {
 
   <>
     <div className="mb-3">
-      <label className="form-label"> {"Find" |> React.string} </label>
+      <Label> {"Find" |> React.string} </Label>
       <Select options compare value on_change=on_select />
     </div>
     {switch (value) {

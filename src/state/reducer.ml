@@ -11,7 +11,6 @@ let reducer (s : State.t) = function
   | ( `InspectFile _ | `InspectCilLocation _ | `UpdateCode _ | `InspectGraph _
     | `UpdateDot _ | `ResetInspect ) as a ->
       InspectReducer.reducer s a
-  | ( `ShowSynSearchQueryAsJSON _ | `UpdateSynSearchField _
-    | `ParseSynSearchQuery _ | `PerformSynSearch | `ClearSynSearchMatches ) as a
-    ->
-      SyntacticSearchReducer.reducer s a
+  | ( `UpdateSearchMode _ | `UpdateSearchField _ | `ParseSearchQuery _
+    | `PerformSearch | `ClearSearchMatches ) as a ->
+      { s with search = SearchReducer.reducer s.search (Option.get s.cil) a }

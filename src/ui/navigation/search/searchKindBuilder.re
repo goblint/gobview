@@ -1,3 +1,5 @@
+open Batteries;
+
 let options = [
   (CodeQuery.Var_k, "Variable"),
   (Fun_k, "Function"),
@@ -6,12 +8,8 @@ let options = [
 
 [@react.component]
 let make = (~value, ~on_change) => {
-  let on_select = k => {
-    on_change(k);
-  };
-
   <div className="mb-3">
-    <label className="form-label"> {"Type" |> React.string} </label>
-    <Select options value on_change=on_select />
+    <Label> {"Type" |> React.string} </Label>
+    <Select options value on_change />
   </div>;
 };

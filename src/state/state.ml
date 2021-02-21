@@ -14,10 +14,6 @@ end
 
 type selected_panel = Selected_panel.t
 
-module SyntacticSearch = SyntacticSearchState
-
-type syntactic_search = SyntacticSearch.t
-
 type t = {
   id : int;
   line : int;
@@ -29,7 +25,7 @@ type t = {
   inspect : inspect option;
   selected_sidebar : selected_sidebar;
   selected_panel : selected_panel option;
-  syntactic_search : syntactic_search;
+  search : Search.t;
 }
 
 let default =
@@ -44,7 +40,7 @@ let default =
     inspect = None;
     selected_sidebar = Selected_sidebar.State;
     selected_panel = None;
-    syntactic_search = SyntacticSearch.default;
+    search = Search.default;
   }
 
 let create ~pdata ~cil () = { default with pdata; cil = Some cil }
