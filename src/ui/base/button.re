@@ -1,12 +1,23 @@
+open Batteries;
+
 [@react.component]
 let make =
-    (~type_=?, ~class_=?, ~color=?, ~on_click=?, ~disabled=?, ~children) => {
-  let (type_, class_, color, on_click, disabled) =
-    Utils.fix_opt_args5(type_, class_, color, on_click, disabled);
-  let type_ = Option.value(type_, ~default=`Button);
-  let class_ = Option.value(class_, ~default=["btn"]);
-  let color = Option.value(color, ~default=`Primary);
-  let disabled = Option.value(disabled, ~default=false);
+    (
+      ~type_=?,
+      ~class_=?,
+      ~color=?,
+      ~outline=?,
+      ~on_click=?,
+      ~disabled=?,
+      ~children,
+    ) => {
+  let (type_, class_, color, outline, on_click, disabled) =
+    Utils.fix_opt_args6(type_, class_, color, outline, on_click, disabled);
+  let type_ = Option.default(`Button, type_);
+  let class_ = Option.default(["btn"], class_);
+  let color = Option.default(`Primary, color);
+  let outline = Option.default(false, outline);
+  let disabled = Option.default(false, disabled);
 
   let type_ =
     switch (type_) {
@@ -15,14 +26,25 @@ let make =
     };
 
   let color_class =
-    switch (color) {
-    | `Primary => ["btn-primary"]
-    | _ => []
-    };
+    (
+      switch (color) {
+      | `Primary => ["primary"]
+      | `Danger => ["danger"]
+      | `None => []
+      }
+    )
+    |> List.map(
+         if (outline) {
+           (++)("outline-");
+         } else {
+           identity;
+         },
+       )
+    |> List.map((++)("btn-"));
 
   let className = [class_, color_class] |> List.concat |> String.concat(" ");
 
-  let onClick = _ => Option.iter(cb => cb(), on_click);
+  let onClick = _ => Option.may(cb => cb(), on_click);
 
   <button type_ className onClick disabled> children </button>;
 };
