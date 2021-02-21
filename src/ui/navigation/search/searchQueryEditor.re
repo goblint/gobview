@@ -24,7 +24,10 @@ let make = (~json, ~query, ~dispatch) => {
         {"Invalid query: " ++ string_of_error(error) |> React.string}
       </InvalidFeedback>
     </div>
-    <Button type_=`Button on_click disabled={Option.is_none(query)}>
+    <Button
+      type_=`Button
+      on_click
+      disabled={Option.is_none(query) || Option.is_some(error)}>
       {"Execute" |> React.string}
     </Button>
   </>;
