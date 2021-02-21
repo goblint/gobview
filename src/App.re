@@ -1,15 +1,17 @@
+open Batteries;
 open Js_of_ocaml;
 open Lwt.Infix;
 
 exception InitFailed(string);
 
-let compose = (f, g, x) => f(g(x));
-
 let init_cil = environment => {
   // Restore the environment hash table, which
   // syntacticsearch uses to map temporary variables created
   // by CIL to their original counterparts.
-  environment |> Hashtbl.to_seq |> Hashtbl.add_seq(Cabs2cil.environment);
+  Hashtbl.clear(Cabs2cil.environment);
+  environment
+  |> Hashtbl.enum
+  |> Enum.iter(((k, v)) => Hashtbl.add(Cabs2cil.environment, k, v));
 };
 
 // Each Goblint analysis module is assigned an ID, and this
@@ -19,7 +21,7 @@ let init_cil = environment => {
 let reorder_goblint_analysis_list =
   List.iter(((id, ana)) => {
     let (current_id, _) =
-      List.find(compose(String.equal(ana), snd), MCP.analyses_table^);
+      List.find(snd %> String.equal(ana), MCP.analyses_table^);
     let spec = List.assoc(current_id, MCP.analyses_list'^);
     let deps = List.assoc(current_id, MCP.dep_list'^);
 
@@ -85,7 +87,14 @@ let init_goblint = (solver, table, config, cil) => {
   GobConfig.set_string("save_run", ""); // This will be set by config.json. Reset it
 
   GobConfig.set_auto("trans.activated[+]", "'expeval'");
-  GobConfig.set_string("trans.expeval.query_file_name", "/query.json");
+  GobConfig.set_string(
+    "trans.expeval.query_file_name",
+    GvConstants.semantic_search_query_file,
+  );
+  GobConfig.set_string(
+    "trans.expeval.marshalled_results_file_name",
+    GvConstants.semantic_search_results_file,
+  );
 
   Cilfacade.init();
   Maingoblint.handle_extraspecials();

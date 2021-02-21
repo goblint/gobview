@@ -57,62 +57,6 @@ let make = (~pdata, ~cil) => {
     [|state.file_name|],
   );
 
-  React.useEffect0(() => {
-    log("Fetching CIL dump");
-    let _ =
-      Lwt.bind(
-        HttpClient.get("/cilfile.dump"),
-        _ => {
-          log("Fetched CIL dump");
-          log("Loaded " ++ cil.Cil.fileName);
-
-          let query =
-            {|{"select":[["name"],["location"],["type"],["id"]],"type":["var"],"target":["name","x"],"find":["uses"]}|}
-            |> Yojson.Safe.from_string
-            |> CodeQuery.query_of_yojson
-            |> (
-              r => {
-                switch (r) {
-                | Ppx_deriving_yojson_runtime.Result.Ok(q) => Ok(q)
-                | Ppx_deriving_yojson_runtime.Result.Error(e) => Error(e)
-                };
-              }
-            )
-            |> Result.get_ok;
-          let results =
-            try(QueryMapping.map_query(query, cil)) {
-            | e =>
-              print_endline(Printexc.to_string(e));
-              raise(e);
-            };
-          print_endline(ResultPrinter.print_result(results, query));
-          flush(stdout);
-
-          let query = {|{
-"kind": ["var"],
-"target": ["name", "x"],
-"find": ["uses"],
-"structure": ["none"],
-"limitation": ["none"],
-"expression": "x == 42",
-"mode": ["May"]
-}|};
-          Js_of_ocaml.Sys_js.create_file(~name="/query.json", ~content=query);
-          try(Maingoblint.do_analyze(Analyses.empty_increment_data(), cil)) {
-          | e => log(Printexc.to_string(e))
-          };
-          log("Goblint analysis is complete!");
-          try(Maingoblint.do_analyze(Analyses.empty_increment_data(), cil)) {
-          | e => log(Printexc.to_string(e))
-          };
-          log("Second Goblint analysis is complete!");
-
-          Lwt.return();
-        },
-      );
-    None;
-  });
-
   React.useEffect1(
     () => {
       switch (state.inspect) {

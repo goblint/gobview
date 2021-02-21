@@ -1,14 +1,14 @@
 open Batteries
+open Js_of_ocaml
 
 module Query = struct
   type t = ExpressionEvaluation.query
 
   type error = ParseError of string
 
-  let create ?(kind = CodeQuery.Var_k) ?(target = CodeQuery.Name_t "")
-      ?(find = CodeQuery.Uses_f) ?(structure = CodeQuery.None_s)
-      ?(limitation = CodeQuery.None_c) ?(expression = "") ?(mode = `Must) () : t
-      =
+  let create ?(kind = CodeQuery.Var_k) ?(target = CodeQuery.Name_t "") ?(find = CodeQuery.Uses_f)
+      ?(structure = CodeQuery.None_s) ?(limitation = CodeQuery.None_c) ?(expression = "")
+      ?(mode = `Must) () : t =
     { kind; target; find; structure; limitation; expression; mode }
 
   let default = create ()
@@ -24,19 +24,17 @@ module Query = struct
   let to_string = ExpressionEvaluation.query_to_yojson %> Yojson.Safe.to_string
 
   let to_syntactic_query (q : t) : CodeQuery.query =
-    {
-      sel = [];
-      k = q.kind;
-      tar = q.target;
-      f = q.find;
-      str = q.structure;
-      lim = q.limitation;
-    }
+    { sel = []; k = q.kind; tar = q.target; f = q.find; str = q.structure; lim = q.limitation }
 
   let is_semantic (q : t) = not (String.is_empty q.expression)
 
   let execute (q : t) cil =
-    if is_semantic q then []
+    if is_semantic q then (
+      Sys_js.create_file ~name:GvConstants.semantic_search_query_file ~content:(to_string q);
+      Maingoblint.do_analyze (Analyses.empty_increment_data ()) cil;
+      let data = Sys_js.read_file ~name:GvConstants.semantic_search_results_file in
+      Marshal.from_string data 0 |> List.map fst |> List.map (fun l -> ("", l, "", 0))
+      (* TODO: Return proper results. At the moment, it is just the CIL location. *) )
     else QueryMapping.map_query (to_syntactic_query q) cil
 
   let string_of_error e = match e with ParseError s -> s
@@ -75,8 +73,7 @@ type json_ui = { text : string; query : query option * Query.error option }
 let graphical_ui_of_json_ui ju =
   match fst ju.query with
   | Some { kind; target; find; structure; expression; mode; _ } ->
-      GraphicalUi.create ~kind ~target:(Ok target) ~find ~structure ~expression
-        ~mode ()
+      GraphicalUi.create ~kind ~target:(Ok target) ~find ~structure ~expression ~mode ()
   | _ -> GraphicalUi.default
 
 let json_ui_of_graphical_ui gu =
@@ -102,10 +99,8 @@ let default =
 
 let update_mode s mode =
   match (s.mode, mode) with
-  | Graphical, Json ->
-      { s with mode; json_ui = json_ui_of_graphical_ui s.graphical_ui }
-  | Json, Graphical ->
-      { s with mode; graphical_ui = graphical_ui_of_json_ui s.json_ui }
+  | Graphical, Json -> { s with mode; json_ui = json_ui_of_graphical_ui s.graphical_ui }
+  | Json, Graphical -> { s with mode; graphical_ui = graphical_ui_of_json_ui s.json_ui }
   | _ -> s
 
 let execute s cil =
