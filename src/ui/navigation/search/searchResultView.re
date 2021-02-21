@@ -1,6 +1,6 @@
 open Batteries;
 
-let make_result_list = (matches, dispatch) => {
+let make_table = (matches, dispatch) => {
   let clear = () => dispatch @@ `ClearSearchMatches;
 
   let on_click = (loc: Cil.location, ()) => {
@@ -47,22 +47,37 @@ let make_result_list = (matches, dispatch) => {
 };
 
 [@react.component]
-let make = (~matches, ~dispatch) => {
+let make = (~matches: Search.matches, ~dispatch) => {
+  React.useEffect1(
+    () => {
+      if (matches == Loading) {
+        dispatch @@ `PerformSearch;
+      };
+      None;
+    },
+    [|matches|],
+  );
+
   let on_click = _ => {
     dispatch @@ `ClearSearchMatches;
   };
 
   <>
     <h5 className="card-title"> {"Results" |> React.string} </h5>
-    {if (List.length(matches) > 0) {
-       make_result_list(matches, dispatch);
-     } else {
+    {switch (matches) {
+     | Loading =>
+       <div className="d-flex justify-content-center">
+         <div className="spinner-border" />
+       </div>
+     | Done([]) =>
        <div className="alert alert-warning alert-dismissible">
          {"No results found" |> React.string}
          <Button class_=["btn-close"] color=`None on_click>
            React.null
          </Button>
-       </div>;
+       </div>
+     | Done(matches) => make_table(matches, dispatch)
+     | _ => React.null
      }}
   </>;
 };

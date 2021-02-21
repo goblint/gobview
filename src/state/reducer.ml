@@ -8,9 +8,9 @@ let reducer (s : State.t) = function
   | `Set_code code -> { s with code }
   | `Switch_sidebar selected_sidebar -> { s with selected_sidebar }
   | `Switch_panel selected_panel -> { s with selected_panel }
-  | ( `InspectFile _ | `InspectCilLocation _ | `UpdateCode _ | `InspectGraph _
-    | `UpdateDot _ | `ResetInspect ) as a ->
+  | ( `InspectFile _ | `InspectCilLocation _ | `UpdateCode _ | `InspectGraph _ | `UpdateDot _
+    | `ResetInspect ) as a ->
       InspectReducer.reducer s a
-  | ( `UpdateSearchMode _ | `UpdateSearchField _ | `ParseSearchQuery _
+  | ( `UpdateSearchMode _ | `UpdateSearchField _ | `ParseSearchQuery _ | `StartPerformSearch
     | `PerformSearch | `ClearSearchMatches ) as a ->
       { s with search = SearchReducer.reducer s.search (Option.get s.cil) a }

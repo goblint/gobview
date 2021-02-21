@@ -85,12 +85,13 @@ let json_ui_of_graphical_ui gu =
 
 type mode = Graphical | Json
 
-type t = {
-  mode : mode;
-  graphical_ui : graphical_ui;
-  json_ui : json_ui;
-  matches : (string * Cil.location * string * int) list option;
-}
+module Matches = struct
+  type t = None | Loading | Done of (string * Cil.location * string * int) list
+end
+
+type matches = Matches.t
+
+type t = { mode : mode; graphical_ui : graphical_ui; json_ui : json_ui; matches : matches }
 
 let default =
   {
@@ -112,5 +113,5 @@ let execute s cil =
     | Graphical -> Some (GraphicalUi.to_query s.graphical_ui)
     | Json -> fst s.json_ui.query
   in
-  let f q = { s with matches = Some (Query.execute q cil) } in
+  let f q = { s with matches = Done (Query.execute q cil) } in
   Option.map_default f s q

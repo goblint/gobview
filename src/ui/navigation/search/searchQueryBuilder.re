@@ -11,7 +11,7 @@ let make = (~kind, ~target, ~find, ~structure, ~expression, ~mode, ~dispatch) =>
     dispatch @@ `UpdateSearchField(`Expression(e));
   let on_change_mode = m => dispatch @@ `UpdateSearchField(`Mode(m));
 
-  let on_click = () => dispatch @@ `PerformSearch;
+  let on_click = () => dispatch @@ `StartPerformSearch;
 
   <>
     <SearchKindBuilder value=kind on_change=on_change_kind />

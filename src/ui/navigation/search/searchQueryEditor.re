@@ -15,9 +15,7 @@ let make = (~json, ~query, ~dispatch) => {
     dispatch @@ `ParseSearchQuery(s);
   };
 
-  let on_click = () => {
-    dispatch @@ `PerformSearch;
-  };
+  let on_click = () => dispatch @@ `StartPerformSearch;
 
   <>
     <div className="mb-3">

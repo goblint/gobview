@@ -22,5 +22,6 @@ let reducer (s : Search.t) cil = function
         else { ju with query = (None, None) }
       in
       { s with json_ui }
+  | `StartPerformSearch -> { s with matches = Loading }
   | `PerformSearch -> Search.execute s cil
   | `ClearSearchMatches -> { s with matches = None }

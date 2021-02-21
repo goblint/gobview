@@ -6,8 +6,8 @@ let make = (~search: Search.t, ~dispatch) => {
     <div className="card-header"> {"Search" |> React.string} </div>
     <div className="card-body">
       {switch (search.matches) {
-       | Some(matches) => <SearchResultView matches dispatch />
-       | _ => <SearchQueryView search dispatch />
+       | None => <SearchQueryView search dispatch />
+       | matches => <SearchResultView matches dispatch />
        }}
     </div>
   </div>;
