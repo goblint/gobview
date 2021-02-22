@@ -10,7 +10,7 @@
 (authors "Alex Micheli <c1707-fisch@yahoo.de>")
 
 (source
- (github keremc/goblint-webfrontend-jsoo))
+ (github goblint/gobview))
 
 (generate_opam_files true)
 
