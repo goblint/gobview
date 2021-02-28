@@ -87,14 +87,6 @@ let init_goblint = (solver, table, config, cil) => {
   GobConfig.set_string("save_run", ""); // This will be set by config.json. Reset it
 
   GobConfig.set_auto("trans.activated[+]", "'expeval'");
-  GobConfig.set_string(
-    "trans.expeval.query_file_name",
-    GvConstants.semantic_search_query_file,
-  );
-  GobConfig.set_string(
-    "trans.expeval.marshalled_results_file_name",
-    GvConstants.semantic_search_results_file,
-  );
 
   Cilfacade.init();
   Maingoblint.handle_extraspecials();
