@@ -1,5 +1,4 @@
 open Batteries
-open Js_of_ocaml
 
 module Query = struct
   type t = ExpressionEvaluation.query
@@ -30,14 +29,9 @@ module Query = struct
 
   let execute (q : t) cil =
     if is_semantic q then (
-      let write =
-        if Sys.file_exists GvConstants.semantic_search_query_file then Sys_js.update_file
-        else Sys_js.create_file
-      in
-      write ~name:GvConstants.semantic_search_query_file ~content:(to_string q);
+      ExpressionEvaluation.gv_query := Some q;
       Maingoblint.do_analyze (Analyses.empty_increment_data ()) cil;
-      let data = Sys_js.read_file ~name:GvConstants.semantic_search_results_file in
-      let results = Marshal.from_string data 0 in
+      let results = !ExpressionEvaluation.gv_results in
       let pred =
         if q.mode = `Must then snd %> Option.default false else snd %> Option.default true
       in
