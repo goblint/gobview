@@ -97,7 +97,9 @@ let init_goblint = (solver, table, config, cil) => {
   Cilfacade.createCFG(cil);
   Cilfacade.ugglyImperativeHack := cil;
 
-  cil;
+  let goblint = GvGoblint.unmarshal(~goblint=solver, cil);
+
+  (goblint, cil);
 };
 
 let init = (pdata, cil, solver, table, config) => {
@@ -111,7 +113,7 @@ let init = (pdata, cil, solver, table, config) => {
     };
   print_endline("Restored Cabs2cil.environment");
 
-  let cil =
+  let (goblint, cil) =
     switch (solver, table, config) {
     | (Ok(s), Ok(t), Ok(c)) =>
       let t = Marshal.from_string(t, 0);
@@ -128,7 +130,7 @@ let init = (pdata, cil, solver, table, config) => {
   print_endline("Fetched the analysis results");
 
   print_endline("Rendering app...");
-  React.Dom.renderToElementWithId(<Main pdata cil />, "app");
+  React.Dom.renderToElementWithId(<Main pdata goblint cil />, "app");
 };
 
 let handle_error = exc => {

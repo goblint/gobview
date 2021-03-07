@@ -37,8 +37,7 @@ let make = (~state, ~dispatch) => {
         {switch (current) {
          | Selected_sidebar.State =>
            <StateView state calls={state |> pdata |> Parse.get_calls} />
-         | Selected_sidebar.Globals =>
-           <GlobView globs={state |> pdata |> Parse.get_globs} />
+         | Selected_sidebar.Globals => <GlobView globs=(state.goblint)#globs />
          }}
       </div>
     </div>

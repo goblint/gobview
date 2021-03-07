@@ -20,6 +20,7 @@ type t = {
   file_name : string;
   file_path : string;
   cil : Cil.file option;
+  goblint : GvGoblint.solver_state;
   pdata : Parse.run;
   code : string;
   inspect : inspect option;
@@ -36,6 +37,7 @@ let default =
     file_path = "";
     pdata = Parse.empty_run;
     code = "";
+    goblint = GvGoblint.empty;
     cil = None;
     inspect = None;
     selected_sidebar = Selected_sidebar.State;
@@ -43,7 +45,7 @@ let default =
     search = Search.default;
   }
 
-let create ~pdata ~cil () = { default with pdata; cil = Some cil }
+let create ~pdata ~goblint ~cil () = { default with pdata; goblint; cil = Some cil }
 
 let cil state = state.cil
 
