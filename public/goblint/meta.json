@@ -1,6 +1,6 @@
 {
   "command":
-    "./goblint --sets solver td3 --enable ana.int.interval --disable ana.int.def_exc --disable exp.fast_global_inits --enable exp.partition-arrays.enabled --enable dbg.verbose --disable ana.opt.hashcons --sets save_run run tests/regression/22-partitioned_arrays/06-interprocedural.c",
-  "timestamp": 1613315140.0,
-  "localtime": "2021-02-14 16:05:40"
+    "./goblint --sets solver td3 --enable ana.int.interval --disable ana.int.def_exc --disable exp.fast_global_inits --enable exp.partition-arrays.enabled --enable dbg.verbose --disable ana.opt.hashcons --sets save_run run main.c",
+  "timestamp": 1615149134.0,
+  "localtime": "2021-03-07 21:32:14"
 }

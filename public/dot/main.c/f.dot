@@ -1,0 +1,15 @@
+digraph cfg {
+	13 -> ret528 [label = "return (void *)0
+"] ;
+	12 -> 13 [label = "fac()
+"] ;
+	11 -> 12 [label = "x = 5
+"] ;
+	fun528 -> 11 [label = "(body)
+"] ;
+	ret528 [id="ret528",URL="javascript:show_info('\N');",fillcolor=white,style=filled,label ="return of f()",shape=box];
+	11 [id="11",URL="javascript:show_info('\N');",fillcolor=white,style=filled,];
+	12 [id="12",URL="javascript:show_info('\N');",fillcolor=white,style=filled,];
+	13 [id="13",URL="javascript:show_info('\N');",fillcolor=white,style=filled,];
+	fun528 [id="fun528",URL="javascript:show_info('\N');",fillcolor=white,style=filled,label ="f()",shape=box];
+}

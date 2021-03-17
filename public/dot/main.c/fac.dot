@@ -1,0 +1,29 @@
+digraph cfg {
+	9 -> ret527 [label = "return
+"] ;
+	4 -> 9 [label = "ret = a
+"] ;
+	2 -> 4 [label = "Pos(x == 0)
+"] ;
+	8 -> 2 [label = "skip
+"] ;
+	7 -> 2 [label = "x = x - 1
+"] ;
+	1 -> 2 [label = "a = 1
+"] ;
+	6 -> 7 [label = "a = a * x
+"] ;
+	2 -> 6 [label = "Neg(x == 0)
+"] ;
+	fun527 -> 1 [label = "(body)
+"] ;
+	8 [id="8",URL="javascript:show_info('\N');",fillcolor=orange,style=filled,];
+	ret527 [id="ret527",URL="javascript:show_info('\N');",fillcolor=white,style=filled,label ="return of fac()",shape=box];
+	1 [id="1",URL="javascript:show_info('\N');",fillcolor=white,style=filled,];
+	9 [id="9",URL="javascript:show_info('\N');",fillcolor=white,style=filled,];
+	2 [id="2",URL="javascript:show_info('\N');",fillcolor=white,style=filled,shape=diamond];
+	4 [id="4",URL="javascript:show_info('\N');",fillcolor=white,style=filled,];
+	6 [id="6",URL="javascript:show_info('\N');",fillcolor=white,style=filled,];
+	fun527 [id="fun527",URL="javascript:show_info('\N');",fillcolor=white,style=filled,label ="fac()",shape=box];
+	7 [id="7",URL="javascript:show_info('\N');",fillcolor=white,style=filled,];
+}

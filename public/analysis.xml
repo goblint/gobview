@@ -1,125 +1,48 @@
-<run><parameters>./goblint --enable dbg.debug --sets warnstyle legacy --enable colors --enable dbg.showtemps --enable dbg.regression --html --sets solver td3 --enable ana.int.interval --disable exp.fast_global_inits --enable exp.partition-arrays.enabled --set ana.activated ['base','expRelation'] tests/regression/22-partitioned_arrays/06-interprocedural.c</parameters><statistics>TOTAL                           0.000 s
-  parse                           0.000 s
-  convert to CIL                  0.000 s
+<run><parameters>./goblint --sets solver td3 --enable ana.int.interval --disable ana.int.def_exc --disable exp.fast_global_inits --enable exp.partition-arrays.enabled --enable dbg.verbose --disable ana.opt.hashcons --html main.c</parameters><statistics>TOTAL                           0.014 s
+  parse                           0.008 s
+  convert to CIL                  0.005 s
   analysis                        0.000 s
-    solving                         0.027 s
+    global_inits                    0.000 s
+    solving                         0.018 s
       S.Dom.equal                     0.000 s
+    verify                          0.003 s
 Timing used
-Memory statistics: total=42.66MB, max=3.93MB, minor=40.95MB, major=3.30MB, promoted=1.59MB
-    minor collections=21  major collections=3 compactions=0
+Memory statistics: total=19.59MB, max=2.00MB, minor=18.97MB, major=2.17MB, promoted=1.56MB
+    minor collections=21  major collections=4 compactions=0
 </statistics><result>
-<file name="06-interprocedural.c" path="tests/regression/22-partitioned_arrays/06-interprocedural.c">
-<function name="callee">
-<node name="fun303"/>
-<node name="59"/>
-<node name="ret303"/>
-<node name="60"/>
-</function>
-<function name="example2">
-<node name="54"/>
-<node name="52"/>
-<node name="56"/>
-<node name="51"/>
-<node name="49"/>
-<node name="43"/>
-<node name="55"/>
-<node name="48"/>
-<node name="44"/>
-<node name="35"/>
-<node name="42"/>
-<node name="53"/>
-<node name="39"/>
-<node name="57"/>
-<node name="45"/>
-<node name="fun300"/>
-<node name="50"/>
-<node name="ret300"/>
-</function>
-<function name="init_array">
-<node name="19"/>
-<node name="26"/>
-<node name="27"/>
-<node name="30"/>
-<node name="ret295"/>
-<node name="31"/>
-<node name="23"/>
-<node name="33"/>
-<node name="fun295"/>
-<node name="32"/>
-</function>
-<function name="do_first">
-<node name="15"/>
-<node name="fun292"/>
-<node name="17"/>
-<node name="ret292"/>
-<node name="16"/>
-</function>
-<function name="example1">
-<node name="11"/>
-<node name="10"/>
-<node name="5"/>
-<node name="fun289"/>
-<node name="8"/>
-<node name="6"/>
-<node name="13"/>
-<node name="12"/>
-<node name="9"/>
-<node name="ret289"/>
-<node name="7"/>
-</function>
+<file name="main.c" path="main.c">
 <function name="main">
-<node name="3"/>
+<node name="20"/>
+<node name="17"/>
+<node name="18"/>
+<node name="ret530"/>
+<node name="fun530"/>
+<node name="15"/>
+<node name="21"/>
+<node name="16"/>
+<node name="19"/>
+</function>
+<function name="f">
+<node name="13"/>
+<node name="11"/>
+<node name="12"/>
+<node name="fun528"/>
+<node name="ret528"/>
+</function>
+<function name="fac">
+<node name="fun527"/>
+<node name="9"/>
+<node name="4"/>
+<node name="6"/>
 <node name="2"/>
-<node name="ret285"/>
-<node name="fun285"/>
+<node name="8"/>
 <node name="1"/>
+<node name="7"/>
+<node name="ret527"/>
 </function>
 </file>
-<call id="ret300" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="42" order="727">
+<call id="ret528" file="main.c" line="22" order="48548">
 <context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
 <analysis name="expRelation">
 <value>
 <data>
@@ -127,61 +50,13 @@ array partitioning deps
 </data>
 </value>
 </analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
+<analysis name="mallocWrapper">
 <value>
 <data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
+Unknown line
 </data>
 </value>
 </analysis>
-</path></call>
-<call id="60" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="67" order="1126">
-<context>
 <analysis name="base">
 <value>
 <map>
@@ -191,835 +66,108 @@ value domain
 <value>
 <map>
 <key>
-arr</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
+__tzname</key>
 <value>
 <data>
-i
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-Not {0}([0,8]); [7,42]
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-arr[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
+top
 </data>
 </value>
 <key>
-Thread
-</key>
+__daylight</key>
 <value>
 <data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-arr
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-arr</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-i
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-Not {0}([0,8]); [7,42]
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-Not {0}([0,8]); [7,42]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-arr[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
+top
 </data>
 </value>
 <key>
-Thread
-</key>
+__timezone</key>
 <value>
 <data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-arr
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="50" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="54" order="914">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
+top
 </data>
 </value>
 <key>
-Thread
-</key>
+tzname</key>
 <value>
 <data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-arr</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Not {0}([0,8]); [7,42]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Not {0}([-31,31]); [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
+top
 </data>
 </value>
 <key>
-Thread
-</key>
+daylight</key>
 <value>
 <data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-arr
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="fun300" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="42" order="727">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
+top
 </data>
 </value>
 <key>
-Thread
-</key>
+timezone</key>
 <value>
 <data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
+top
 </data>
 </value>
 <key>
-Thread
-</key>
+stdin</key>
 <value>
 <data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="16" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="27" order="546">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-a[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
+top
 </data>
 </value>
 <key>
-Thread
-</key>
+stdout</key>
 <value>
 <data>
-main
+top
 </data>
-</value>
-</map>
 </value>
 <key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
+stderr</key>
 <value>
 <data>
-()
+top
 </data>
 </value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
 <key>
-value domain
-</key>
+sys_nerr</key>
 <value>
-<map>
+<data>
+top
+</data>
+</value>
 <key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
+sys_errlist</key>
 <value>
 <data>
-0
+top
 </data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
 </value>
 <key>
 x</key>
 <value>
 <data>
-42; [42,42]
+intervals:[0,0]
 </data>
 </value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-a[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="32" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="37" order="698">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
 <key>
 a</key>
 <value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
 <data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-a[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
+intervals:[0,0]
 </data>
 </value>
 <key>
-Thread
-</key>
+ret</key>
 <value>
 <data>
-main
+intervals:[0,0]
+</data>
+</value>
+<key>
+p</key>
+<value>
+<data>
+intervals:[0,0]
 </data>
 </value>
 </map>
@@ -1034,5314 +182,45 @@ array partitioning deps
 </map>
 </value>
 </analysis>
-<analysis name="expRelation">
+<analysis name="threadid">
 <value>
 <data>
-()
+f@main.c:30
 </data>
 </value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (other)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
 </analysis>
 </context>
 
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Not {0}([-31,31]); [20,20]
-</data>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-a[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-a
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
+<path><analysis name="expRelation">
 <value>
 <data>
 ()
 </data>
 </value>
 </analysis>
-</path><context>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
 <analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-b[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Not {0}([-31,31]); [20,20]
-</data>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-b[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-b
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="ret303" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="65" order="1088">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-arr</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-i
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-Not {0}([0,8]); [7,42]
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-arr[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-arr
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-arr</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-i
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-Not {0}([0,8]); [7,42]
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-Not {0}([0,8]); [7,42]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-arr
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="45" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="45" order="771">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-arr</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-i
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-Not {0}([0,8]); [7,42]
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-Not {0}([0,8]); [7,42]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Unknown int([-31,31]); [0,19]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-arr
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="57" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="63" order="1085">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-arr</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Not {0}([0,8]); [7,42]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Not {0}([-31,31]); [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-arr
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="39" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="45" order="767">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-arr</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-i
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-Not {0}([0,8]); [7,42]
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Unknown int([-31,31]); [0,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-arr
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="fun295" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="30" order="561">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-a[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-a[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path><context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-b[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-b[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="1" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="3" order="252">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="53" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="58" order="987">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-arr</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Not {0}([0,8]); [7,42]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Not {0}([-31,31]); [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-arr
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="7" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="15" order="373">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="33" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="38" order="722">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-a[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Not {0}([-31,31]); [20,20]
-</data>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-a[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-a
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path><context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-b[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Not {0}([-31,31]); [20,20]
-</data>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-b[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-b
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="ret289" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="8" order="282">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="9" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="18" order="412">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-3; [3,3]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="ret292" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="25" order="500">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-a[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-3; [3,3]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="12" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="22" order="476">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-3; [3,3]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="13" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="23" order="497">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-3; [3,3]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="42" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="47" order="803">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-arr</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-i
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-Not {0}([0,8]); [7,42]
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Unknown int([-31,31]); [0,19]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-arr
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="23" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="31" order="600">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-a[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-i
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Unknown int([-31,31]); [0,20]
-</data>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-a[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-a
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path><context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-b[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-i
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Unknown int([-31,31]); [0,20]
-</data>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-b[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-b
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="6" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="14" order="351">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="35" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="45" order="771">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-arr</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="17" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="28" order="558">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-a[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-3; [3,3]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-x</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-a[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="44" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="49" order="846">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-arr</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-i
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-Not {0}([0,8]); [7,42]
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Unknown int([-31,31]); [0,19]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-arr
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="48" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="52" order="866">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-arr</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Not {0}([0,8]); [7,42]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Not {0}([-31,31]); [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-arr
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="fun285" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="2" order="233">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="55" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="61" order="1038">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-arr</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Not {0}([0,8]); [7,42]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Not {0}([-31,31]); [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-arr
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="ret285" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="2" order="233">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
 <value>
 <map>
 <key>
@@ -6353,30 +232,7 @@ value domain
 RETURN</key>
 <value>
 <data>
-0; [0,0]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
+intervals:[0,0]
 </data>
 </value>
 </map>
@@ -6391,59 +247,31 @@ array partitioning deps
 </map>
 </value>
 </analysis>
-<analysis name="expRelation">
+<analysis name="threadid">
 <value>
 <data>
-()
+f@main.c:30
 </data>
 </value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (other)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
 </analysis>
 </path></call>
-<call id="2" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="4" order="266">
+<call id="fun528" file="main.c" line="22" order="48548">
 <context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
 <analysis name="expRelation">
 <value>
 <data>
@@ -6451,61 +279,13 @@ array partitioning deps
 </data>
 </value>
 </analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
+<analysis name="mallocWrapper">
 <value>
 <data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
+Unknown line
 </data>
 </value>
 </analysis>
-</path></call>
-<call id="31" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="36" order="673">
-<context>
 <analysis name="base">
 <value>
 <map>
@@ -6515,1461 +295,108 @@ value domain
 <value>
 <map>
 <key>
-a</key>
+__tzname</key>
 <value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-a[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Not {0}([-31,31]); [20,20]
-</data>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-a[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-a
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path><context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-b[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Not {0}([-31,31]); [20,20]
-</data>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-b[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-b
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="43" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="48" order="820">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-arr</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-i
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-Not {0}([0,8]); [7,42]
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Unknown int([-31,31]); [0,19]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-arr
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="fun292" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="25" order="500">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-a[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-a[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="49" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="53" order="891">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-arr</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Not {0}([0,8]); [7,42]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Not {0}([-31,31]); [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-arr
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="8" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="17" order="397">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
 <data>
-0
+top
 </data>
 </value>
 <key>
-Thread
-</key>
+__daylight</key>
 <value>
 <data>
-main
+top
 </data>
 </value>
-</map>
-</value>
 <key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
+__timezone</key>
 <value>
 <data>
-()
+top
 </data>
 </value>
-</analysis>
-</path></call>
-<call id="15" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="26" order="528">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
 <key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
+tzname</key>
 <value>
 <data>
-42; [42,42]
+top
 </data>
 </value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-        </map></value>
 <key>
-length
-</key>
+daylight</key>
 <value>
 <data>
-20; [20,20]
+top
 </data>
 </value>
-</map>
-</value>
 <key>
-arr</key>
-<value>
-<set>
+timezone</key>
 <value>
 <data>
-a[0; [0,0]]
+top
 </data>
-</value>
-</set>
-</value>
-</map>
 </value>
 <key>
-flag domain
-</key>
+stdin</key>
 <value>
-<map>
-<key>
-MT mode
-</key>
-<value>
 <data>
-0
+top
 </data>
 </value>
 <key>
-Thread
-</key>
+stdout</key>
 <value>
 <data>
-main
+top
 </data>
 </value>
-</map>
-</value>
 <key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
+stderr</key>
 <value>
 <data>
-()
+top
 </data>
 </value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
 <key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
+sys_nerr</key>
 <value>
 <data>
-bottom
+top
 </data>
 </value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-        </map></value>
 <key>
-length
-</key>
+sys_errlist</key>
 <value>
 <data>
-20; [20,20]
+top
 </data>
-</value>
-</map>
 </value>
 <key>
 x</key>
 <value>
 <data>
-Unknown int([-31,31]); [-2147483648,2147483647]
+intervals:[0,0]
 </data>
 </value>
 <key>
-arr</key>
-<value>
-<set>
+a</key>
 <value>
 <data>
-a[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
+intervals:[0,0]
 </data>
 </value>
 <key>
-Thread
-</key>
+ret</key>
 <value>
 <data>
-main
+intervals:[0,0]
+</data>
+</value>
+<key>
+p</key>
+<value>
+<data>
+intervals:[0,0]
 </data>
 </value>
 </map>
@@ -7984,6 +411,194 @@ array partitioning deps
 </map>
 </value>
 </analysis>
+<analysis name="threadid">
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (other)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</context>
+
+<path><analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+<key>
+__tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdin</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdout</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stderr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_nerr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_errlist</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+x</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+a</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+ret</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+p</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (other)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</path></call>
+<call id="12" file="main.c" line="24" order="48578">
+<context>
 <analysis name="expRelation">
 <value>
 <data>
@@ -7991,9 +606,478 @@ array partitioning deps
 </data>
 </value>
 </analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+<key>
+__tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdin</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdout</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stderr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_nerr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_errlist</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+x</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+a</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+ret</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+p</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (other)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</context>
+
+<path><analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+<key>
+x</key>
+<value>
+<data>
+intervals:[5,5]
+</data>
+</value>
+<key>
+p</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (other)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
 </path></call>
-<call id="fun289" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="8" order="282">
+<call id="11" file="main.c" line="23" order="48569">
 <context>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+<key>
+__tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdin</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdout</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stderr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_nerr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_errlist</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+x</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+a</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+ret</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+p</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (other)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</context>
+
+<path><analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+<key>
+p</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (other)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</path></call>
+<call id="ret527" file="main.c" line="10" order="48436">
+<context>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
 <analysis name="base">
 <value>
 <map>
@@ -8005,29 +1089,6 @@ value domain
 </map>
 </value>
 <key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
 array partitioning deps
 </key>
 <value>
@@ -8037,329 +1098,44 @@ array partitioning deps
 </map>
 </value>
 </analysis>
-<analysis name="expRelation">
+<analysis name="threadid">
 <value>
 <data>
-()
+f@main.c:30
 </data>
 </value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (other)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
 </analysis>
 </context>
 
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
+<path><analysis name="expRelation">
 <value>
 <data>
 ()
 </data>
 </value>
 </analysis>
-</path></call>
-<call id="59" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="66" order="1114">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-arr</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
+<analysis name="mallocWrapper">
 <value>
 <data>
-i
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-Not {0}([0,8]); [7,42]
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-arr[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-arr
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
+Unknown line
 </data>
 </value>
 </analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-arr</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-i
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-Not {0}([0,8]); [7,42]
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-arr[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-arr
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="51" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="56" order="939">
-<context>
 <analysis name="base">
 <value>
 <map>
@@ -8371,29 +1147,6 @@ value domain
 </map>
 </value>
 <key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
 array partitioning deps
 </key>
 <value>
@@ -8403,6 +1156,31 @@ array partitioning deps
 </map>
 </value>
 </analysis>
+<analysis name="threadid">
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (other)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</path></call>
+<call id="19" file="main.c" line="33" order="49142">
+<context>
 <analysis name="expRelation">
 <value>
 <data>
@@ -8410,9 +1188,14 @@ array partitioning deps
 </data>
 </value>
 </analysis>
-</context>
-
-<path><analysis name="base">
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
 <value>
 <map>
 <key>
@@ -8421,61 +1204,101 @@ value domain
 <value>
 <map>
 <key>
-arr</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
+__tzname</key>
 <value>
 <data>
-Not {0}([0,8]); [7,42]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Not {0}([-31,31]); [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
+top
 </data>
 </value>
 <key>
-Thread
-</key>
+__daylight</key>
 <value>
 <data>
-main
+top
+</data>
+</value>
+<key>
+__timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdin</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdout</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stderr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_nerr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_errlist</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+x</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+a</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+ret</key>
+<value>
+<data>
+intervals:[0,0]
 </data>
 </value>
 </map>
@@ -8485,22 +1308,119 @@ array partitioning deps
 </key>
 <value>
 <map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-arr
-</data>
-</value>
-</set>
-</value>
 </map>
 </value>
 </map>
 </value>
 </analysis>
+<analysis name="threadid">
+<value>
+<data>
+main
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Singlethreaded
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</context>
+
+<path><analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+<key>
+thrd</key>
+<value>
+<set>
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</set>
+</value>
+<key>
+res</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+tmp</key>
+<value>
+<data>
+intervals:[-2147483648,2147483647]
+</data>
+</value>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+main
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (main)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</path></call>
+<call id="7" file="main.c" line="17" order="48522">
+<context>
 <analysis name="expRelation">
 <value>
 <data>
@@ -8508,9 +1428,13 @@ arr
 </data>
 </value>
 </analysis>
-</path></call>
-<call id="5" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="12" order="329">
-<context>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
 <analysis name="base">
 <value>
 <map>
@@ -8522,29 +1446,6 @@ value domain
 </map>
 </value>
 <key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
 array partitioning deps
 </key>
 <value>
@@ -8554,16 +1455,45 @@ array partitioning deps
 </map>
 </value>
 </analysis>
-<analysis name="expRelation">
+<analysis name="threadid">
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (other)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</context>
+
+<path><analysis name="expRelation">
 <value>
 <data>
 ()
 </data>
 </value>
 </analysis>
-</context>
-
-<path><analysis name="base">
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
 <value>
 <map>
 <key>
@@ -8574,80 +1504,8 @@ value domain
 <key>
 a</key>
 <value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
 <data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
+intervals:[-2147483648,2147483647]
 </data>
 </value>
 </map>
@@ -8662,6 +1520,31 @@ array partitioning deps
 </map>
 </value>
 </analysis>
+<analysis name="threadid">
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (other)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</path></call>
+<call id="1" file="main.c" line="11" order="48451">
+<context>
 <analysis name="expRelation">
 <value>
 <data>
@@ -8669,9 +1552,13 @@ array partitioning deps
 </data>
 </value>
 </analysis>
-</path></call>
-<call id="56" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="62" order="1062">
-<context>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
 <analysis name="base">
 <value>
 <map>
@@ -8683,26 +1570,61 @@ value domain
 </map>
 </value>
 <key>
-flag domain
+array partitioning deps
 </key>
 <value>
 <map>
-<key>
-MT mode
-</key>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
 <value>
 <data>
-0
+f@main.c:30
 </data>
 </value>
-<key>
-Thread
-</key>
+</analysis>
+<analysis name="threadflag">
 <value>
 <data>
-main
+Multithreaded (other)
 </data>
 </value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</context>
+
+<path><analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
 </map>
 </value>
 <key>
@@ -8715,6 +1637,31 @@ array partitioning deps
 </map>
 </value>
 </analysis>
+<analysis name="threadid">
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (other)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</path></call>
+<call id="16" file="main.c" line="30" order="48701">
+<context>
 <analysis name="expRelation">
 <value>
 <data>
@@ -8722,9 +1669,14 @@ array partitioning deps
 </data>
 </value>
 </analysis>
-</context>
-
-<path><analysis name="base">
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
 <value>
 <map>
 <key>
@@ -8733,61 +1685,101 @@ value domain
 <value>
 <map>
 <key>
-arr</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
+__tzname</key>
 <value>
 <data>
-Not {0}([0,8]); [7,42]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Not {0}([-31,31]); [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
+top
 </data>
 </value>
 <key>
-Thread
-</key>
+__daylight</key>
 <value>
 <data>
-main
+top
+</data>
+</value>
+<key>
+__timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdin</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdout</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stderr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_nerr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_errlist</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+x</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+a</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+ret</key>
+<value>
+<data>
+intervals:[0,0]
 </data>
 </value>
 </map>
@@ -8797,61 +1789,178 @@ array partitioning deps
 </key>
 <value>
 <map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+main
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Singlethreaded
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</context>
+
+<path><analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
 <key>
-i</key>
+value domain
+</key>
+<value>
+<map>
+<key>
+__tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdin</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdout</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stderr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_nerr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_errlist</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+x</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+a</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+ret</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+thrd</key>
 <value>
 <set>
 <value>
 <data>
-arr
+f@main.c:30
 </data>
 </value>
 </set>
 </value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
+<key>
+res</key>
 <value>
 <data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="3" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="5" order="278">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
+intervals:[-2147483648,2147483647]
 </data>
 </value>
 <key>
-Thread
-</key>
+tmp</key>
 <value>
 <data>
-main
+intervals:[-2147483648,2147483647]
 </data>
 </value>
 </map>
@@ -8866,16 +1975,164 @@ array partitioning deps
 </map>
 </value>
 </analysis>
+<analysis name="threadid">
+<value>
+<data>
+main
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (main)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</path></call>
+<call id="8" file="main.c" line="18" order="48531">
+<context>
 <analysis name="expRelation">
 <value>
 <data>
 ()
 </data>
 </value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (other)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</context>
+</call>
+<call id="2" file="main.c" line="13" order="48465">
+<context>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (other)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
 </analysis>
 </context>
 
-<path><analysis name="base">
+<path><analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
 <value>
 <map>
 <key>
@@ -8883,27 +2140,18 @@ value domain
 </key>
 <value>
 <map>
-</map>
-</value>
 <key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
+x</key>
 <value>
 <data>
-0
+intervals:[-2147483648,2147483647]
 </data>
 </value>
 <key>
-Thread
-</key>
+a</key>
 <value>
 <data>
-main
+intervals:[1,1]
 </data>
 </value>
 </map>
@@ -8918,6 +2166,31 @@ array partitioning deps
 </map>
 </value>
 </analysis>
+<analysis name="threadid">
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (other)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</path></call>
+<call id="6" file="main.c" line="16" order="48507">
+<context>
 <analysis name="expRelation">
 <value>
 <data>
@@ -8925,9 +2198,130 @@ array partitioning deps
 </data>
 </value>
 </analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (other)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</context>
+
+<path><analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (other)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
 </path></call>
-<call id="ret295" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="30" order="561">
+<call id="21" file="main.c" line="35" order="49193">
 <context>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
 <analysis name="base">
 <value>
 <map>
@@ -8937,72 +2331,184 @@ value domain
 <value>
 <map>
 <key>
+__tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdin</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdout</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stderr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_nerr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_errlist</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+x</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
 a</key>
 <value>
-<map>
+<data>
+intervals:[0,0]
+</data>
+</value>
 <key>
-partitioned array
+ret</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+</map>
+</value>
+<key>
+array partitioning deps
 </key>
 <value>
 <map>
-<key>Any</key>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
 <value>
 <data>
-Unknown int([-31,31]); [-2147483648,2147483647]
+main
 </data>
 </value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Singlethreaded
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</context>
 
-</map>
-</value>
-<key>
-length
-</key>
+<path><analysis name="expRelation">
 <value>
 <data>
-20; [20,20]
+()
 </data>
 </value>
-</map>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
 </value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
 <key>
-arr</key>
+value domain
+</key>
+<value>
+<map>
+<key>
+thrd</key>
 <value>
 <set>
 <value>
 <data>
-a[0; [0,0]]
+f@main.c:30
 </data>
 </value>
 </set>
 </value>
 <key>
-val</key>
+res</key>
 <value>
 <data>
-42; [42,42]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
+intervals:[0,0]
 </data>
 </value>
 <key>
-Thread
-</key>
+tmp</key>
 <value>
 <data>
-main
+intervals:[-2147483648,2147483647]
 </data>
 </value>
 </map>
@@ -9017,6 +2523,31 @@ array partitioning deps
 </map>
 </value>
 </analysis>
+<analysis name="threadid">
+<value>
+<data>
+main
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (main)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</path></call>
+<call id="4" file="main.c" line="14" order="48483">
+<context>
 <analysis name="expRelation">
 <value>
 <data>
@@ -9024,9 +2555,131 @@ array partitioning deps
 </data>
 </value>
 </analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (other)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
 </context>
 
-<path><analysis name="base">
+<path><analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (other)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</path></call>
+<call id="15" file="main.c" line="30" order="48701">
+<context>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
 <value>
 <map>
 <key>
@@ -9035,94 +2688,2855 @@ value domain
 <value>
 <map>
 <key>
+__tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdin</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdout</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stderr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_nerr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_errlist</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+x</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
 a</key>
 <value>
-<map>
+<data>
+intervals:[0,0]
+</data>
+</value>
 <key>
-partitioned array
+ret</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+</map>
+</value>
+<key>
+array partitioning deps
 </key>
 <value>
 <map>
-
-          <key>Partitioned By</key>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
 <value>
 <data>
-0
+main
 </data>
 </value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Singlethreaded
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</context>
 
+<path><analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+<key>
+__tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdin</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdout</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stderr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_nerr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_errlist</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+x</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+a</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+ret</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+thrd</key>
+<value>
+<data>
+intervals:[0,18446744073709551615]
+</data>
+</value>
+<key>
+res</key>
+<value>
+<data>
+intervals:[-2147483648,2147483647]
+</data>
+</value>
+<key>
+tmp</key>
+<value>
+<data>
+intervals:[-2147483648,2147483647]
+</data>
+</value>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+main
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Singlethreaded
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</path></call>
+<call id="fun530" file="main.c" line="28" order="48664">
+<context>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+<key>
+__tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdin</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdout</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stderr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_nerr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_errlist</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+x</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+a</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+ret</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+main
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Singlethreaded
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</context>
 
-          <key>l</key>
+<path><analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+<key>
+__tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdin</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdout</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stderr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_nerr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_errlist</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+x</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+a</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+ret</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+main
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Singlethreaded
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</path></call>
+<call id="13" file="main.c" line="25" order="48587">
+<context>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+<key>
+__tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdin</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdout</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stderr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_nerr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_errlist</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+x</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+a</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+ret</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+p</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (other)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</context>
+
+<path><analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+<key>
+p</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (other)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</path></call>
+<call id="ret530" file="main.c" line="28" order="48664">
+<context>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+<key>
+__tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdin</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdout</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stderr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_nerr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_errlist</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+x</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+a</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+ret</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+main
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Singlethreaded
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</context>
+
+<path><analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+<key>
+RETURN</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+main
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (main)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</path></call>
+<call id="18" file="main.c" line="32" order="49011">
+<context>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+<key>
+__tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdin</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdout</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stderr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_nerr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_errlist</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+x</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+a</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+ret</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+main
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Singlethreaded
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</context>
+
+<path><analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+<key>
+thrd</key>
+<value>
+<set>
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</set>
+</value>
+<key>
+res</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+tmp</key>
+<value>
+<data>
+intervals:[-2147483648,2147483647]
+</data>
+</value>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+main
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (main)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</path></call>
+<call id="9" file="main.c" line="20" order="48545">
+<context>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (other)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</context>
+
+<path><analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+<key>
+ret</key>
+<value>
+<data>
+intervals:[-2147483648,2147483647]
+</data>
+</value>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (other)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</path></call>
+<call id="17" file="main.c" line="31" order="48991">
+<context>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+<key>
+__tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdin</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdout</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stderr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_nerr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_errlist</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+x</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+a</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+ret</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+main
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Singlethreaded
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</context>
+
+<path><analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+<key>
+thrd</key>
+<value>
+<set>
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</set>
+</value>
+<key>
+res</key>
+<value>
+<data>
+intervals:[-2147483648,2147483647]
+</data>
+</value>
+<key>
+tmp</key>
+<value>
+<data>
+intervals:[-2147483648,2147483647]
+</data>
+</value>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+main
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (main)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</path></call>
+<call id="20" file="main.c" line="34" order="49162">
+<context>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+<key>
+__tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+__timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+tzname</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+daylight</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+timezone</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdin</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stdout</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+stderr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_nerr</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+sys_errlist</key>
+<value>
+<data>
+top
+</data>
+</value>
+<key>
+x</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+a</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+ret</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+main
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Singlethreaded
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</context>
+
+<path><analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+<key>
+thrd</key>
+<value>
+<set>
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</set>
+</value>
+<key>
+res</key>
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+<key>
+tmp</key>
+<value>
+<data>
+intervals:[-2147483648,2147483647]
+</data>
+</value>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+main
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (main)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</path></call>
+<call id="fun527" file="main.c" line="10" order="48436">
+<context>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (other)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</context>
+
+<path><analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+Unknown line
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<map>
+<key>
+value domain
+</key>
+<value>
+<map>
+</map>
+</value>
+<key>
+array partitioning deps
+</key>
+<value>
+<map>
+</map>
+</value>
+</map>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+f@main.c:30
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+Multithreaded (other)
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</path></call>
+
+<glob><key>stdin</key><analysis name="threadid">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mutex">
+<value>
+<data>
+All
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<data>
+top
+</data>
+</value>
+</analysis>
+</glob>
+<glob><key>stdout</key><analysis name="threadid">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mutex">
+<value>
+<data>
+All
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<data>
+top
+</data>
+</value>
+</analysis>
+</glob>
+<glob><key>stderr</key><analysis name="threadid">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mutex">
+<value>
+<data>
+All
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<data>
+top
+</data>
+</value>
+</analysis>
+</glob>
+<glob><key>__tzname</key><analysis name="threadid">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mutex">
+<value>
+<data>
+All
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<data>
+top
+</data>
+</value>
+</analysis>
+</glob>
+<glob><key>__daylight</key><analysis name="threadid">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mutex">
+<value>
+<data>
+All
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<data>
+top
+</data>
+</value>
+</analysis>
+</glob>
+<glob><key>__timezone</key><analysis name="threadid">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mutex">
+<value>
+<data>
+All
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<data>
+top
+</data>
+</value>
+</analysis>
+</glob>
+<glob><key>tzname</key><analysis name="threadid">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mutex">
+<value>
+<data>
+All
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<data>
+top
+</data>
+</value>
+</analysis>
+</glob>
+<glob><key>daylight</key><analysis name="threadid">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mutex">
+<value>
+<data>
+All
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<data>
+top
+</data>
+</value>
+</analysis>
+</glob>
+<glob><key>timezone</key><analysis name="threadid">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mutex">
+<value>
+<data>
+All
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<data>
+top
+</data>
+</value>
+</analysis>
+</glob>
+<glob><key>main</key><analysis name="base">
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+</analysis>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mutex">
+<value>
+<data>
+All
+</data>
+</value>
+</analysis>
+</glob>
+<glob><key>f@main.c:30</key><analysis name="base">
+<value>
+<data>
+intervals:[0,0]
+</data>
+</value>
+</analysis>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="threadid">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+</glob>
+<glob><key>sys_nerr</key><analysis name="threadid">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mutex">
+<value>
+<data>
+All
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<data>
+top
+</data>
+</value>
+</analysis>
+</glob>
+<glob><key>sys_errlist</key><analysis name="threadid">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mutex">
+<value>
+<data>
+All
+</data>
+</value>
+</analysis>
+<analysis name="base">
+<value>
+<data>
+top
+</data>
+</value>
+</analysis>
+</glob>
+<glob><key>x</key><analysis name="threadid">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="base">
+<value>
+<data>
+intervals:[-2147483648,2147483647]
+</data>
+</value>
+</analysis>
+</glob>
+<glob><key>a</key><analysis name="threadid">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="base">
+<value>
+<data>
+intervals:[-2147483648,2147483647]
+</data>
+</value>
+</analysis>
+</glob>
+<glob><key>ret</key><analysis name="threadid">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="threadflag">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mallocWrapper">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="escape">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="expRelation">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="mutex">
+<value><set>
+</set></value>
+</analysis>
+<analysis name="base">
+<value>
+<data>
+intervals:[-2147483648,2147483647]
+</data>
+</value>
+</analysis>
+</glob>
+<glob><key>fac</key><analysis name="mallocWrapper">
+<value>
+<data>
+()
+</data>
+</value>
+</analysis>
+<analysis name="base">
 <value>
 <data>
 bottom
 </data>
 </value>
-
-
-
-          <key>m</key>
+</analysis>
+<analysis name="threadid">
 <value>
 <data>
-42; [42,42]
+()
 </data>
 </value>
-
-
-
-          <key>r</key>
+</analysis>
+<analysis name="threadflag">
 <value>
 <data>
-42; [42,42]
+()
 </data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
 </value>
 </analysis>
 <analysis name="expRelation">
@@ -9132,2981 +5546,15 @@ array partitioning deps
 </data>
 </value>
 </analysis>
-</path><context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-b[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
+<analysis name="escape">
 <value>
 <data>
 ()
 </data>
 </value>
 </analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
+<analysis name="mutex">
+<value><set>
+</set></value>
 </analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="30" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="34" order="656">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-a[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Not {0}([-31,31]); [20,20]
-</data>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-a[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-a
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path><context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-b[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Not {0}([-31,31]); [20,20]
-</data>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-b[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-b
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="52" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="57" order="964">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-arr</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Not {0}([0,8]); [7,42]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Not {0}([-31,31]); [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-arr
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="10" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="20" order="434">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-3; [3,3]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="11" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="21" order="454">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-3; [3,3]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-0
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-bottom
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="27" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="31" order="604">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-a[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-i
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Unknown int([-31,31]); [0,19]
-</data>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-a[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-a
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path><context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-b[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-i
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Unknown int([-31,31]); [0,19]
-</data>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-b[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-b
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="54" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="60" order="1012">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-arr</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Not {0}([0,8]); [7,42]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Not {0}([-31,31]); [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-arr
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="fun303" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="65" order="1088">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-arr</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-i
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-Not {0}([0,8]); [7,42]
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-arr[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-arr
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-arr</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-i
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-Not {0}([0,8]); [7,42]
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-arr[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-arr
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="26" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="32" order="636">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-a[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-i
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Unknown int([-31,31]); [0,19]
-</data>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-a[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-a
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path><context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-b[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-
-          <key>Partitioned By</key>
-<value>
-<data>
-i
-</data>
-</value>
-
-
-          <key>l</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-
-
-
-          <key>m</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-
-
-          <key>r</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-
-
-        </map></value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Unknown int([-31,31]); [0,19]
-</data>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-b[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-<key>
-i</key>
-<value>
-<set>
-<value>
-<data>
-b
-</data>
-</value>
-</set>
-</value>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-<call id="19" file="tests/regression/22-partitioned_arrays/06-interprocedural.c" line="31" order="604">
-<context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-a[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-a</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-a[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-42; [42,42]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path><context>
-<analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-b[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</context>
-
-<path><analysis name="base">
-<value>
-<map>
-<key>
-value domain
-</key>
-<value>
-<map>
-<key>
-b</key>
-<value>
-<map>
-<key>
-partitioned array
-</key>
-<value>
-<map>
-<key>Any</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-
-</map>
-</value>
-<key>
-length
-</key>
-<value>
-<data>
-20; [20,20]
-</data>
-</value>
-</map>
-</value>
-<key>
-i</key>
-<value>
-<data>
-Unknown int([-31,31]); [-2147483648,2147483647]
-</data>
-</value>
-<key>
-arr</key>
-<value>
-<set>
-<value>
-<data>
-b[0; [0,0]]
-</data>
-</value>
-</set>
-</value>
-<key>
-val</key>
-<value>
-<data>
-12; [12,12]
-</data>
-</value>
-</map>
-</value>
-<key>
-flag domain
-</key>
-<value>
-<map>
-<key>
-MT mode
-</key>
-<value>
-<data>
-0
-</data>
-</value>
-<key>
-Thread
-</key>
-<value>
-<data>
-main
-</data>
-</value>
-</map>
-</value>
-<key>
-array partitioning deps
-</key>
-<value>
-<map>
-</map>
-</value>
-</map>
-</value>
-</analysis>
-<analysis name="expRelation">
-<value>
-<data>
-()
-</data>
-</value>
-</analysis>
-</path></call>
-</result></run>
+</glob></result></run>

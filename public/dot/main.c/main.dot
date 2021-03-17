@@ -1,0 +1,27 @@
+digraph cfg {
+	21 -> ret530 [label = "return 0
+"] ;
+	20 -> 21 [label = "printf((char const   * __restrict  )&quot;fac() = %d\n&quot;, ret)
+"] ;
+	19 -> 20 [label = "assert(res == 0)
+"] ;
+	18 -> 19 [label = "res = pthread_join(thrd, (void **)((void *)0))
+"] ;
+	17 -> 18 [label = "assert(res == 0)
+"] ;
+	16 -> 17 [label = "res = tmp
+"] ;
+	15 -> 16 [label = "tmp = pthread_create((pthread_t * __restrict  )(&amp; thrd), (pthread_attr_t const   * __restrict  )((void *)0), &amp; f, (void * __restrict  )((void *)0))
+"] ;
+	fun530 -> 15 [label = "(body)
+"] ;
+	16 [id="16",URL="javascript:show_info('\N');",fillcolor=white,style=filled,];
+	ret530 [id="ret530",URL="javascript:show_info('\N');",fillcolor=white,style=filled,label ="return of main()",shape=box];
+	17 [id="17",URL="javascript:show_info('\N');",fillcolor=white,style=filled,];
+	18 [id="18",URL="javascript:show_info('\N');",fillcolor=white,style=filled,];
+	19 [id="19",URL="javascript:show_info('\N');",fillcolor=white,style=filled,];
+	20 [id="20",URL="javascript:show_info('\N');",fillcolor=white,style=filled,];
+	21 [id="21",URL="javascript:show_info('\N');",fillcolor=white,style=filled,];
+	fun530 [id="fun530",URL="javascript:show_info('\N');",fillcolor=white,style=filled,label ="main()",shape=box];
+	15 [id="15",URL="javascript:show_info('\N');",fillcolor=white,style=filled,];
+}

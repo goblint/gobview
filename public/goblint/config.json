@@ -200,6 +200,7 @@
   "trans" : {
     "activated" : [],
     "expeval" : {
+      "marshalled_results_file_name" : "",
       "query_file_name" : ""
     }
   },
