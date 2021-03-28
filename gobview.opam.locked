@@ -1,0 +1,105 @@
+opam-version: "2.0"
+synopsis: "Web frontend for Goblint"
+maintainer: [
+  "Kerem Cakirer <kerem.cakirer@tum.de>" "Michael Schwarz <m.schwarz@tum.de>"
+]
+authors: ["Alex Micheli <c1707-fisch@yahoo.de>"]
+license: "MIT"
+homepage: "https://github.com/goblint/gobview"
+bug-reports: "https://github.com/goblint/gobview/issues"
+depends: [
+  "astring" {= "0.8.5"}
+  "base" {= "v0.14.1"}
+  "base-bigarray" {= "base"}
+  "base-bytes" {= "base"}
+  "base-threads" {= "base"}
+  "base-unix" {= "base"}
+  "batteries" {= "3.3.0"}
+  "biniou" {= "1.2.1"}
+  "cmdliner" {= "1.0.4"}
+  "conf-gmp" {= "3"}
+  "cppo" {= "1.6.7"}
+  "csexp" {= "1.4.0"}
+  "dune" {= "2.8.4"}
+  "dune-configurator" {= "2.8.4"}
+  "easy-format" {= "1.3.2"}
+  "fix" {= "20201120"}
+  "fpath" {= "0.7.3"}
+  "gen_js_api" {= "1.0.6"}
+  "goblint-cil" {= "1.7.8"}
+  "js_of_ocaml" {= "3.7.1"}
+  "js_of_ocaml-compiler" {= "3.7.1"}
+  "js_of_ocaml-lwt" {= "3.7.1"}
+  "js_of_ocaml-ppx" {= "3.7.1"}
+  "jsoo-react" {= "dev"}
+  "lwt" {= "5.4.0"}
+  "menhir" {= "20210310"}
+  "menhirLib" {= "20210310"}
+  "menhirSdk" {= "20210310"}
+  "merlin-extend" {= "0.6"}
+  "mmap" {= "1.1.0"}
+  "num" {= "1.4"}
+  "ocaml" {= "4.10.2"}
+  "ocaml-base-compiler" {= "4.10.2"}
+  "ocaml-compiler-libs" {= "v0.12.3"}
+  "ocaml-config" {= "1"}
+  "ocaml-migrate-parsetree" {= "1.8.0"}
+  "ocamlbuild" {= "0.14.0"}
+  "ocamlfind" {= "1.9.1"}
+  "ocamlformat" {= "0.15.0"}
+  "ocplib-endian" {= "1.1"}
+  "odoc" {= "1.5.2"}
+  "ppx_blob" {= "0.7.2"}
+  "ppx_derivers" {= "1.2.1"}
+  "ppx_deriving" {= "5.1"}
+  "ppx_deriving_yojson" {= "3.6.1"}
+  "ppx_tools_versioned" {= "5.4.0"}
+  "ppxlib" {= "0.15.0"}
+  "re" {= "1.9.0"}
+  "reason" {= "3.7.0"}
+  "result" {= "1.5"}
+  "seq" {= "base"}
+  "sexplib0" {= "v0.14.0"}
+  "stdio" {= "v0.14.0"}
+  "stdlib-shims" {= "0.3.0"}
+  "topkg" {= "1.0.3"}
+  "tyxml" {= "4.4.0"}
+  "uchar" {= "0.0.2"}
+  "uucp" {= "13.0.0"}
+  "uuseg" {= "13.0.0"}
+  "uutf" {= "1.0.2"}
+  "xml-light" {= "2.4"}
+  "yojson" {= "1.7.0"}
+  "zarith" {= "1.12"}
+  "zarith_stubs_js" {= "v0.14.0"}
+]
+build: [
+  ["dune" "subst"] {dev}
+  [
+    "dune"
+    "build"
+    "-p"
+    name
+    "-j"
+    jobs
+    "@install"
+    "@runtest" {with-test}
+    "@doc" {with-doc}
+  ]
+]
+dev-repo: "git+https://github.com/goblint/gobview.git"
+pin-depends: [
+  [
+    "jsoo-react.dev" "git+https://github.com/jchavarri/jsoo-react.git#a013cf2"
+  ]
+  [
+    "goblint-cil.1.7.8"
+    "git+https://github.com/keremc/cil.git#improve_js_compat"
+  ]
+  [
+    "gen_js_api.1.0.6"
+    "git+https://github.com/jchavarri/gen_js_api.git#typ_var"
+  ]
+]
+name: "gobview"
+version: "dev"
