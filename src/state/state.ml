@@ -2,11 +2,11 @@ module Inspect = InspectState
 
 type inspect = Inspect.t
 
-module Selected_sidebar = struct
-  type t = State | Globals
+module SelectedSidebar = struct
+  type t = State | OldGlobals | Globals
 end
 
-type selected_sidebar = Selected_sidebar.t
+type selected_sidebar = SelectedSidebar.t
 
 module Selected_panel = struct
   type t = Warnings | Dead_code | Parameters | Statistics
@@ -40,7 +40,7 @@ let default =
     goblint = GvGoblint.empty;
     cil = None;
     inspect = None;
-    selected_sidebar = Selected_sidebar.State;
+    selected_sidebar = SelectedSidebar.State;
     selected_panel = None;
     search = Search.default;
   }

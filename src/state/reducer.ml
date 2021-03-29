@@ -6,7 +6,7 @@ let reducer (s : State.t) = function
   | `Set_cil cil -> { s with cil = Some cil }
   | `Set_pdata pdata -> { s with pdata }
   | `Set_code code -> { s with code }
-  | `Switch_sidebar selected_sidebar -> { s with selected_sidebar }
+  | `SwitchSidebar selected_sidebar -> { s with selected_sidebar }
   | `Switch_panel selected_panel -> { s with selected_panel }
   | ( `InspectFile _ | `InspectCilLocation _ | `UpdateCode _ | `InspectGraph _ | `UpdateDot _
     | `ResetInspect ) as a ->

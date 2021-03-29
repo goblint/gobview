@@ -1,8 +1,9 @@
 open State;
 
 let views = [
-  (Selected_sidebar.State, "State"),
-  (Selected_sidebar.Globals, "Globals"),
+  (SelectedSidebar.State, "State"),
+  (SelectedSidebar.OldGlobals, "Globals"),
+  (SelectedSidebar.Globals, "Globals"),
 ];
 
 let make_nav_tabs = (side_panel, dispatch) => {
@@ -18,7 +19,7 @@ let make_nav_tabs = (side_panel, dispatch) => {
             <a
               href="#"
               className={"nav-link" ++ (side_panel == v ? " active" : "")}
-              onClick={on_click(`Switch_sidebar(v))}>
+              onClick={on_click(`SwitchSidebar(v))}>
               {n |> React.string}
             </a>
           </li>
@@ -29,15 +30,17 @@ let make_nav_tabs = (side_panel, dispatch) => {
 
 [@react.component]
 let make = (~state, ~dispatch) => {
-  let current = selected_sidebar(state);
+  let current = state.selected_sidebar;
   <>
     {make_nav_tabs(current, dispatch)}
     <div className="tab-content">
       <div className="tab-pane active">
         {switch (current) {
-         | Selected_sidebar.State =>
+         | SelectedSidebar.State =>
            <StateView state calls={state |> pdata |> Parse.get_calls} />
-         | Selected_sidebar.Globals => <GlobView globs=(state.goblint)#globs />
+         | SelectedSidebar.OldGlobals =>
+           <GlobView globs=(state.goblint)#globs />
+         | SelectedSidebar.Globals => <GvGlobalView goblint={state.goblint} />
          }}
       </div>
     </div>

@@ -4,6 +4,10 @@ open Cil
 class virtual solver_state =
   object
     method virtual globs : Parse.glob list
+
+    method virtual global_names : string list
+
+    method virtual global : string -> Representation.t
   end
 
 class empty_solver_state =
@@ -11,6 +15,10 @@ class empty_solver_state =
     inherit solver_state
 
     method globs = []
+
+    method global_names = []
+
+    method global _ = `Nothing
   end
 
 module type Sig = sig
@@ -47,11 +55,24 @@ module Make (Cfg : MyCFG.CfgBidir) (Spec : Analyses.SpecHC) : Sig = struct
 
   let globs ((_, gh) : t) = GHashtbl.enum gh |> Enum.map glob |> List.of_enum
 
+  let transform_ghashtbl = Hashtbl.of_enum % Enum.map (fun (k, v) -> (k.vname, v)) % GHashtbl.enum
+
+  let global_names = List.of_enum % Enum.map (fun (k, _) -> k.vname) % GHashtbl.enum
+
+  let global n gh' =
+    Hashtbl.find_option gh' n |> Option.map_default (fun g -> GSpec.represent g) `Nothing
+
   class solver_state_impl (lh, gh) =
     object
       inherit solver_state
 
+      val gh' = transform_ghashtbl gh
+
       method globs = globs (lh, gh)
+
+      method global_names = global_names gh
+
+      method global n = global n gh'
     end
 
   let wrap_solver_state ((lh, gh) : t) = new solver_state_impl (lh, gh)
