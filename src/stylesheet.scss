@@ -1,1 +1,5 @@
-@import '~bootstrap/scss/bootstrap'
+@import '~bootstrap/scss/bootstrap';
+
+ol, ul {
+  padding-left: 1rem;
+}
