@@ -2,8 +2,10 @@ open Batteries;
 
 let rec is_simple = r =>
   switch (r) {
-  | `Tagged("intervals", _) => true
   | `List([r]) => is_simple(r)
+  | `Tagged("intervals", r)
+  | `Tagged("bottom", r)
+  | `Tagged("top", r) => Representation.is_simple(r)
   | _ => Representation.is_simple(r)
   };
 
