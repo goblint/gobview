@@ -3,6 +3,7 @@ open State;
 let views = [
   (SelectedSidebar.State, "State"),
   (SelectedSidebar.OldGlobals, "Globals"),
+  (SelectedSidebar.Nodes, "Nodes"),
   (SelectedSidebar.Globals, "Globals"),
 ];
 
@@ -40,6 +41,7 @@ let make = (~state, ~dispatch) => {
            <StateView state calls={state |> pdata |> Parse.get_calls} />
          | SelectedSidebar.OldGlobals =>
            <GlobView globs=(state.goblint)#globs />
+         | SelectedSidebar.Nodes => <GvNodeStateView goblint={state.goblint} />
          | SelectedSidebar.Globals => <GvGlobalView goblint={state.goblint} />
          }}
       </div>

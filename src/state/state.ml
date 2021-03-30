@@ -3,7 +3,7 @@ module Inspect = InspectState
 type inspect = Inspect.t
 
 module SelectedSidebar = struct
-  type t = State | OldGlobals | Globals
+  type t = State | OldGlobals | Nodes | Globals
 end
 
 type selected_sidebar = SelectedSidebar.t
