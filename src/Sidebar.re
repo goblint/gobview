@@ -42,7 +42,8 @@ let make = (~state, ~dispatch) => {
          | SelectedSidebar.OldGlobals =>
            <GlobView globs=(state.goblint)#globs />
          | SelectedSidebar.Nodes => <GvNodeStateView goblint={state.goblint} />
-         | SelectedSidebar.Globals => <GvGlobalView goblint={state.goblint} />
+         | SelectedSidebar.Globals =>
+           <GvGlobalStateView goblint={state.goblint} />
          }}
       </div>
     </div>
