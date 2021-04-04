@@ -3,7 +3,7 @@ open Batteries;
 module ToggledSet = Set.Make(String);
 
 [@react.component]
-let make = (~goblint: GvGoblint.solver_state) => {
+let make = (~analyses) => {
   let (toggled, set_toggled) = React.useState(() => ToggledSet.empty);
 
   let toggle = (n, ()) => {
@@ -17,8 +17,8 @@ let make = (~goblint: GvGoblint.solver_state) => {
   };
 
   <ul className="list-group list-group-flush">
-    {goblint#global_names
-     |> List.mapi((i, n) => {
+    {analyses
+     |> List.mapi((i, (n, results)) => {
           <li key={string_of_int(i)} className="list-group-item">
             <div className="d-flex justify-content-between align-items-center">
               {n |> React.string}
@@ -30,11 +30,7 @@ let make = (~goblint: GvGoblint.solver_state) => {
               </Button>
             </div>
             {if (ToggledSet.mem(n, toggled)) {
-               let analyses = goblint#global(n);
-               switch (analyses) {
-               | `Assoc(analyses) => <GvAnalysesView analyses />
-               | _ => React.null
-               };
+               <GvAnalysesView results />;
              } else {
                React.null;
              }}

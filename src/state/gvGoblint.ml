@@ -8,6 +8,8 @@ class virtual solver_state =
     method virtual global_names : string list
 
     method virtual global : string -> Representation.t
+
+    method virtual global_analyses : (string * (string * Representation.t) list) list
   end
 
 class empty_solver_state =
@@ -19,6 +21,8 @@ class empty_solver_state =
     method global_names = []
 
     method global _ = `Nothing
+
+    method global_analyses = []
   end
 
 module type Sig = sig
@@ -62,17 +66,34 @@ module Make (Cfg : MyCFG.CfgBidir) (Spec : Analyses.SpecHC) : Sig = struct
   let global n gh' =
     Hashtbl.find_option gh' n |> Option.map_default (fun g -> GSpec.represent g) `Nothing
 
+  let compute_global_analysis_tbl gh =
+    let tbl = Hashtbl.create (GHashtbl.length gh) in
+    let insert_analysis_result a v r =
+      Hashtbl.modify_opt a (function None -> Some [ (v, r) ] | Some l -> Some ((v, r) :: l)) tbl
+    in
+    let f k v =
+      match v with
+      | `Assoc l -> List.iter (fun (a, r) -> insert_analysis_result a k.vname r) l
+      | _ -> failwith "Not sure if this is supposed to happen."
+    in
+    gh |> GHashtbl.map (fun _ -> GSpec.represent) |> GHashtbl.iter f;
+    Hashtbl.to_list tbl
+
   class solver_state_impl (lh, gh) =
     object
       inherit solver_state
 
       val gh' = transform_ghashtbl gh
 
+      val global_analysis_tbl = compute_global_analysis_tbl gh
+
       method globs = globs (lh, gh)
 
       method global_names = global_names gh
 
       method global n = global n gh'
+
+      method global_analyses = global_analysis_tbl
     end
 
   let wrap_solver_state ((lh, gh) : t) = new solver_state_impl (lh, gh)
