@@ -41,7 +41,14 @@ let make = (~state, ~dispatch) => {
            <StateView state calls={state |> pdata |> Parse.get_calls} />
          | SelectedSidebar.OldGlobals =>
            <GlobView globs=(state.goblint)#globs />
-         | SelectedSidebar.Nodes => <GvNodeStateView goblint={state.goblint} />
+         | SelectedSidebar.Nodes =>
+           <GvNodeStateView
+             goblint={state.goblint}
+             inspect={state.inspect}
+             file_path={state.file_path}
+             line={state.line}
+             id={state.id}
+           />
          | SelectedSidebar.Globals =>
            <GvGlobalStateView analyses=(state.goblint)#global_analyses />
          }}
