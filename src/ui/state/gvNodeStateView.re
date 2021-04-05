@@ -24,7 +24,7 @@ let make = (~goblint, ~inspect, ~file_path, ~line, ~id) => {
   switch (local) {
   | None => React.null
   | Some(local) =>
-    <CollapsibleList style=`Flush>
+    <CollapsibleList collapsed=false style=`Flush>
       {goblint#local_analyses(local)
        |> List.group(((id, _), (id', _)) => String.compare(id, id'))
        |> List.map(
