@@ -87,7 +87,7 @@ and make_bot_top = s =>
 and make_set = l =>
   switch (l) {
   | [] => "∅" |> React.string
-  | _ =>
+  | _ when List.for_all(is_simple, l) =>
     l
     |> List.map(make_rec)
     |> List.interleave(
@@ -96,6 +96,7 @@ and make_set = l =>
          React.string(", "),
        )
     |> React.list
+  | _ => make_list(l)
   };
 
 [@react.component]
