@@ -16,7 +16,7 @@ let make =
     };
 
   <li className>
-    <div className="d-flex justify-content-between align-items-center">
+    <div>
       {name |> React.string}
       <Button
         class_=["btn", "btn-sm", "dropdown-toggle"]
