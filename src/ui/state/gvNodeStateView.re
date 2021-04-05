@@ -1,7 +1,7 @@
 open Batteries;
 
 let make_single = (ctx, path) => {
-  <CollapsibleList override_class=[]>
+  <CollapsibleList collapsed=false override_class=[]>
     <CollapsibleListItem name="Context" override_class=[]>
       <GvRepresentationView represent=ctx />
     </CollapsibleListItem>

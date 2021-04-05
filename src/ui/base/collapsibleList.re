@@ -3,9 +3,10 @@ open Batteries;
 module ToggledSet = Set.Make(Int);
 
 [@react.component]
-let make = (~class_=?, ~style=?, ~override_class=?, ~children) => {
-  let (class_, style, override_class) =
-    Utils.fix_opt_args3(class_, style, override_class);
+let make = (~collapsed=?, ~class_=?, ~style=?, ~override_class=?, ~children) => {
+  let (collapsed, class_, style, override_class) =
+    Utils.fix_opt_args4(collapsed, class_, style, override_class);
+  let collapsed = Option.default(true, collapsed);
   let class_ = Option.default([], class_);
   let style = Option.default(`Default, style);
 
@@ -43,7 +44,9 @@ let make = (~class_=?, ~style=?, ~override_class=?, ~children) => {
          elt,
          CollapsibleListItem.makeProps(
            ~key=string_of_int(i),
-           ~collapsed=!ToggledSet.mem(i, toggled),
+           ~collapsed={
+             ToggledSet.mem(i, toggled) != collapsed;
+           },
            ~on_toggle=on_toggle(i),
            (),
          ),
