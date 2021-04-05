@@ -30,16 +30,15 @@ let make = (~goblint, ~inspect, ~file_path, ~line, ~id) => {
        |> List.map(
             fun
             | [(id, (ctx, path))] =>
-              <CollapsibleListItem key=id name={"Node: " ++ id}>
+              <CollapsibleListItem name={"Node: " ++ id}>
                 {make_single(ctx, path)}
               </CollapsibleListItem>
             | [(id, _), ..._] as group =>
-              <CollapsibleListItem key=id name={"Node: " ++ id}>
+              <CollapsibleListItem name={"Node: " ++ id}>
                 <CollapsibleList style=`Flush>
                   {group
                    |> List.mapi((i, (_, (ctx, path))) =>
                         <CollapsibleListItem
-                          key={string_of_int(i)}
                           name={"Tuple: " ++ string_of_int(i)}>
                           {make_single(ctx, path)}
                         </CollapsibleListItem>
