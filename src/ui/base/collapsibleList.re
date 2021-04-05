@@ -43,7 +43,7 @@ let make = (~class_=?, ~style=?, ~override_class=?, ~children) => {
          elt,
          CollapsibleListItem.makeProps(
            ~key=string_of_int(i),
-           ~collapsed=ToggledSet.mem(i, toggled),
+           ~collapsed=!ToggledSet.mem(i, toggled),
            ~on_toggle=on_toggle(i),
            (),
          ),
