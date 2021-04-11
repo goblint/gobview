@@ -102,7 +102,7 @@ let init_goblint = (solver, table, config, cil) => {
   (goblint, cil);
 };
 
-let init = (pdata, cil, solver, table, config) => {
+let init = (~pdata, ~solver, ~config, ~cil, ~analyses, ~warnings, ()) => {
   let cil =
     switch (cil) {
     | Ok(s) =>
@@ -114,7 +114,7 @@ let init = (pdata, cil, solver, table, config) => {
   print_endline("Restored Cabs2cil.environment");
 
   let (goblint, cil) =
-    switch (solver, table, config) {
+    switch (solver, analyses, config) {
     | (Ok(s), Ok(t), Ok(c)) =>
       let t = Marshal.from_string(t, 0);
       init_goblint(s, t, c, cil);
@@ -129,8 +129,15 @@ let init = (pdata, cil, solver, table, config) => {
     };
   print_endline("Fetched the analysis results");
 
+  let warnings =
+    switch (warnings) {
+    | Ok(s) => Marshal.from_string(s, 0)
+    | _ => raise(InitFailed("Failed to load the warning table"))
+    };
+  print_endline("Restored the warning table");
+
   print_endline("Rendering app...");
-  React.Dom.renderToElementWithId(<Main pdata goblint cil />, "app");
+  React.Dom.renderToElementWithId(<Main pdata cil goblint warnings />, "app");
 };
 
 let handle_error = exc => {
@@ -144,10 +151,11 @@ let handle_error = exc => {
 
 [
   "/analysis.xml",
-  "/cil.marshalled",
   "/goblint/solver.marshalled",
-  "/goblint/analyses.marshalled",
   "/goblint/config.json",
+  "/goblint/cil.marshalled",
+  "/goblint/analyses.marshalled",
+  "/goblint/warnings.marshalled",
 ]
 |> List.map(HttpClient.get)
 |> Lwt.all
@@ -155,8 +163,8 @@ let handle_error = exc => {
   l =>
     Lwt.return(
       switch (l) {
-      | [pdata, cil, solver, table, config] =>
-        try(init(pdata, cil, solver, table, config)) {
+      | [pdata, solver, config, cil, analyses, warnings] =>
+        try(init(~pdata, ~solver, ~config, ~cil, ~analyses, ~warnings, ())) {
         | exc => handle_error(exc)
         }
       | _ => ()

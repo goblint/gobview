@@ -1,11 +1,11 @@
 open Util;
 
 [@react.component]
-let make = (~pdata, ~goblint, ~cil) => {
+let make = (~pdata, ~cil, ~goblint, ~warnings) => {
   let (state, dispatch) =
     React.useReducer(
       Reducer.reducer,
-      State.create(~pdata, ~goblint, ~cil, ()),
+      State.create(~pdata, ~cil, ~goblint, ~warnings, ()),
     );
 
   let fetchCode = s => {

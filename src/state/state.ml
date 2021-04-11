@@ -14,6 +14,8 @@ end
 
 type selected_panel = Selected_panel.t
 
+type warning = [ `text of string * Cil.location | `group of string * (string * Cil.location) list ]
+
 type t = {
   id : int;
   line : int;
@@ -21,6 +23,7 @@ type t = {
   file_path : string;
   cil : Cil.file option;
   goblint : GvGoblint.solver_state;
+  warnings : warning list;
   pdata : Parse.run;
   code : string;
   inspect : inspect option;
@@ -39,13 +42,15 @@ let default =
     code = "";
     goblint = GvGoblint.empty;
     cil = None;
+    warnings = [];
     inspect = None;
     selected_sidebar = SelectedSidebar.State;
     selected_panel = None;
     search = Search.default;
   }
 
-let create ~pdata ~goblint ~cil () = { default with pdata; goblint; cil = Some cil }
+let create ~pdata ~cil ~goblint ~warnings () =
+  { default with pdata; cil = Some cil; goblint; warnings }
 
 let cil state = state.cil
 

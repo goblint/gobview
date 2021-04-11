@@ -39,17 +39,24 @@ let make_nav_pills = (current, dispatch) => {
 
 [@react.component]
 let make = (~state, ~dispatch) => {
+  let to_parse_warning = ((s, loc: Cil.location)) =>
+    Parse.Warning(loc.file, string_of_int(loc.line), s);
+  let warnings =
+    state.warnings
+    |> List.map(w =>
+         switch (w) {
+         | `text(w) => [to_parse_warning(w)]
+         | `group(_, l) => List.map(to_parse_warning, l)
+         }
+       )
+    |> List.concat;
   let current = selected_panel_opt(state);
   <div className="border-right border-left">
     {make_nav_pills(current, dispatch)}
     <div className="tab-content">
       <div className="tab-pane active">
         {switch (current) {
-         | Some(Selected_panel.Warnings) =>
-           <WarningView
-             warnings={state.pdata |> Parse.get_warnings}
-             dispatch
-           />
+         | Some(Selected_panel.Warnings) => <WarningView warnings dispatch />
          | Some(Selected_panel.Dead_code) =>
            <DeadCodeView
              calls={
