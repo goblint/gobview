@@ -39,6 +39,12 @@ let make_nav_pills = (current, dispatch) => {
 
 [@react.component]
 let make = (~state, ~dispatch) => {
+  let parameters =
+    switch (Yojson.Safe.Util.member("command", state.meta)) {
+    | `String(command) => command
+    | _ => ""
+    };
+
   let to_parse_warning = ((s, loc: Cil.location)) =>
     Parse.Warning(loc.file, string_of_int(loc.line), s);
   let warnings =
@@ -50,6 +56,7 @@ let make = (~state, ~dispatch) => {
          }
        )
     |> List.concat;
+
   let current = selected_panel_opt(state);
   <div className="border-right border-left">
     {make_nav_pills(current, dispatch)}
@@ -67,8 +74,7 @@ let make = (~state, ~dispatch) => {
              }
              dispatch
            />
-         | Some(Selected_panel.Parameters) =>
-           <ParameterView parameters={state.pdata |> Parse.get_parameters} />
+         | Some(Selected_panel.Parameters) => <ParameterView parameters />
          | Some(Selected_panel.Statistics) =>
            <StatisticsView statistics={state.pdata |> Parse.get_statistics} />
 

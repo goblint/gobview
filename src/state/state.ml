@@ -1,3 +1,4 @@
+open Batteries
 module Inspect = InspectState
 
 type inspect = Inspect.t
@@ -23,6 +24,7 @@ type t = {
   file_path : string;
   cil : Cil.file option;
   goblint : GvGoblint.solver_state;
+  meta : Yojson.Safe.t;
   warnings : warning list;
   pdata : Parse.run;
   code : string;
@@ -42,6 +44,7 @@ let default =
     code = "";
     goblint = GvGoblint.empty;
     cil = None;
+    meta = `Null;
     warnings = [];
     inspect = None;
     selected_sidebar = SelectedSidebar.State;
@@ -49,8 +52,8 @@ let default =
     search = Search.default;
   }
 
-let create ~pdata ~cil ~goblint ~warnings () =
-  { default with pdata; cil = Some cil; goblint; warnings }
+let create ~pdata ~cil ~goblint ~meta ~warnings () =
+  { default with pdata; cil = Some cil; goblint; meta; warnings }
 
 let cil state = state.cil
 

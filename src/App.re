@@ -102,7 +102,7 @@ let init_goblint = (solver, table, config, cil) => {
   (goblint, cil);
 };
 
-let init = (~pdata, ~solver, ~config, ~cil, ~analyses, ~warnings, ()) => {
+let init = (~pdata, ~solver, ~config, ~meta, ~cil, ~analyses, ~warnings, ()) => {
   let cil =
     switch (cil) {
     | Ok(s) =>
@@ -129,6 +129,12 @@ let init = (~pdata, ~solver, ~config, ~cil, ~analyses, ~warnings, ()) => {
     };
   print_endline("Fetched the analysis results");
 
+  let meta =
+    switch (meta) {
+    | Ok(s) => Yojson.Safe.from_string(s)
+    | _ => raise(InitFailed("Failed to load the warning table"))
+    };
+
   let warnings =
     switch (warnings) {
     | Ok(s) => Marshal.from_string(s, 0)
@@ -137,7 +143,10 @@ let init = (~pdata, ~solver, ~config, ~cil, ~analyses, ~warnings, ()) => {
   print_endline("Restored the warning table");
 
   print_endline("Rendering app...");
-  React.Dom.renderToElementWithId(<Main pdata cil goblint warnings />, "app");
+  React.Dom.renderToElementWithId(
+    <Main pdata cil goblint meta warnings />,
+    "app",
+  );
 };
 
 let handle_error = exc => {
@@ -153,6 +162,7 @@ let handle_error = exc => {
   "/analysis.xml",
   "/goblint/solver.marshalled",
   "/goblint/config.json",
+  "/goblint/meta.json",
   "/goblint/cil.marshalled",
   "/goblint/analyses.marshalled",
   "/goblint/warnings.marshalled",
@@ -163,8 +173,19 @@ let handle_error = exc => {
   l =>
     Lwt.return(
       switch (l) {
-      | [pdata, solver, config, cil, analyses, warnings] =>
-        try(init(~pdata, ~solver, ~config, ~cil, ~analyses, ~warnings, ())) {
+      | [pdata, solver, config, meta, cil, analyses, warnings] =>
+        try(
+          init(
+            ~pdata,
+            ~solver,
+            ~config,
+            ~meta,
+            ~cil,
+            ~analyses,
+            ~warnings,
+            (),
+          )
+        ) {
         | exc => handle_error(exc)
         }
       | _ => ()
