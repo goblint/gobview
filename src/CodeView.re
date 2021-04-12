@@ -43,7 +43,9 @@ let make = (~state, ~dispatch, ~calls, ~warnings) => {
             dispatch
             hasc={hasc(calls, i + 1, state.file_path)}
             warnings={get_all_warnings(warnings, i + 1, state.file_path)}
-            hasDeadCode={has_dead_code(calls, i + 1, state.file_path)}
+            hasDeadCode={
+              (state.goblint)#is_dead(~line=i + 1, ~file=state.file_path)
+            }
             highlight={i + 1 == state.line}
           />
         })

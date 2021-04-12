@@ -16,6 +16,8 @@ class virtual solver_state =
     method virtual global_analyses : (string * (string * Representation.t) list) list
 
     method virtual dead_locations : location list
+
+    method virtual is_dead : file:string -> line:int -> bool
   end
 
 class empty_solver_state =
@@ -33,6 +35,8 @@ class empty_solver_state =
     method global_analyses = []
 
     method dead_locations = []
+
+    method is_dead ~file:_ ~line:_ = false
   end
 
 module type Sig = sig
@@ -120,6 +124,8 @@ module Make (Cfg : MyCFG.CfgBidir) (Spec : Analyses.SpecHC) : Sig = struct
 
       val gh' = transform_ghashtbl gh
 
+      val dead = dead_locations lh
+
       val global_analysis_tbl = compute_global_analysis_tbl gh
 
       method local_analyses = local_analyses lh'
@@ -132,7 +138,9 @@ module Make (Cfg : MyCFG.CfgBidir) (Spec : Analyses.SpecHC) : Sig = struct
 
       method global_analyses = global_analysis_tbl
 
-      method dead_locations = dead_locations lh
+      method dead_locations = dead
+
+      method is_dead ~file ~line = List.exists (fun loc -> loc.file = file && line = loc.line) dead
     end
 
   let wrap_solver_state ((lh, gh) : t) = new solver_state_impl (lh, gh)
