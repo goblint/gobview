@@ -1,3 +1,4 @@
+open Batteries;
 open State;
 
 let views = [
@@ -57,7 +58,9 @@ let make = (~state, ~dispatch) => {
        )
     |> List.concat;
 
-  let current = selected_panel_opt(state);
+  let locations = (state.goblint)#dead_locations;
+
+  let current = state.selected_panel;
   <div className="border-right border-left">
     {make_nav_pills(current, dispatch)}
     <div className="tab-content">
@@ -65,15 +68,7 @@ let make = (~state, ~dispatch) => {
         {switch (current) {
          | Some(Selected_panel.Warnings) => <WarningView warnings dispatch />
          | Some(Selected_panel.Dead_code) =>
-           <DeadCodeView
-             calls={
-               state.pdata
-               |> Parse.get_calls
-               |> List.filter(Parse.has_dead_code)
-               |> Parse.sort_calls_by_line
-             }
-             dispatch
-           />
+           <DeadCodeView locations dispatch />
          | Some(Selected_panel.Parameters) => <ParameterView parameters />
          | Some(Selected_panel.Statistics) =>
            <StatisticsView statistics={state.pdata |> Parse.get_statistics} />

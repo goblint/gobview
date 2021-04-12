@@ -14,6 +14,8 @@ class virtual solver_state =
     method virtual global : string -> Representation.t
 
     method virtual global_analyses : (string * (string * Representation.t) list) list
+
+    method virtual dead_locations : location list
   end
 
 class empty_solver_state =
@@ -29,6 +31,8 @@ class empty_solver_state =
     method global _ = `Nothing
 
     method global_analyses = []
+
+    method dead_locations = []
   end
 
 module type Sig = sig
@@ -62,6 +66,18 @@ module Make (Cfg : MyCFG.CfgBidir) (Spec : Analyses.SpecHC) : Sig = struct
   let local_analyses lh' l =
     Hashtbl.find_all lh' l
     |> List.map (fun (id, c, d) -> (id, (Spec.C.represent c, LSpec.represent d)))
+
+  let dead_locations lh =
+    let module NodeSet = Set.Make (Node.Node) in
+    let dead = ref NodeSet.empty in
+    let live = ref NodeSet.empty in
+    lh
+    |> LHashtbl.iter (fun (n, _) d ->
+           if Spec.D.is_bot d then dead := NodeSet.add n !dead else live := NodeSet.add n !live);
+    NodeSet.diff !dead !live |> NodeSet.to_list
+    |> List.map (function
+         | Node.Statement stmt -> get_stmtLoc stmt.skind
+         | FunctionEntry vi | Function vi -> vi.vdecl)
 
   let parse s =
     let parser = XmlParser.make () in
@@ -115,6 +131,8 @@ module Make (Cfg : MyCFG.CfgBidir) (Spec : Analyses.SpecHC) : Sig = struct
       method global n = global n gh'
 
       method global_analyses = global_analysis_tbl
+
+      method dead_locations = dead_locations lh
     end
 
   let wrap_solver_state ((lh, gh) : t) = new solver_state_impl (lh, gh)

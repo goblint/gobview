@@ -1,28 +1,24 @@
+open Batteries;
+
 [@react.component]
-let make = (~dispatch, ~calls: list(Parse.call)) => {
+let make = (~dispatch, ~locations) => {
   <div className="filebox">
     <h3>
-      {(List.length(calls) == 0 ? "No dead code found!" : "Dead Code")
+      {(List.length(locations) == 0 ? "No dead code found!" : "Dead Code")
        |> React.string}
     </h3>
     <ul>
-      {calls
-       |> List.mapi((i, c) => {
+      {locations
+       |> List.mapi((i, loc: Cil.location) => {
             <li
               className="cursor warnitem"
               key={string_of_int(i)}
               onClick={_ => {
-                dispatch @@
-                `Set_file_name(
-                  Parse.get_file(c) |> Parse.get_file_from_filepath,
-                );
-                dispatch @@ `Set_file_path(Parse.get_file(c));
-                dispatch @@ `Set_line(int_of_string(Parse.get_line(c)));
+                dispatch @@ `Set_file_name(loc.file);
+                dispatch @@ `Set_file_path(loc.file);
+                dispatch @@ `Set_line(loc.line);
               }}>
-              {Parse.get_line(c)
-               ++ " : "
-               ++ Parse.get_file(c)
-               |> React.string}
+              {string_of_int(loc.line) ++ " : " ++ loc.file |> React.string}
             </li>
           })
        |> React.list}
