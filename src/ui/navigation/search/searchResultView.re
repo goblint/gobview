@@ -3,7 +3,7 @@ open Batteries;
 let make_table = (matches, dispatch) => {
   let clear = () => dispatch @@ `ClearSearchMatches;
 
-  let on_click = (loc: Cil.location, ()) => {
+  let on_click = (loc: Cil.location, _, _) => {
     dispatch @@ `InspectCilLocation(loc);
     dispatch @@ `Set_line(loc.line);
   };
