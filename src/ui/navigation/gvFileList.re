@@ -1,10 +1,16 @@
 open Batteries;
 
-let make_func_list = (_, funcs) => {
+let make_func_list = (file, funcs, dispatch) => {
+  let on_click = (data, _) => Option.may(dispatch, data);
+
   <ul>
     {funcs
      |> List.mapi((i, func) => {
-          <li key={string_of_int(i)}> {func |> React.string} </li>
+          <li key={string_of_int(i)}>
+            <Link on_click callback_data={`InspectGraph((func, file, file))}>
+              {func |> React.string}
+            </Link>
+          </li>
         })
      |> React.list}
   </ul>;
@@ -19,14 +25,19 @@ let make = (~cil: Cil.file, ~dispatch) => {
     | GFun(fdec, loc) => Hashtbl.add(files, loc.file, fdec.svar.vname)
     | _ => (),
   );
+
+  let on_click = (data, _) => Option.may(dispatch, data);
+
   <ul>
     {files
      |> Hashtbl.keys
      |> Enum.uniq_by(String.equal)
      |> Enum.mapi((i, file) => {
           <li key={string_of_int(i)}>
-            {file |> React.string}
-            {make_func_list(file, Hashtbl.find_all(files, file))}
+            <Link on_click callback_data={`InspectFile((file, file))}>
+              {file |> React.string}
+            </Link>
+            {make_func_list(file, Hashtbl.find_all(files, file), dispatch)}
           </li>
         })
      |> List.of_enum
