@@ -1,36 +1,44 @@
-#include <assert.h>
 #include <pthread.h>
 #include <stdio.h>
 
-int x;
-int a;
+int x, a, ret;
+int results[] = {1, 2};
 
-int ret;
+pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
 
 void fac() {
-  a = 1;
-fac:
-  if (x == 0) {
+rec:
+  if (x <= 0) {
     ret = a;
   } else {
-    a = a * x;
+    a *= x;
     --x;
-    goto fac;
+    goto rec;
   }
 }
 
 void *f(void *p) {
-  x = 5;
+  int *params = p;
+  int lock = params[1] == 0;
+  if (lock) {
+    pthread_mutex_lock(&mtx);
+  }
+  x = params[0];
+  a = 1;
   fac();
+  results[params[1]] = ret;
+  if (lock) {
+    pthread_mutex_unlock(&mtx);
+  }
   return NULL;
 }
 
 int main(void) {
-  pthread_t thrd;
-  int res = pthread_create(&thrd, NULL, f, NULL);
-  assert(res == 0);
-  res = pthread_join(thrd, NULL);
-  assert(res == 0);
-  printf("fac() = %d\n", ret);
-  return 0;
+  pthread_t t1, t2;
+  pthread_create(&t1, NULL, f, &(int[2]){5, 0});
+  pthread_create(&t2, NULL, f, &(int[2]){10, 1});
+  pthread_join(t1, NULL);
+  pthread_join(t2, NULL);
+  printf("fac(5) = %d\n", results[0]);
+  printf("fac(10) = %d\n", results[1]);
 }

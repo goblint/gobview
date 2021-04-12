@@ -1,29 +1,26 @@
 digraph cfg {
-	9 -> ret527 [label = "return
+	7 -> ret528 [label = "return
 "] ;
-	4 -> 9 [label = "ret = a
+	2 -> 7 [label = "ret = a
 "] ;
-	2 -> 4 [label = "Pos(x == 0)
+	0 -> 2 [label = "Pos(x &lt;= 0)
 "] ;
-	8 -> 2 [label = "skip
+	6 -> 0 [label = "skip
 "] ;
-	7 -> 2 [label = "x = x - 1
+	5 -> 0 [label = "x = x - 1
 "] ;
-	1 -> 2 [label = "a = 1
+	fun528 -> 0 [label = "(body)
 "] ;
-	6 -> 7 [label = "a = a * x
+	4 -> 5 [label = "a = a * x
 "] ;
-	2 -> 6 [label = "Neg(x == 0)
+	0 -> 4 [label = "Neg(x &lt;= 0)
 "] ;
-	fun527 -> 1 [label = "(body)
-"] ;
-	8 [id="8",URL="javascript:show_info('\N');",fillcolor=orange,style=filled,];
-	ret527 [id="ret527",URL="javascript:show_info('\N');",fillcolor=white,style=filled,label ="return of fac()",shape=box];
-	1 [id="1",URL="javascript:show_info('\N');",fillcolor=white,style=filled,];
-	9 [id="9",URL="javascript:show_info('\N');",fillcolor=white,style=filled,];
-	2 [id="2",URL="javascript:show_info('\N');",fillcolor=white,style=filled,shape=diamond];
+	0 [id="0",URL="javascript:show_info('\N');",fillcolor=white,style=filled,shape=diamond];
+	ret528 [id="ret528",URL="javascript:show_info('\N');",fillcolor=white,style=filled,label ="return of fac()",shape=box];
+	2 [id="2",URL="javascript:show_info('\N');",fillcolor=white,style=filled,];
 	4 [id="4",URL="javascript:show_info('\N');",fillcolor=white,style=filled,];
-	6 [id="6",URL="javascript:show_info('\N');",fillcolor=white,style=filled,];
-	fun527 [id="fun527",URL="javascript:show_info('\N');",fillcolor=white,style=filled,label ="fac()",shape=box];
+	5 [id="5",URL="javascript:show_info('\N');",fillcolor=white,style=filled,];
+	6 [id="6",URL="javascript:show_info('\N');",fillcolor=orange,style=filled,];
+	fun528 [id="fun528",URL="javascript:show_info('\N');",fillcolor=white,style=filled,label ="fac()",shape=box];
 	7 [id="7",URL="javascript:show_info('\N');",fillcolor=white,style=filled,];
 }

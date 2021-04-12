@@ -84,7 +84,7 @@
     "limit" : {
       "widen" : 0
     },
-    "print_dead_code" : false,
+    "print_dead_code" : true,
     "regression" : false,
     "showtemps" : false,
     "slice" : {
@@ -121,6 +121,9 @@
     "g2html_path" : ".",
     "gcc_path" : "/usr/bin/gcc-6",
     "globs_are_top" : false,
+    "gobview" : {
+      "dump" : "../gobview/public/goblint"
+    },
     "incremental" : {
       "mode" : "off",
       "stable" : true,
@@ -193,14 +196,13 @@
   "phases" : [],
   "printstats" : false,
   "result" : "none",
-  "save_run" : "run",
+  "save_run" : "",
   "solver" : "td3",
   "solverdiffs" : false,
   "tempDir" : "",
   "trans" : {
     "activated" : [],
     "expeval" : {
-      "marshalled_results_file_name" : "",
       "query_file_name" : ""
     }
   },
