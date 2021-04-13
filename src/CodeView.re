@@ -30,7 +30,7 @@ let get_all_warnings = (warnings, line, filepath) => {
   );
 };
 [@react.component]
-let make = (~state, ~code, ~dispatch, ~calls, ~warnings) => {
+let make = (~state, ~code, ~file, ~dispatch, ~calls, ~warnings) => {
   <div
     className="d-inline-block min-w-100"
     style={React.Dom.Style.make(~backgroundColor="#f5f2f0", ())}>
@@ -41,11 +41,9 @@ let make = (~state, ~code, ~dispatch, ~calls, ~warnings) => {
             text=l
             numb={i + 1}
             dispatch
-            hasc={hasc(calls, i + 1, state.file_path)}
-            warnings={get_all_warnings(warnings, i + 1, state.file_path)}
-            hasDeadCode={
-              (state.goblint)#is_dead(~line=i + 1, ~file=state.file_path)
-            }
+            hasc={hasc(calls, i + 1, file)}
+            warnings={get_all_warnings(warnings, i + 1, file)}
+            hasDeadCode={(state.goblint)#is_dead(~line=i + 1, ~file)}
             highlight={i + 1 == state.line}
           />
         })

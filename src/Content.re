@@ -12,6 +12,7 @@ let make = (~state: State.t, ~dispatch) => {
          <CodeView
            state
            code={Option.default("", f.contents)}
+           file={f.path}
            dispatch
            calls={state.pdata |> Parse.get_calls}
            warnings={state.pdata |> Parse.get_warnings}

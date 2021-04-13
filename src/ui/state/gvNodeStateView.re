@@ -18,7 +18,7 @@ let make = (~goblint, ~display, ~file_path, ~line, ~id) => {
     |> Option.map(
          fun
          | GvDisplay.Func(_) => `Node(string_of_int(id))
-         | File(_) => `Line((file_path, line)),
+         | File(f) => `Line((f.path, line)),
        );
 
   switch (local) {
