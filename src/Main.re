@@ -1,4 +1,4 @@
-open Util;
+open Batteries;
 
 [@react.component]
 let make = (~pdata, ~cil, ~goblint, ~meta, ~warnings) => {
@@ -20,40 +20,11 @@ let make = (~pdata, ~cil, ~goblint, ~meta, ~warnings) => {
     ();
   };
 
-  let fetchData = s => {
-    let _ =
-      Lwt.bind(
-        HttpClient.get("/" ++ s),
-        s => {
-          log("Parse data");
-          let data = Parse.parse_string(Result.get_ok(s));
-          log("Parse data done");
-          log("Search main");
-          let (xfile, xfilepath) =
-            Parse.search_main_file(Parse.get_files(data));
-          if (String.equal(xfile, "")) {
-            log("Found no main file");
-          } else {
-            log("Found main file: " ++ xfile);
-          };
-          dispatch @@ `InspectFile((xfile, xfilepath));
-          Lwt.return();
-        },
-      );
-    ();
-  };
-
-  React.useEffect0(() => {
-    log("Initial data and code fetch");
-    fetchData("analysis.xml");
-    None;
-  });
-
   React.useEffect1(
     () => {
       if (!String.equal(state.file_name, "")) {
         fetchCode(state.file_name);
-        log("Fetched code: " ++ state.file_name);
+        print_endline("Fetched code: " ++ state.file_name);
       };
       None;
     },
@@ -76,7 +47,7 @@ let make = (~pdata, ~cil, ~goblint, ~meta, ~warnings) => {
             ++ "/"
             ++ f.name
             ++ ".dot";
-          log("Fetching " ++ url);
+          print_endline("Fetching " ++ url);
           let _ =
             Lwt.bind(
               HttpClient.get("/" ++ url),
