@@ -2,8 +2,8 @@
 let make = (~state: State.t, ~calls) => {
   calls
   |> (
-    switch (state.inspect) {
-    | Some(Graph(_)) =>
+    switch (state.display) {
+    | Some(Func(_)) =>
       List.filter(c => Parse.get_id(c) == string_of_int(state.id))
     | _ =>
       List.filter(c =>

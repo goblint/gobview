@@ -44,7 +44,7 @@ let make = (~state, ~dispatch) => {
          | SelectedSidebar.Nodes =>
            <GvNodeStateView
              goblint={state.goblint}
-             inspect={state.inspect}
+             display={state.display}
              file_path={state.file_path}
              line={state.line}
              id={state.id}

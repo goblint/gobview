@@ -4,7 +4,7 @@ let make_table = (matches, dispatch) => {
   let clear = () => dispatch @@ `ClearSearchMatches;
 
   let on_click = (loc: Cil.location, _, _) => {
-    dispatch @@ `InspectCilLocation(loc);
+    dispatch @@ `DisplayFile(loc.file);
     dispatch @@ `Set_line(loc.line);
   };
 

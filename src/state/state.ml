@@ -1,7 +1,4 @@
 open Batteries
-module Inspect = InspectState
-
-type inspect = Inspect.t
 
 module SelectedSidebar = struct
   type t = State | OldGlobals | Nodes | Globals
@@ -17,18 +14,20 @@ type selected_panel = Selected_panel.t
 
 type warning = [ `text of string * Cil.location | `group of string * (string * Cil.location) list ]
 
+type display = GvDisplay.t
+
 type t = {
   id : int;
   line : int;
   file_name : string;
   file_path : string;
+  code : string;
   cil : Cil.file option;
   goblint : GvGoblint.solver_state;
   meta : Yojson.Safe.t;
   warnings : warning list;
   pdata : Parse.run;
-  code : string;
-  inspect : inspect option;
+  display : display option;
   selected_sidebar : selected_sidebar;
   selected_panel : selected_panel option;
   search : Search.t;
@@ -46,7 +45,7 @@ let default =
     cil = None;
     meta = `Null;
     warnings = [];
-    inspect = None;
+    display = None;
     selected_sidebar = SelectedSidebar.State;
     selected_panel = None;
     search = Search.default;

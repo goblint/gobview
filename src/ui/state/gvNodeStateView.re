@@ -12,13 +12,13 @@ let make_single = (ctx, path) => {
 };
 
 [@react.component]
-let make = (~goblint, ~inspect, ~file_path, ~line, ~id) => {
+let make = (~goblint, ~display, ~file_path, ~line, ~id) => {
   let local =
-    inspect
+    display
     |> Option.map(
          fun
-         | InspectState.Graph(_) => `Node(string_of_int(id))
-         | InspectState.File(_) => `Line((file_path, line)),
+         | GvDisplay.Func(_) => `Node(string_of_int(id))
+         | File(_) => `Line((file_path, line)),
        );
 
   switch (local) {

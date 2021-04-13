@@ -7,7 +7,7 @@ let make_func_list = (file, funcs, dispatch) => {
     {funcs
      |> List.mapi((i, func) => {
           <li key={string_of_int(i)}>
-            <Link on_click callback_data={`InspectGraph((func, file, file))}>
+            <Link on_click callback_data={`DisplayFunc((func, file))}>
               {func |> React.string}
             </Link>
           </li>
@@ -34,7 +34,7 @@ let make = (~cil: Cil.file, ~dispatch) => {
      |> Enum.uniq_by(String.equal)
      |> Enum.mapi((i, file) => {
           <li key={string_of_int(i)}>
-            <Link on_click callback_data={`InspectFile((file, file))}>
+            <Link on_click callback_data={`DisplayFile(file)}>
               {file |> React.string}
             </Link>
             {make_func_list(file, Hashtbl.find_all(files, file), dispatch)}

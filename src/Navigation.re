@@ -1,10 +1,9 @@
 let make_func_list_item = (dispatch, file, i, Parse.Funct(_, func)) => {
-  let file_name = Parse.file_to_name(file);
   let file_path = Parse.file_to_path(file);
 
   let onClick = e => {
     React.Event.Mouse.preventDefault(e);
-    dispatch @@ `InspectGraph((func, file_name, file_path));
+    dispatch @@ `DisplayFunc((func, file_path));
   };
 
   <li key={string_of_int(i)}>
@@ -20,12 +19,11 @@ let make_func_list = (dispatch, file) => {
 };
 
 let make_file_list_item = (dispatch, i, file) => {
-  let file_name = Parse.file_to_name(file);
   let file_path = Parse.file_to_path(file);
 
   let onClick = e => {
     React.Event.Mouse.preventDefault(e);
-    dispatch @@ `InspectFile((file_name, file_path));
+    dispatch @@ `DisplayFile(file_path);
   };
 
   <li key={string_of_int(i)}>

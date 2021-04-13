@@ -8,61 +8,44 @@ let make = (~pdata, ~cil, ~goblint, ~meta, ~warnings) => {
       State.create(~pdata, ~cil, ~goblint, ~meta, ~warnings, ()),
     );
 
-  let fetchCode = s => {
-    let _ =
-      Lwt.bind(
-        HttpClient.get("/" ++ s),
-        s => {
-          dispatch @@ `Set_code(Result.get_ok(s));
-          Lwt.return();
-        },
-      );
-    ();
+  let fetch_file =
+    HttpClient.on_get(res => {
+      switch (res) {
+      | Ok(s) => dispatch @@ `UpdateFileContents(s)
+      | _ => ()
+      }
+    });
+
+  let fetch_dot = (func, file) => {
+    let pattern = Js_of_ocaml.Regexp.regexp("/");
+    let url =
+      "dot/"
+      ++ Js_of_ocaml.Regexp.global_replace(pattern, file, "%252F")
+      ++ "/"
+      ++ func
+      ++ ".dot";
+    HttpClient.on_get(
+      res => {
+        switch (res) {
+        | Ok(s) => dispatch @@ `UpdateFuncDot(s)
+        | _ => ()
+        }
+      },
+      url,
+    );
   };
 
   React.useEffect1(
     () => {
-      if (!String.equal(state.file_name, "")) {
-        fetchCode(state.file_name);
-        print_endline("Fetched code: " ++ state.file_name);
-      };
-      None;
-    },
-    [|state.file_name|],
-  );
-
-  React.useEffect1(
-    () => {
-      switch (state.inspect) {
-      | Some(Graph(f)) =>
-        if (Option.is_none(f.dot)) {
-          let pattern = Js_of_ocaml.Regexp.regexp("/");
-          let url =
-            "dot/"
-            ++ Js_of_ocaml.Regexp.global_replace(
-                 pattern,
-                 f.file_path,
-                 "%252F",
-               )
-            ++ "/"
-            ++ f.name
-            ++ ".dot";
-          print_endline("Fetching " ++ url);
-          let _ =
-            Lwt.bind(
-              HttpClient.get("/" ++ url),
-              dot => {
-                dispatch @@ `UpdateDot(Result.get_ok(dot));
-                Lwt.return();
-              },
-            );
-          ();
-        }
+      switch (state.display) {
+      | Some(File(f)) when Option.is_none(f.contents) => fetch_file(f.path)
+      | Some(Func(f)) when Option.is_none(f.dot) =>
+        fetch_dot(f.name, f.file)
       | _ => ()
       };
       None;
     },
-    [|state.inspect|],
+    [|state.display|],
   );
 
   <div className="container-fluid">

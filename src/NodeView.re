@@ -1,7 +1,8 @@
+open Batteries;
 open Js_of_ocaml;
 
 [@react.component]
-let make = (~state: State.t, ~dispatch) => {
+let make = (~func: GvDisplay.func, ~dispatch) => {
   let show_info = id => {
     dispatch @@ `Set_id(id);
     // When you click on a link like `javascript:show_info('42')` in Firefox, it
@@ -17,17 +18,11 @@ let make = (~state: State.t, ~dispatch) => {
    */
   Js.(Unsafe.global##.show_info_ := wrap_callback(show_info));
 
-  let dot =
-    switch (state.inspect) {
-    | Some(Graph(f)) => f.dot
-    | _ => None
-    };
-
-  switch (dot) {
+  switch (func.dot) {
   | Some(dot) =>
     <ErrorBoundary
       message={
-        "Cannot display graph. The generated DOT file is probably too large."
+        "Cannot display the function graph. The generated DOT file is probably too large."
         |> Js.string
       }>
       <Graphviz dot={dot |> Js.string} />

@@ -1,4 +1,4 @@
-let make_breadcrumb = (inspect: State.Inspect.t, dispatch) => {
+let make_breadcrumb = (display: State.display, dispatch) => {
   let on_click = (act, e) => {
     React.Event.Mouse.preventDefault(e);
     dispatch @@ act;
@@ -7,20 +7,18 @@ let make_breadcrumb = (inspect: State.Inspect.t, dispatch) => {
   <nav>
     <ol className="breadcrumb">
       <li className="breadcrumb-item">
-        <a href="#" onClick={on_click(`ResetInspect)}>
+        <a href="#" onClick={on_click(`DisplayNothing)}>
           {"Analysis" |> React.string}
         </a>
       </li>
-      {switch (inspect) {
+      {switch (display) {
        | File(f) =>
-         <li className="breadcrumb-item active"> {f.name |> React.string} </li>
-       | Graph(f) =>
+         <li className="breadcrumb-item active"> {f.path |> React.string} </li>
+       | Func(f) =>
          <>
            <li className="breadcrumb-item">
-             <a
-               href="#"
-               onClick={on_click(`InspectFile((f.file_name, f.file_path)))}>
-               {f.file_name |> React.string}
+             <a href="#" onClick={on_click(`DisplayFile(f.file))}>
+               {f.file |> React.string}
              </a>
            </li>
            <li className="breadcrumb-item active">
@@ -33,9 +31,9 @@ let make_breadcrumb = (inspect: State.Inspect.t, dispatch) => {
 };
 
 [@react.component]
-let make = (~inspect, ~dispatch) => {
-  switch (inspect) {
-  | Some(i) => make_breadcrumb(i, dispatch)
+let make = (~display, ~dispatch) => {
+  switch (display) {
+  | Some(d) => make_breadcrumb(d, dispatch)
   | _ =>
     <nav>
       <ol className="breadcrumb">
