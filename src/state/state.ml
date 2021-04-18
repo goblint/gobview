@@ -1,5 +1,3 @@
-open Batteries
-
 module SelectedSidebar = struct
   type t = State | OldGlobals | Nodes | Globals
 end
@@ -53,13 +51,3 @@ let default =
 
 let make ~pdata ~cil ~goblint ~meta ~warnings () =
   { default with pdata; cil = Some cil; goblint; meta; warnings }
-
-let cil state = state.cil
-
-let pdata state = state.pdata
-
-let selected_sidebar state = state.selected_sidebar
-
-let selected_panel state = Option.get state.selected_panel
-
-let selected_panel_opt state = state.selected_panel

@@ -38,7 +38,7 @@ let make = (~state, ~dispatch) => {
       <div className="tab-pane active">
         {switch (current) {
          | SelectedSidebar.State =>
-           <StateView state calls={state |> pdata |> Parse.get_calls} />
+           <StateView state calls={state.pdata |> Parse.get_calls} />
          | SelectedSidebar.OldGlobals =>
            <GlobView globs=(state.goblint)#globs />
          | SelectedSidebar.Nodes =>
