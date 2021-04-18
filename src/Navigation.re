@@ -43,7 +43,7 @@ let make = (~state: State.t, ~dispatch) => {
        |> List.mapi(make_file_list_item(dispatch))
        |> React.list}
     </ul>
-    <GvFileList cil={Option.get(state.cil)} dispatch />
+    <GvFileList cil={state.cil} dispatch />
     <SearchView search dispatch />
   </>;
 };

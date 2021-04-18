@@ -20,7 +20,7 @@ type t = {
   file_name : string;
   file_path : string;
   code : string;
-  cil : Cil.file option;
+  cil : Cil.file;
   goblint : GvGoblint.solver_state;
   meta : Yojson.Safe.t;
   warnings : warning list;
@@ -40,7 +40,7 @@ let default =
     pdata = Parse.empty_run;
     code = "";
     goblint = GvGoblint.empty;
-    cil = None;
+    cil = Cil.dummyFile;
     meta = `Null;
     warnings = [];
     display = None;
@@ -50,4 +50,4 @@ let default =
   }
 
 let make ~pdata ~cil ~goblint ~meta ~warnings () =
-  { default with pdata; cil = Some cil; goblint; meta; warnings }
+  { default with pdata; cil; goblint; meta; warnings }

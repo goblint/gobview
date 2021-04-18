@@ -3,7 +3,7 @@ let reducer (s : State.t) = function
   | `Set_line line -> { s with line }
   | `Set_file_name file_name -> { s with file_name }
   | `Set_file_path file_path -> { s with file_path }
-  | `Set_cil cil -> { s with cil = Some cil }
+  | `Set_cil cil -> { s with cil }
   | `Set_pdata pdata -> { s with pdata }
   | `Set_code code -> { s with code }
   | `SwitchSidebar selected_sidebar -> { s with selected_sidebar }
@@ -13,4 +13,4 @@ let reducer (s : State.t) = function
       { s with display = GvDisplayReducer.reduce s s.display a }
   | ( `UpdateSearchMode _ | `UpdateSearchField _ | `ParseSearchQuery _ | `StartPerformSearch
     | `PerformSearch | `ClearSearchMatches ) as a ->
-      { s with search = SearchReducer.reducer s.search (Option.get s.cil) a }
+      { s with search = SearchReducer.reducer s.search s.cil a }
