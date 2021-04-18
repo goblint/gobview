@@ -51,7 +51,7 @@ let default =
     search = Search.default;
   }
 
-let create ~pdata ~cil ~goblint ~meta ~warnings () =
+let make ~pdata ~cil ~goblint ~meta ~warnings () =
   { default with pdata; cil = Some cil; goblint; meta; warnings }
 
 let cil state = state.cil

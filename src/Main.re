@@ -5,7 +5,7 @@ let make = (~pdata, ~cil, ~goblint, ~meta, ~warnings) => {
   let (state, dispatch) =
     React.useReducer(
       Reducer.reducer,
-      State.create(~pdata, ~cil, ~goblint, ~meta, ~warnings, ()),
+      State.make(~pdata, ~cil, ~goblint, ~meta, ~warnings, ()),
     );
 
   let fetch_file =
