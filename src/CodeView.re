@@ -44,6 +44,7 @@ let make = (~goblint, ~warnings, ~file: GvDisplay.file, ~inspect, ~dispatch) => 
           <CodeLine
             key={string_of_int(i)}
             text=l
+            file={file.path}
             numb={i + 1}
             dispatch
             hasc={goblint#has_local_analysis(line)}

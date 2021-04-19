@@ -6,6 +6,7 @@ let insert_space = i => (i < 10 ? "  " : " ") |> React.string;
 let make =
     (
       ~text,
+      ~file,
       ~numb,
       ~dispatch,
       ~hasc: bool,
@@ -39,7 +40,7 @@ let make =
       )}
       onClick={_ =>
         if (hasc) {
-          dispatch @@ `Set_line(numb);
+          dispatch @@ `InspectLine((file, numb));
         }
       }>
       {let line_number = string_of_int(numb) |> React.string;
