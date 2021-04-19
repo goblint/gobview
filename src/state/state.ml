@@ -1,3 +1,5 @@
+open Batteries
+
 module SelectedSidebar = struct
   type t = Nodes | Globals
 end
@@ -10,7 +12,25 @@ end
 
 type selected_panel = Selected_panel.t
 
-type warning = [ `text of string * Cil.location | `group of string * (string * Cil.location) list ]
+module Warning = struct
+  type t = [ `text of string * Cil.location | `group of string * (string * Cil.location) list ]
+
+  let to_string = function
+    | `text (s, _) -> s
+    | `group (s, l) -> List.map (Printf.sprintf "%s: %s" s % fst) l |> String.concat "\n"
+
+  let find_all (file, line) =
+    let is_this_location (loc : Cil.location) = String.equal file loc.file && line = loc.line in
+    let f = function
+      | `text (_, loc) as w -> if is_this_location loc then Some w else None
+      | `group (s, l) ->
+          let l' = List.filter (is_this_location % snd) l in
+          if List.is_empty l' then None else Some (`group (s, l'))
+    in
+    List.filter_map f
+end
+
+type warning = Warning.t
 
 type display = GvDisplay.t
 

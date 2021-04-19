@@ -75,7 +75,7 @@ let make =
        warnings
        |> List.map(w =>
             <div className="warning">
-              {Parse.warning_to_text(w) |> React.string}
+              {State.Warning.to_string(w) |> React.string}
             </div>
           )
        |> React.list;

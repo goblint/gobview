@@ -1,4 +1,4 @@
-open State;
+open Batteries;
 
 let hasc = (calls, line, filepath) => {
   List.exists(
@@ -30,26 +30,27 @@ let get_all_warnings = (warnings, line, filepath) => {
   );
 };
 [@react.component]
-let make = (~state, ~code, ~file, ~dispatch, ~calls, ~warnings) => {
+let make = (~goblint, ~warnings, ~file: GvDisplay.file, ~inspect, ~dispatch) => {
+  let inspected_line =
+    inspect
+    |> Option.map_default(GvInspect.line_num, None)
+    |> Option.default(-1);
   <div
     className="d-inline-block min-w-100"
     style={React.Dom.Style.make(~backgroundColor="#f5f2f0", ())}>
-    {String.split_on_char('\n', code)
+    {String.split_on_char('\n', Option.default("", file.contents))
      |> List.mapi((i, l) => {
+          let line = GvInspect.Line.make(~file=file.path, ~num=i + 1);
           <CodeLine
             key={string_of_int(i)}
             text=l
             numb={i + 1}
             dispatch
-            hasc={
-              (state.goblint)#has_local_analysis(
-                GvInspect.Line.make(~file, ~num=i + 1),
-              )
-            }
-            warnings={get_all_warnings(warnings, i + 1, file)}
-            hasDeadCode={(state.goblint)#is_dead(~line=i + 1, ~file)}
-            highlight={i + 1 == state.line}
-          />
+            hasc={goblint#has_local_analysis(line)}
+            warnings={State.Warning.find_all(line, warnings)}
+            hasDeadCode={goblint#is_dead(~file=file.path, ~line=i + 1)}
+            highlight={i + 1 == inspected_line}
+          />;
         })
      |> React.list}
   </div>;

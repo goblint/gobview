@@ -8,14 +8,13 @@ let make = (~state: State.t, ~dispatch) => {
     <div className="flex-fill overflow-auto">
       {switch (state.display) {
        | None => <Navigation state dispatch />
-       | Some(File(f)) =>
+       | Some(File(file)) =>
          <CodeView
-           state
-           code={Option.default("", f.contents)}
-           file={f.path}
+           goblint={state.goblint}
+           warnings={state.warnings}
+           file
+           inspect={state.inspect}
            dispatch
-           calls={state.pdata |> Parse.get_calls}
-           warnings={state.pdata |> Parse.get_warnings}
          />
        | Some(Func(func)) => <GvFuncView func dispatch />
        }}

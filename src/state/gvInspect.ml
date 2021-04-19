@@ -22,4 +22,6 @@ type t = Line of line | Node of node
 
 let line ~file ~num = Line (file, num)
 
+let line_num = function Line ((_, n) as line) when Line.valid line -> Some n | _ -> None
+
 let node ~id = Node id
