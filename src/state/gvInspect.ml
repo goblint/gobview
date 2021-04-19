@@ -18,6 +18,6 @@ type node = Node.t
 
 type t = Line of line | Node of node
 
-let line ~file ~num = Line (file, num)
+let line ~file ~num () = Line (file, num)
 
-let node ~id = Node id
+let node ~id () = Node id
