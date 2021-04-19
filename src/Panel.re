@@ -2,10 +2,10 @@ open Batteries;
 open State;
 
 let views = [
-  (Selected_panel.Warnings, "Warnings"),
-  (Selected_panel.Dead_code, "Dead code"),
-  (Selected_panel.Parameters, "Parameters"),
-  (Selected_panel.Statistics, "Statistics"),
+  (SelectedPanel.Warnings, "Warnings"),
+  (SelectedPanel.DeadCode, "Dead code"),
+  (SelectedPanel.Parameters, "Parameters"),
+  (SelectedPanel.Statistics, "Statistics"),
 ];
 
 let make_nav_pills = (current, dispatch) => {
@@ -54,12 +54,11 @@ let make = (~state, ~dispatch) => {
     <div className="tab-content">
       <div className="tab-pane active">
         {switch (current) {
-         | Some(Selected_panel.Warnings) =>
+         | Some(Warnings) =>
            <WarningView warnings={state.warnings} dispatch />
-         | Some(Selected_panel.Dead_code) =>
-           <DeadCodeView locations dispatch />
-         | Some(Selected_panel.Parameters) => <ParameterView parameters />
-         | Some(Selected_panel.Statistics) =>
+         | Some(DeadCode) => <DeadCodeView locations dispatch />
+         | Some(Parameters) => <ParameterView parameters />
+         | Some(Statistics) =>
            <StatisticsView statistics={state.pdata |> Parse.get_statistics} />
 
          | _ => React.null

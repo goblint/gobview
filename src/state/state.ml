@@ -6,11 +6,11 @@ end
 
 type selected_sidebar = SelectedSidebar.t
 
-module Selected_panel = struct
-  type t = Warnings | Dead_code | Parameters | Statistics
+module SelectedPanel = struct
+  type t = Warnings | DeadCode | Parameters | Statistics
 end
 
-type selected_panel = Selected_panel.t
+type selected_panel = SelectedPanel.t
 
 module Warning = struct
   type t = [ `text of string * Cil.location | `group of string * (string * Cil.location) list ]
