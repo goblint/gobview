@@ -21,7 +21,7 @@ let make_nav_pills = (current, dispatch) => {
             <a
               href="#"
               className={"nav-link" ++ (current == Some(v) ? " active" : "")}
-              onClick={on_click(`Switch_panel(Some(v)))}>
+              onClick={on_click(`SwitchPanel(Some(v)))}>
               {n |> React.string}
             </a>
           </li>
@@ -29,9 +29,7 @@ let make_nav_pills = (current, dispatch) => {
      |> React.list}
     <li className="nav-item">
       <a
-        href="#"
-        className="nav-link"
-        onClick={on_click(`Switch_panel(None))}>
+        href="#" className="nav-link" onClick={on_click(`SwitchPanel(None))}>
         {"✖" |> React.string}
       </a>
     </li>

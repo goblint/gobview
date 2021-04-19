@@ -1,6 +1,6 @@
 let reducer (s : State.t) = function
   | `SwitchSidebar selected_sidebar -> { s with selected_sidebar }
-  | `Switch_panel selected_panel -> { s with selected_panel }
+  | `SwitchPanel selected_panel -> { s with selected_panel }
   | (`DisplayNothing | `DisplayFile _ | `DisplayFunc _ | `UpdateFileContents _ | `UpdateFuncDot _)
     as a ->
       { s with display = GvDisplayReducer.reduce s s.display a }
