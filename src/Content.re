@@ -17,7 +17,7 @@ let make = (~state: State.t, ~dispatch) => {
            calls={state.pdata |> Parse.get_calls}
            warnings={state.pdata |> Parse.get_warnings}
          />
-       | Some(Func(func)) => <NodeView func dispatch />
+       | Some(Func(func)) => <GvNodeView func dispatch />
        }}
     </div>
   </>;
