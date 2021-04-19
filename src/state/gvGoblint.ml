@@ -1,11 +1,10 @@
 open Batteries
 open Cil
 
-type local = [ `Line of string * int | `Node of string ]
-
 class virtual solver_state =
   object
-    method virtual local_analyses : local -> (string * (Representation.t * Representation.t)) list
+    method virtual local_analyses
+        : GvInspect.t -> (string * (Representation.t * Representation.t)) list
 
     method virtual globs : Parse.glob list
 
@@ -64,7 +63,10 @@ module Make (Cfg : MyCFG.CfgBidir) (Spec : Analyses.SpecHC) : Sig = struct
     lh |> LHashtbl.enum
     |> Enum.map (fun (((_, c) as k), v) ->
            let id = LVar.var_id k in
-           [ (`Line (LVar.file_name k, LVar.line_nr k), (id, c, v)); (`Node id, (id, c, v)) ])
+           [
+             (GvInspect.Line (LVar.file_name k, LVar.line_nr k), (id, c, v));
+             (GvInspect.Node id, (id, c, v));
+           ])
     |> Enum.map List.enum |> Enum.concat |> Hashtbl.of_enum
 
   let local_analyses lh' l =

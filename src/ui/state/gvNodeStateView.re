@@ -12,20 +12,12 @@ let make_single = (ctx, path) => {
 };
 
 [@react.component]
-let make = (~goblint, ~display, ~file_path, ~line, ~id) => {
-  let local =
-    display
-    |> Option.map(
-         fun
-         | GvDisplay.Func(_) => `Node(string_of_int(id))
-         | File(f) => `Line((f.path, line)),
-       );
-
-  switch (local) {
+let make = (~goblint, ~inspect) => {
+  switch (inspect) {
   | None => React.null
-  | Some(local) =>
+  | Some(inspect) =>
     <CollapsibleList collapsed=false style=`Flush>
-      {goblint#local_analyses(local)
+      {goblint#local_analyses(inspect)
        |> List.group(((id, _), (id', _)) => String.compare(id, id'))
        |> List.map(
             fun

@@ -26,23 +26,14 @@ let make_nav = (active, dispatch) => {
 };
 
 [@react.component]
-let make = (~state: State.t, ~dispatch) => {
-  let current = state.selected_sidebar;
+let make = (~active, ~goblint, ~inspect, ~dispatch) => {
   <>
-    {make_nav(current, dispatch)}
+    {make_nav(active, dispatch)}
     <div className="tab-content">
       <div className="tab-pane active">
-        {switch (current) {
-         | SelectedSidebar.Nodes =>
-           <GvNodeStateView
-             goblint={state.goblint}
-             display={state.display}
-             file_path={state.file_path}
-             line={state.line}
-             id={state.id}
-           />
-         | SelectedSidebar.Globals =>
-           <GvGlobalStateView analyses=(state.goblint)#global_analyses />
+        {switch (active) {
+         | SelectedSidebar.Nodes => <GvNodeStateView goblint inspect />
+         | Globals => <GvGlobalStateView analyses=goblint#global_analyses />
          }}
       </div>
     </div>

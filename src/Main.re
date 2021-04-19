@@ -51,7 +51,12 @@ let make = (~pdata, ~cil, ~goblint, ~meta, ~warnings) => {
   <div className="container-fluid">
     <div className="row">
       <div className="col-3 border-right vh-100 overflow-auto">
-        <Sidebar state dispatch />
+        <Sidebar
+          active={state.selected_sidebar}
+          goblint
+          inspect={state.inspect}
+          dispatch
+        />
       </div>
       <div className="col-9 d-flex flex-column vh-100">
         <Content state dispatch />
