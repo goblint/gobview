@@ -46,18 +46,6 @@ let make = (~state, ~dispatch) => {
     | _ => ""
     };
 
-  let to_parse_warning = ((s, loc: Cil.location)) =>
-    Parse.Warning(loc.file, string_of_int(loc.line), s);
-  let warnings =
-    state.warnings
-    |> List.map(w =>
-         switch (w) {
-         | `text(w) => [to_parse_warning(w)]
-         | `group(_, l) => List.map(to_parse_warning, l)
-         }
-       )
-    |> List.concat;
-
   let locations = (state.goblint)#dead_locations;
 
   let current = state.selected_panel;
@@ -66,7 +54,8 @@ let make = (~state, ~dispatch) => {
     <div className="tab-content">
       <div className="tab-pane active">
         {switch (current) {
-         | Some(Selected_panel.Warnings) => <WarningView warnings dispatch />
+         | Some(Selected_panel.Warnings) =>
+           <WarningView warnings={state.warnings} dispatch />
          | Some(Selected_panel.Dead_code) =>
            <DeadCodeView locations dispatch />
          | Some(Selected_panel.Parameters) => <ParameterView parameters />

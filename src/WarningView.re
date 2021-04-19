@@ -1,5 +1,7 @@
+open Batteries;
+
 [@react.component]
-let make = (~dispatch, ~warnings: list(Parse.warning)) => {
+let make = (~warnings, ~dispatch) => {
   <div className="filebox">
     <h3>
       {(List.length(warnings) == 0 ? "No warnings found!" : "Warnings")
@@ -7,25 +9,20 @@ let make = (~dispatch, ~warnings: list(Parse.warning)) => {
     </h3>
     <ul>
       {warnings
-       |> List.mapi((i, c) => {
+       |> List.map(State.Warning.to_list)
+       |> List.flatten
+       |> List.mapi((i, (text, loc: Cil.location)) => {
             <li
               className="cursor warnitem"
               key={string_of_int(i)}
               onClick={_ => {
-                dispatch @@
-                `Set_file_name(
-                  Parse.warning_to_file(c) |> Parse.get_file_from_filepath,
-                );
-                dispatch @@ `Set_file_path(Parse.warning_to_file(c));
-                dispatch @@
-                `Set_line(int_of_string(Parse.warning_to_line(c)));
+                dispatch @@ `Set_file_name(loc.file);
+                dispatch @@ `Set_file_path(loc.file);
+                dispatch @@ `Set_line(loc.line);
               }}>
-              <b> {Parse.warning_to_text(c) |> React.string} </b>
+              <b> {text |> React.string} </b>
               <br />
-              {Parse.warning_to_line(c)
-               ++ " : "
-               ++ Parse.warning_to_file(c)
-               |> React.string}
+              {string_of_int(loc.line) ++ " : " ++ loc.file |> React.string}
             </li>
           })
        |> React.list}

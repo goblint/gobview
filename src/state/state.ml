@@ -19,6 +19,10 @@ module Warning = struct
     | `text (s, _) -> s
     | `group (s, l) -> List.map (Printf.sprintf "%s: %s" s % fst) l |> String.concat "\n"
 
+  let to_list = function
+    | `text w -> [ w ]
+    | `group (n, l) -> List.map (fun (s, loc) -> (Printf.sprintf "%s: %s" n s, loc)) l
+
   let find_all (file, line) =
     let is_this_location (loc : Cil.location) = String.equal file loc.file && line = loc.line in
     let f = function
