@@ -41,7 +41,11 @@ let make = (~state, ~code, ~file, ~dispatch, ~calls, ~warnings) => {
             text=l
             numb={i + 1}
             dispatch
-            hasc={hasc(calls, i + 1, file)}
+            hasc={
+              (state.goblint)#has_local_analysis(
+                GvInspect.Line.make(~file, ~num=i + 1),
+              )
+            }
             warnings={get_all_warnings(warnings, i + 1, file)}
             hasDeadCode={(state.goblint)#is_dead(~line=i + 1, ~file)}
             highlight={i + 1 == state.line}

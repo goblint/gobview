@@ -6,6 +6,8 @@ class virtual solver_state =
     method virtual local_analyses
         : GvInspect.t -> (string * (Representation.t * Representation.t)) list
 
+    method virtual has_local_analysis : GvInspect.line -> bool
+
     method virtual globs : Parse.glob list
 
     method virtual global_names : string list
@@ -24,6 +26,8 @@ class empty_solver_state =
     inherit solver_state
 
     method local_analyses _ = []
+
+    method has_local_analysis _ = false
 
     method globs = []
 
@@ -72,6 +76,8 @@ module Make (Cfg : MyCFG.CfgBidir) (Spec : Analyses.SpecHC) : Sig = struct
   let local_analyses lh' l =
     Hashtbl.find_all lh' l
     |> List.map (fun (id, c, d) -> (id, (Spec.C.represent c, LSpec.represent d)))
+
+  let has_local_analysis lh' l = Hashtbl.mem lh' (GvInspect.Line l)
 
   let dead_locations lh =
     let module NodeSet = Set.Make (Node.Node) in
@@ -131,6 +137,8 @@ module Make (Cfg : MyCFG.CfgBidir) (Spec : Analyses.SpecHC) : Sig = struct
       val global_analysis_tbl = compute_global_analysis_tbl gh
 
       method local_analyses = local_analyses lh'
+
+      method has_local_analysis = has_local_analysis lh'
 
       method globs = globs (lh, gh)
 

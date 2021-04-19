@@ -3,6 +3,8 @@ module Line = struct
 
   let empty = ("", -1)
 
+  let make ~file ~num = (file, num)
+
   let valid (_, n) = n != -1
 
   let of_location (loc : Cil.location) = (loc.file, loc.line)
