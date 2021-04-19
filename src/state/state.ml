@@ -1,5 +1,5 @@
 module SelectedSidebar = struct
-  type t = State | OldGlobals | Nodes | Globals
+  type t = Nodes | Globals
 end
 
 type selected_sidebar = SelectedSidebar.t
@@ -48,7 +48,7 @@ let default =
     warnings = [];
     display = None;
     inspect = None;
-    selected_sidebar = SelectedSidebar.State;
+    selected_sidebar = SelectedSidebar.Nodes;
     selected_panel = None;
     search = Search.default;
   }
