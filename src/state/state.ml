@@ -14,6 +14,8 @@ type warning = [ `text of string * Cil.location | `group of string * (string * C
 
 type display = GvDisplay.t
 
+type inspect = GvInspect.t
+
 type t = {
   id : int;
   line : int;
@@ -26,6 +28,7 @@ type t = {
   warnings : warning list;
   pdata : Parse.run;
   display : display option;
+  inspect : inspect option;
   selected_sidebar : selected_sidebar;
   selected_panel : selected_panel option;
   search : Search.t;
@@ -44,6 +47,7 @@ let default =
     meta = `Null;
     warnings = [];
     display = None;
+    inspect = None;
     selected_sidebar = SelectedSidebar.State;
     selected_panel = None;
     search = Search.default;
