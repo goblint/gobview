@@ -41,9 +41,6 @@ type display = GvDisplay.t
 type inspect = GvInspect.t
 
 type t = {
-  line : int;
-  file_name : string;
-  file_path : string;
   goblint : GvGoblint.solver_state;
   cil : Cil.file;
   meta : Yojson.Safe.t;
@@ -58,9 +55,6 @@ type t = {
 
 let default =
   {
-    line = -1;
-    file_name = "";
-    file_path = "";
     pdata = Parse.empty_run;
     goblint = GvGoblint.empty;
     cil = Cil.dummyFile;

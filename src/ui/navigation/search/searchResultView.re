@@ -5,7 +5,7 @@ let make_table = (matches, dispatch) => {
 
   let on_click = (loc: Cil.location, _, _) => {
     dispatch @@ `DisplayFile(loc.file);
-    dispatch @@ `Set_line(loc.line);
+    dispatch @@ `InspectLine(GvInspect.Line.of_location(loc));
   };
 
   <>

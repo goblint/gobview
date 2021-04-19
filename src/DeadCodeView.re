@@ -14,9 +14,8 @@ let make = (~dispatch, ~locations) => {
               className="cursor warnitem"
               key={string_of_int(i)}
               onClick={_ => {
-                dispatch @@ `Set_file_name(loc.file);
-                dispatch @@ `Set_file_path(loc.file);
-                dispatch @@ `Set_line(loc.line);
+                dispatch @@ `DisplayFile(loc.file);
+                dispatch @@ `InspectLine(GvInspect.Line.of_location(loc));
               }}>
               {string_of_int(loc.line) ++ " : " ++ loc.file |> React.string}
             </li>
