@@ -27,7 +27,7 @@ let make_breadcrumb_items = (display: State.display, dispatch) => {
 
 [@react.component]
 let make = (~display, ~dispatch) => {
-  <nav className="navbar navbar-light bg-light">
+  <nav className="navbar navbar-light bg-light fixed-top py-1">
     <div className="container-fluid justify-content-start">
       <span className="navbar-brand"> {"Gobview" |> React.string} </span>
       <nav>

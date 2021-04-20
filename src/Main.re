@@ -52,7 +52,7 @@ let make = (~pdata, ~cil, ~goblint, ~meta, ~warnings) => {
     <GvNavbar display={state.display} dispatch />
     <div className="container-fluid">
       <div className="row">
-        <div className="col-3 border-right vh-100 overflow-auto">
+        <div className="col-3 border-end overflow-auto pt-5 vh-100">
           <Sidebar
             active={state.selected_sidebar}
             goblint
@@ -60,7 +60,7 @@ let make = (~pdata, ~cil, ~goblint, ~meta, ~warnings) => {
             dispatch
           />
         </div>
-        <div className="col-9 d-flex flex-column vh-100">
+        <div className="col-9 d-flex flex-column pt-5 vh-100">
           <Content state dispatch />
           <Panel state dispatch />
         </div>
