@@ -1,11 +1,11 @@
 open Batteries;
 
 [@react.component]
-let make = (~pdata, ~cil, ~goblint, ~warnings, ~meta, ~stats) => {
+let make = (~cil, ~goblint, ~warnings, ~meta, ~stats) => {
   let (state, dispatch) =
     React.useReducer(
       Reducer.reducer,
-      State.make(~pdata, ~cil, ~goblint, ~warnings, ~meta, ~stats, ()),
+      State.make(~cil, ~goblint, ~warnings, ~meta, ~stats, ()),
     );
 
   let fetch_file =

@@ -102,7 +102,7 @@ let init_goblint = (solver, table, config, cil) => {
   (goblint, cil);
 };
 
-let init = (pdata, solver, config, cil, meta, analyses, warnings, stats) => {
+let init = (solver, config, meta, cil, analyses, warnings, stats) => {
   let cil =
     switch (cil) {
     | Ok(s) =>
@@ -121,13 +121,6 @@ let init = (pdata, solver, config, cil, meta, analyses, warnings, stats) => {
     | _ => raise(InitFailed("Failed to load Goblint state"))
     };
   print_endline("Initialized Goblint");
-
-  let pdata =
-    switch (pdata) {
-    | Ok(s) => Parse.parse_string(s)
-    | _ => raise(InitFailed("Failed to load the analysis results"))
-    };
-  print_endline("Fetched the analysis results");
 
   let warnings =
     switch (warnings) {
@@ -150,7 +143,7 @@ let init = (pdata, solver, config, cil, meta, analyses, warnings, stats) => {
 
   print_endline("Rendering app...");
   React.Dom.renderToElementWithId(
-    <Main pdata cil goblint warnings meta stats />,
+    <Main cil goblint warnings meta stats />,
     "app",
   );
 };
@@ -165,7 +158,6 @@ let handle_error = exc => {
 };
 
 [
-  "/analysis.xml",
   "/goblint/solver.marshalled",
   "/goblint/config.json",
   "/goblint/meta.json",
@@ -180,8 +172,8 @@ let handle_error = exc => {
   l =>
     Lwt.return(
       switch (l) {
-      | [pdata, solver, config, meta, cil, analyses, warnings, stats] =>
-        try(init(pdata, solver, config, cil, meta, analyses, warnings, stats)) {
+      | [solver, config, meta, cil, analyses, warnings, stats] =>
+        try(init(solver, config, meta, cil, analyses, warnings, stats)) {
         | exc => handle_error(exc)
         }
       | _ => ()

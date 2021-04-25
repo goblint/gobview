@@ -8,8 +8,6 @@ class virtual solver_state =
 
     method virtual has_local_analysis : GvInspect.line -> bool
 
-    method virtual globs : Parse.glob list
-
     method virtual global_names : string list
 
     method virtual global : string -> Representation.t
@@ -28,8 +26,6 @@ class empty_solver_state =
     method local_analyses _ = []
 
     method has_local_analysis _ = false
-
-    method globs = []
 
     method global_names = []
 
@@ -91,19 +87,6 @@ module Make (Cfg : MyCFG.CfgBidir) (Spec : Analyses.SpecHC) : Sig = struct
          | Node.Statement stmt -> get_stmtLoc stmt.skind
          | FunctionEntry vi | Function vi -> vi.vdecl)
 
-  let parse s =
-    let parser = XmlParser.make () in
-    XmlParser.prove parser false;
-    XmlParser.parse parser (SString s)
-
-  let glob (v, s) =
-    let f = IO.output_string () in
-    GSpec.printXml f s;
-    let xml = IO.close_out f in
-    "<glob><key>" ^ v.vname ^ "</key>" ^ xml ^ "</glob>" |> parse |> Parse.parse_glob
-
-  let globs ((_, gh) : t) = GHashtbl.enum gh |> Enum.map glob |> List.of_enum
-
   let transform_ghashtbl = Hashtbl.of_enum % Enum.map (fun (k, v) -> (k.vname, v)) % GHashtbl.enum
 
   let global_names = List.of_enum % Enum.map (fun (k, _) -> k.vname) % GHashtbl.enum
@@ -139,8 +122,6 @@ module Make (Cfg : MyCFG.CfgBidir) (Spec : Analyses.SpecHC) : Sig = struct
       method local_analyses = local_analyses lh'
 
       method has_local_analysis = has_local_analysis lh'
-
-      method globs = globs (lh, gh)
 
       method global_names = global_names gh
 
