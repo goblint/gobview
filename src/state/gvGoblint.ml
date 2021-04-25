@@ -8,10 +8,6 @@ class virtual solver_state =
 
     method virtual has_local_analysis : GvInspect.line -> bool
 
-    method virtual global_names : string list
-
-    method virtual global : string -> Representation.t
-
     method virtual global_analyses : (string * (string * Representation.t) list) list
 
     method virtual dead_locations : location list
@@ -26,10 +22,6 @@ class empty_solver_state =
     method local_analyses _ = []
 
     method has_local_analysis _ = false
-
-    method global_names = []
-
-    method global _ = `Nothing
 
     method global_analyses = []
 
@@ -87,14 +79,7 @@ module Make (Cfg : MyCFG.CfgBidir) (Spec : Analyses.SpecHC) : Sig = struct
          | Node.Statement stmt -> get_stmtLoc stmt.skind
          | FunctionEntry vi | Function vi -> vi.vdecl)
 
-  let transform_ghashtbl = Hashtbl.of_enum % Enum.map (fun (k, v) -> (k.vname, v)) % GHashtbl.enum
-
-  let global_names = List.of_enum % Enum.map (fun (k, _) -> k.vname) % GHashtbl.enum
-
-  let global n gh' =
-    Hashtbl.find_option gh' n |> Option.map_default (fun g -> GSpec.represent g) `Nothing
-
-  let compute_global_analysis_tbl gh =
+  let transform_ghashtbl gh =
     let tbl = Hashtbl.create (GHashtbl.length gh) in
     let insert_analysis_result a v r =
       Hashtbl.modify_opt a (function None -> Some [ (v, r) ] | Some l -> Some ((v, r) :: l)) tbl
@@ -117,17 +102,11 @@ module Make (Cfg : MyCFG.CfgBidir) (Spec : Analyses.SpecHC) : Sig = struct
 
       val dead = dead_locations lh
 
-      val global_analysis_tbl = compute_global_analysis_tbl gh
-
       method local_analyses = local_analyses lh'
 
       method has_local_analysis = has_local_analysis lh'
 
-      method global_names = global_names gh
-
-      method global n = global n gh'
-
-      method global_analyses = global_analysis_tbl
+      method global_analyses = gh'
 
       method dead_locations = dead
 
