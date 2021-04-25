@@ -45,7 +45,7 @@ type t = {
   cil : Cil.file;
   warnings : warning list;
   meta : Yojson.Safe.t;
-  stats : Stats.t;
+  stats : Stats.t * Gc.stat;
   pdata : Parse.run;
   display : display option;
   inspect : inspect option;
@@ -61,7 +61,7 @@ let default =
     cil = Cil.dummyFile;
     warnings = [];
     meta = `Null;
-    stats = Stats.top;
+    stats = (Stats.top, Gc.quick_stat ());
     display = None;
     inspect = None;
     selected_sidebar = SelectedSidebar.Nodes;
