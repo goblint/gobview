@@ -43,8 +43,9 @@ type inspect = GvInspect.t
 type t = {
   goblint : GvGoblint.solver_state;
   cil : Cil.file;
-  meta : Yojson.Safe.t;
   warnings : warning list;
+  meta : Yojson.Safe.t;
+  stats : Stats.t;
   pdata : Parse.run;
   display : display option;
   inspect : inspect option;
@@ -58,8 +59,9 @@ let default =
     pdata = Parse.empty_run;
     goblint = GvGoblint.empty;
     cil = Cil.dummyFile;
-    meta = `Null;
     warnings = [];
+    meta = `Null;
+    stats = Stats.top;
     display = None;
     inspect = None;
     selected_sidebar = SelectedSidebar.Nodes;
@@ -67,5 +69,5 @@ let default =
     search = Search.default;
   }
 
-let make ~pdata ~cil ~goblint ~meta ~warnings () =
-  { default with pdata; cil; goblint; meta; warnings }
+let make ~pdata ~cil ~goblint ~warnings ~meta ~stats () =
+  { default with pdata; cil; goblint; warnings; meta; stats }

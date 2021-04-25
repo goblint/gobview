@@ -102,7 +102,7 @@ let init_goblint = (solver, table, config, cil) => {
   (goblint, cil);
 };
 
-let init = (~pdata, ~solver, ~config, ~meta, ~cil, ~analyses, ~warnings, ()) => {
+let init = (pdata, solver, config, cil, meta, analyses, warnings, stats) => {
   let cil =
     switch (cil) {
     | Ok(s) =>
@@ -129,12 +129,6 @@ let init = (~pdata, ~solver, ~config, ~meta, ~cil, ~analyses, ~warnings, ()) => 
     };
   print_endline("Fetched the analysis results");
 
-  let meta =
-    switch (meta) {
-    | Ok(s) => Yojson.Safe.from_string(s)
-    | _ => raise(InitFailed("Failed to load the warning table"))
-    };
-
   let warnings =
     switch (warnings) {
     | Ok(s) => Marshal.from_string(s, 0)
@@ -142,9 +136,21 @@ let init = (~pdata, ~solver, ~config, ~meta, ~cil, ~analyses, ~warnings, ()) => 
     };
   print_endline("Restored the warning table");
 
+  let meta =
+    switch (meta) {
+    | Ok(s) => Yojson.Safe.from_string(s)
+    | _ => raise(InitFailed("Failed to load the warning table"))
+    };
+
+  let stats =
+    switch (stats) {
+    | Ok(s) => Marshal.from_string(s, 0)
+    | _ => raise(InitFailed("Failed to load runtime stats"))
+    };
+
   print_endline("Rendering app...");
   React.Dom.renderToElementWithId(
-    <Main pdata cil goblint meta warnings />,
+    <Main pdata cil goblint warnings meta stats />,
     "app",
   );
 };
@@ -166,6 +172,7 @@ let handle_error = exc => {
   "/goblint/cil.marshalled",
   "/goblint/analyses.marshalled",
   "/goblint/warnings.marshalled",
+  "/goblint/stats.marshalled",
 ]
 |> List.map(HttpClient.get)
 |> Lwt.all
@@ -173,19 +180,8 @@ let handle_error = exc => {
   l =>
     Lwt.return(
       switch (l) {
-      | [pdata, solver, config, meta, cil, analyses, warnings] =>
-        try(
-          init(
-            ~pdata,
-            ~solver,
-            ~config,
-            ~meta,
-            ~cil,
-            ~analyses,
-            ~warnings,
-            (),
-          )
-        ) {
+      | [pdata, solver, config, meta, cil, analyses, warnings, stats] =>
+        try(init(pdata, solver, config, cil, meta, analyses, warnings, stats)) {
         | exc => handle_error(exc)
         }
       | _ => ()

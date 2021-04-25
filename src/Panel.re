@@ -56,9 +56,7 @@ let make = (~state, ~dispatch) => {
            <WarningView warnings={state.warnings} dispatch />
          | Some(DeadCode) => <DeadCodeView locations dispatch />
          | Some(Parameters) => <ParameterView parameters />
-         | Some(Statistics) =>
-           <StatisticsView statistics={state.pdata |> Parse.get_statistics} />
-
+         | Some(Statistics) => <GvStatisticsView stats={state.stats} />
          | _ => React.null
          }}
       </div>
