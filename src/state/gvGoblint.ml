@@ -36,7 +36,7 @@ module type Sig = sig
   val wrap_solver_state : t -> solver_state
 end
 
-module Make (Cfg : MyCFG.CfgBidir) (Spec : Analyses.SpecHC) : Sig = struct
+module Make (Cfg : MyCFG.CfgBidir) (Spec : Analyses.Spec) : Sig = struct
   module Inc = struct
     let increment = Analyses.empty_increment_data ()
   end

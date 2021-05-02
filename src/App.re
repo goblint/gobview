@@ -66,7 +66,8 @@ let reorder_goblint_analysis_list =
   });
 
 let init_goblint = (solver, table, config, cil) => {
-  reorder_goblint_analysis_list(table);
+  AfterConfig.run(); // This registers the "base" analysis
+
   try(reorder_goblint_analysis_list(table)) {
   | Not_found =>
     raise(InitFailed("Failed to populate the Goblint analysis list"))
@@ -84,7 +85,7 @@ let init_goblint = (solver, table, config, cil) => {
   // GobConfig.set_bool("verify", false);
 
   GobConfig.set_string("load_run", "goblint");
-  GobConfig.set_string("save_run", ""); // This will be set by config.json. Reset it
+  GobConfig.set_string("exp.gobview.dump", ""); // This will be set by config.json. Reset it
 
   GobConfig.set_auto("trans.activated[+]", "'expeval'");
 
@@ -95,7 +96,7 @@ let init_goblint = (solver, table, config, cil) => {
   // Don't remove these either
   let cil = Cilfacade.callConstructors(cil);
   Cilfacade.createCFG(cil);
-  Cilfacade.ugglyImperativeHack := cil;
+  Cilfacade.current_file := cil;
 
   let goblint = GvGoblint.unmarshal(~goblint=solver, cil);
 
