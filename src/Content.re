@@ -3,6 +3,7 @@ open Batteries;
 [@react.component]
 let make = (~state: State.t, ~dispatch) => {
   <div className="flex-fill overflow-auto">
+    <GvBreadcrumb display={state.display} dispatch />
     {switch (state.display) {
      | None => <Navigation state dispatch />
      | Some(File(file)) =>

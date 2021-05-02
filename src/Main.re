@@ -48,23 +48,20 @@ let make = (~cil, ~goblint, ~warnings, ~meta, ~stats) => {
     [|state.display|],
   );
 
-  <>
-    <GvNavbar display={state.display} dispatch />
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col-3 border-end overflow-auto pt-5 vh-100">
-          <Sidebar
-            active={state.selected_sidebar}
-            goblint
-            inspect={state.inspect}
-            dispatch
-          />
-        </div>
-        <div className="col-9 d-flex flex-column pt-5 vh-100">
-          <Content state dispatch />
-          <Panel state dispatch />
-        </div>
+  <div className="container-fluid">
+    <div className="row">
+      <div className="col-3 border-end overflow-auto vh-100">
+        <Sidebar
+          active={state.selected_sidebar}
+          goblint
+          inspect={state.inspect}
+          dispatch
+        />
+      </div>
+      <div className="col-9 d-flex flex-column vh-100">
+        <Content state dispatch />
+        <Panel state dispatch />
       </div>
     </div>
-  </>;
+  </div>;
 };

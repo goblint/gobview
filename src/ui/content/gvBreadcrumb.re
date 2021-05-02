@@ -27,20 +27,15 @@ let make_breadcrumb_items = (display: State.display, dispatch) => {
 
 [@react.component]
 let make = (~display, ~dispatch) => {
-  <nav className="navbar navbar-light bg-light fixed-top py-1">
-    <div className="container-fluid justify-content-start">
-      <span className="navbar-brand"> {"Gobview" |> React.string} </span>
-      <nav>
-        <ol className="breadcrumb my-0">
-          {switch (display) {
-           | Some(d) => make_breadcrumb_items(d, dispatch)
-           | _ =>
-             <li className="breadcrumb-item active">
-               {"Analysis" |> React.string}
-             </li>
-           }}
-        </ol>
-      </nav>
-    </div>
+  <nav className="mt-2">
+    <ol className="breadcrumb">
+      {switch (display) {
+       | Some(d) => make_breadcrumb_items(d, dispatch)
+       | _ =>
+         <li className="breadcrumb-item active">
+           {"Analysis" |> React.string}
+         </li>
+       }}
+    </ol>
   </nav>;
 };
