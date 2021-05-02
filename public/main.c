@@ -19,7 +19,7 @@ rec:
 
 void *f(void *p) {
   int *params = p;
-  int lock = params[1] == 0;
+  int lock;
   if (lock) {
     pthread_mutex_lock(&mtx);
   }
@@ -41,4 +41,6 @@ int main(void) {
   pthread_join(t2, NULL);
   printf("fac(5) = %d\n", results[0]);
   printf("fac(10) = %d\n", results[1]);
+  int *p;
+  *p = 42;
 }

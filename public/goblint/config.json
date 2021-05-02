@@ -20,12 +20,10 @@
     },
     "int" : {
       "cdebug" : false,
-      "cinterval" : false,
       "cnarrow" : "basic",
       "cwiden" : "basic",
       "def_exc" : false,
       "enums" : false,
-      "enums_max" : 1,
       "interval" : true,
       "wrap_on_signed_overflow" : false
     },
@@ -34,7 +32,7 @@
     },
     "opt" : {
       "equal" : true,
-      "hashcons" : false
+      "hashcons" : true
     },
     "osek" : {
       "check" : false,
@@ -84,7 +82,7 @@
     "limit" : {
       "widen" : 0
     },
-    "print_dead_code" : true,
+    "print_dead_code" : false,
     "regression" : false,
     "showtemps" : false,
     "slice" : {
@@ -101,10 +99,9 @@
       "context" : false
     },
     "uncalled" : false,
-    "verbose" : true,
+    "verbose" : false,
     "warn_with_context" : false
   },
-  "dopartial" : false,
   "dump_globs" : false,
   "exitfun" : [],
   "exp" : {
@@ -137,7 +134,7 @@
     },
     "mincfg" : false,
     "no-int-context" : false,
-    "no-interval32-context" : false,
+    "no-interval-context" : false,
     "no-narrow" : false,
     "partition-arrays" : {
       "enabled" : true,
@@ -146,7 +143,9 @@
       "smart-join" : false
     },
     "precious_globs" : [],
-    "privatization" : true,
+    "priv-distr-init" : false,
+    "priv-prec-dump" : "",
+    "privatization" : "protection-read",
     "ptr-arith-safe" : false,
     "region-offsets" : false,
     "single-threaded" : false,
@@ -161,9 +160,9 @@
     },
     "uninit-ptr-safe" : false,
     "unique" : [],
-    "unknown_funs_spawn" : true,
     "volatiles_are_top" : true,
     "widen-context" : false,
+    "widen-context-partial" : false,
     "witness" : {
       "id" : "node",
       "invariant" : {
@@ -197,6 +196,17 @@
   "printstats" : false,
   "result" : "none",
   "save_run" : "",
+  "sem" : {
+    "builtin_unreachable" : {
+      "dead_code" : false
+    },
+    "unknown_function" : {
+      "invalidate" : {
+        "globals" : true
+      },
+      "spawn" : true
+    }
+  },
   "solver" : "td3",
   "solverdiffs" : false,
   "tempDir" : "",

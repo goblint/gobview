@@ -1,6 +1,6 @@
 {
   "command":
-    "./goblint --sets solver td3 --enable ana.int.interval --disable ana.int.def_exc --disable exp.fast_global_inits --enable exp.partition-arrays.enabled --disable ana.opt.hashcons --enable dbg.verbose main.c --sets exp.gobview.dump ../gobview/public/goblint --enable dbg.print_dead_code",
-  "timestamp": 1618186825.0,
-  "localtime": "2021-04-12 03:20:25"
+    "./goblint --sets solver td3 --enable ana.int.interval --disable ana.int.def_exc --disable exp.fast_global_inits --enable exp.partition-arrays.enabled --sets exp.gobview.dump ../gobview/public/goblint main.c",
+  "timestamp": 1619994637.0,
+  "localtime": "2021-05-03 01:30:37"
 }
