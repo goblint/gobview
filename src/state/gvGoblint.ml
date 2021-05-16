@@ -1,5 +1,6 @@
 open Batteries
 open Cil
+open Js_of_ocaml
 
 class virtual solver_state =
   object
@@ -13,6 +14,8 @@ class virtual solver_state =
     method virtual dead_locations : location list
 
     method virtual is_dead : file:string -> line:int -> bool
+
+    method virtual dot_of_fundec : Cil.fundec -> string
   end
 
 class empty_solver_state =
@@ -28,6 +31,8 @@ class empty_solver_state =
     method dead_locations = []
 
     method is_dead ~file:_ ~line:_ = false
+
+    method dot_of_fundec _ = ""
   end
 
 module type Sig = sig
@@ -92,6 +97,13 @@ module Make (Cfg : MyCFG.CfgBidir) (Spec : Analyses.Spec) : Sig = struct
     gh |> GHashtbl.map (fun _ -> GSpec.represent) |> GHashtbl.iter f;
     Hashtbl.to_list tbl
 
+  let dot_of_fundec (fd : Cil.fundec) =
+    let out = Legacy.open_out "null" in
+    let dot = ref "" in
+    Sys_js.set_channel_flusher out (fun s -> dot := !dot ^ s);
+    MyCFG.printFun (module Cfg : MyCFG.CfgBidir) (fun _ -> true) fd out;
+    !dot
+
   class solver_state_impl (lh, gh) =
     object
       inherit solver_state
@@ -111,6 +123,8 @@ module Make (Cfg : MyCFG.CfgBidir) (Spec : Analyses.Spec) : Sig = struct
       method dead_locations = dead
 
       method is_dead ~file ~line = List.exists (fun loc -> loc.file = file && line = loc.line) dead
+
+      method dot_of_fundec = dot_of_fundec
     end
 
   let wrap_solver_state ((lh, gh) : t) = new solver_state_impl (lh, gh)
