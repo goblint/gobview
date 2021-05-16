@@ -21,6 +21,7 @@ let rec make_rec = represent =>
   | `Tagged("set", `List(l)) => make_set(l)
   | `Tagged("intervals", `Pair(`Value(x), `Value(y))) =>
     "[" ++ x ++ ", " ++ y ++ "]" |> React.string
+  | `Tagged(_, r) => make_rec(r)
   | _ => "Unexpected value" |> React.string
   }
 
