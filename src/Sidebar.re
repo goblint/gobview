@@ -33,7 +33,24 @@ let make = (~active, ~goblint, ~inspect, ~dispatch) => {
       <div className="tab-pane active">
         {switch (active) {
          | SelectedSidebar.Nodes => <GvNodeStateView goblint inspect />
-         | Globals => <GvGlobalStateView analyses=goblint#global_analyses />
+         | Globals =>
+           <>
+             <GvGlobalStateView analyses=goblint#global_analyses />
+             <GvGlobalStateView
+               analyses={
+                 goblint#global_analyses_yojson
+                 |> List.map(((k, v)) =>
+                      (
+                        k,
+                        v
+                        |> List.map(((k, v)) =>
+                             (k, GvGoblint.representation_of_yojson(v))
+                           ),
+                      )
+                    )
+               }
+             />
+           </>
          }}
       </div>
     </div>

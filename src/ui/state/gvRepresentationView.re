@@ -79,10 +79,15 @@ and make_list = rs =>
     </ol>
   }
 
-and make_bot_top = s =>
-  <span style={React.Dom.Style.make(~fontStyle="italic", ())}>
-    {s |> React.string}
-  </span>
+and make_bot_top = s => {
+  let style =
+    if (List.mem(s, ["⊥", "⊤"])) {
+      React.Dom.Style.make();
+    } else {
+      React.Dom.Style.make(~fontStyle="italic", ());
+    };
+  <span style> {s |> React.string} </span>;
+}
 
 and make_set = l =>
   switch (l) {

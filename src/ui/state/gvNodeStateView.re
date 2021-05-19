@@ -41,6 +41,36 @@ let make = (~goblint, ~inspect) => {
             | _ => failwith("BatList.group should never return empty groups"),
           )
        |> React.list}
+      {goblint#local_analyses_yojson(inspect)
+       |> List.group(((id, _), (id', _)) => String.compare(id, id'))
+       |> List.map(
+            fun
+            | [(id, (ctx, path))] =>
+              <CollapsibleListItem name={"Node: " ++ id}>
+                {make_single(
+                   ctx |> GvGoblint.representation_of_yojson,
+                   path |> GvGoblint.representation_of_yojson,
+                 )}
+              </CollapsibleListItem>
+            | [(id, _), ..._] as group =>
+              <CollapsibleListItem name={"Node: " ++ id}>
+                <CollapsibleList style=`Flush>
+                  {group
+                   |> List.mapi((i, (_, (ctx, path))) =>
+                        <CollapsibleListItem
+                          name={"Tuple: " ++ string_of_int(i)}>
+                          {make_single(
+                             ctx |> GvGoblint.representation_of_yojson,
+                             path |> GvGoblint.representation_of_yojson,
+                           )}
+                        </CollapsibleListItem>
+                      )
+                   |> React.list}
+                </CollapsibleList>
+              </CollapsibleListItem>
+            | _ => failwith("BatList.group should never return empty groups"),
+          )
+       |> React.list}
     </CollapsibleList>
   };
 };
