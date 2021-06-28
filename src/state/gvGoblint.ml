@@ -100,7 +100,10 @@ module Make (Cfg : MyCFG.CfgBidir) (Spec : Analyses.Spec) : Sig = struct
 
   let local_analyses lh' l =
     Hashtbl.find_all lh' l
-    |> List.map (fun (id, c, d) -> (id, (Spec.C.represent c, LSpec.represent d)))
+    |> List.map (fun (id, c, d) ->
+           ( id,
+             ( Spec.C.to_yojson c |> representation_of_yojson,
+               LSpec.to_yojson d |> representation_of_yojson ) ))
 
   let local_analyses_yojson lh' l =
     Hashtbl.find_all lh' l
@@ -130,7 +133,7 @@ module Make (Cfg : MyCFG.CfgBidir) (Spec : Analyses.Spec) : Sig = struct
       | `Assoc l -> List.iter (fun (a, r) -> insert_analysis_result a k.vname r) l
       | _ -> failwith "Not sure if this is supposed to happen."
     in
-    gh |> GHashtbl.map (fun _ -> GSpec.represent) |> GHashtbl.iter f;
+    gh |> GHashtbl.map (fun _ -> representation_of_yojson % GSpec.to_yojson) |> GHashtbl.iter f;
     Hashtbl.to_list tbl
 
   let transform_ghashtbl_yojson gh =

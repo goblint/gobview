@@ -85,7 +85,10 @@ let init_goblint = (solver, table, config, cil) => {
   // GobConfig.set_bool("verify", false);
 
   GobConfig.set_string("load_run", "goblint");
-  GobConfig.set_string("exp.gobview.dump", ""); // This will be set by config.json. Reset it
+
+  // These two will be set by config.json. Reset them.
+  GobConfig.set_string("save_run", "");
+  GobConfig.set_bool("gobview", false);
 
   GobConfig.set_auto("trans.activated[+]", "'expeval'");
 

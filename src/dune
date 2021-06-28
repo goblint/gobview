@@ -5,7 +5,8 @@
  (modes js)
  (libraries batteries.unthreaded gen_js_api goblint-cil
    goblint-cil.syntacticsearch goblint.lib js_of_ocaml-lwt jsoo-react.lib lwt
-   ppx_deriving_yojson.runtime xml-light yojson zarith zarith_stubs_js)
+   ppx_deriving.runtime ppx_deriving_yojson.runtime xml-light yojson zarith
+   zarith_stubs_js)
  (js_of_ocaml
   (javascript_files react-requires.js static-requires.js))
  (preprocess
