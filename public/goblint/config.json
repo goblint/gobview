@@ -2,7 +2,7 @@
   "allfuns" : false,
   "allglobs" : false,
   "ana" : {
-    "activated" : ["expRelation", "base", "threadid", "threadflag", "escape", "mutex", "mallocWrapper"],
+    "activated" : ["expRelation", "base", "threadid", "threadflag", "threadreturn", "escape", "mutex", "mallocWrapper"],
     "arinc" : {
       "assume_success" : true,
       "export" : true,
@@ -19,9 +19,6 @@
       "optimistic" : false
     },
     "int" : {
-      "cdebug" : false,
-      "cnarrow" : "basic",
-      "cwiden" : "basic",
       "def_exc" : false,
       "enums" : false,
       "interval" : true,
@@ -29,6 +26,11 @@
     },
     "mutex" : {
       "disjoint_types" : true
+    },
+    "octapron" : {
+      "no_signed_overflow" : true,
+      "no_uints" : false,
+      "vars" : []
     },
     "opt" : {
       "equal" : true,
@@ -55,7 +57,6 @@
     "pml" : {
       "debug" : true
     },
-    "restart_count" : 1,
     "spec" : {
       "file" : ""
     },
@@ -64,10 +65,9 @@
       "enabled" : false,
       "functions" : false
     },
-    "warnings" : false,
     "wp" : false
   },
-  "colors" : false,
+  "colors" : "auto",
   "compare_runs" : [],
   "comparesolver" : "",
   "cppflags" : "",
@@ -75,14 +75,15 @@
   "custom_includes" : [],
   "custom_libc" : false,
   "dbg" : {
+    "backtrace-signal" : "sigusr2",
     "cilout" : "",
     "debug" : false,
     "dump" : "",
-    "earlywarn" : false,
     "limit" : {
       "widen" : 0
     },
     "print_dead_code" : false,
+    "print_wpoints" : false,
     "regression" : false,
     "showtemps" : false,
     "slice" : {
@@ -90,16 +91,17 @@
       "on" : false
     },
     "solver-progress" : false,
-    "solver-signal" : "sigint",
+    "solver-signal" : "sigusr1",
+    "solver-stats-interval" : 10,
     "test" : {
       "domain" : false
     },
-    "timeout" : 0,
+    "timeout" : "0",
     "trace" : {
       "context" : false
     },
     "uncalled" : false,
-    "verbose" : false,
+    "verbose" : true,
     "warn_with_context" : false
   },
   "dump_globs" : false,
@@ -118,9 +120,6 @@
     "g2html_path" : ".",
     "gcc_path" : "/usr/bin/gcc-6",
     "globs_are_top" : false,
-    "gobview" : {
-      "dump" : "../gobview/public/goblint"
-    },
     "incremental" : {
       "mode" : "off",
       "stable" : true,
@@ -150,6 +149,9 @@
     "region-offsets" : false,
     "single-threaded" : false,
     "solver" : {
+      "slr4" : {
+        "restart_count" : 1
+      },
       "td3" : {
         "side_widen" : "cycle",
         "space" : false,
@@ -176,6 +178,7 @@
   },
   "g2html" : false,
   "gccwarn" : false,
+  "gobview" : true,
   "includes" : [],
   "interact" : {
     "enabled" : false,
@@ -195,7 +198,7 @@
   "phases" : [],
   "printstats" : false,
   "result" : "none",
-  "save_run" : "",
+  "save_run" : "../goblint-webfrontend-jsoo/public/goblint",
   "sem" : {
     "builtin_unreachable" : {
       "dead_code" : false
@@ -217,5 +220,6 @@
     }
   },
   "verify" : true,
+  "warn" : "post",
   "warnstyle" : "pretty"
 }
