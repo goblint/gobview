@@ -97,7 +97,6 @@ let init_goblint = (solver, table, config, cil) => {
   Maingoblint.handle_flags();
 
   // Don't remove these either
-  let cil = Cilfacade.callConstructors(cil);
   Cilfacade.createCFG(cil);
   Cilfacade.current_file := cil;
 
