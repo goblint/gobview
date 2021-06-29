@@ -30,14 +30,9 @@ class virtual solver_state =
     method virtual local_analyses
         : GvInspect.t -> (string * (Representation.t * Representation.t)) list
 
-    method virtual local_analyses_yojson
-        : GvInspect.t -> (string * (Yojson.Safe.t * Yojson.Safe.t)) list
-
     method virtual has_local_analysis : GvInspect.line -> bool
 
     method virtual global_analyses : (string * (string * Representation.t) list) list
-
-    method virtual global_analyses_yojson : (string * (string * Yojson.Safe.t) list) list
 
     method virtual dead_locations : location list
 
@@ -52,13 +47,9 @@ class empty_solver_state =
 
     method local_analyses _ = []
 
-    method local_analyses_yojson _ = []
-
     method has_local_analysis _ = false
 
     method global_analyses = []
-
-    method global_analyses_yojson = []
 
     method dead_locations = []
 
@@ -105,10 +96,6 @@ module Make (Cfg : MyCFG.CfgBidir) (Spec : Analyses.Spec) : Sig = struct
              ( Spec.C.to_yojson c |> representation_of_yojson,
                LSpec.to_yojson d |> representation_of_yojson ) ))
 
-  let local_analyses_yojson lh' l =
-    Hashtbl.find_all lh' l
-    |> List.map (fun (id, c, d) -> (id, (Spec.C.to_yojson c, LSpec.to_yojson d)))
-
   let has_local_analysis lh' l = Hashtbl.mem lh' (GvInspect.Line l)
 
   let dead_locations lh =
@@ -136,19 +123,6 @@ module Make (Cfg : MyCFG.CfgBidir) (Spec : Analyses.Spec) : Sig = struct
     gh |> GHashtbl.map (fun _ -> representation_of_yojson % GSpec.to_yojson) |> GHashtbl.iter f;
     Hashtbl.to_list tbl
 
-  let transform_ghashtbl_yojson gh =
-    let tbl = Hashtbl.create (GHashtbl.length gh) in
-    let insert_analysis_result a v r =
-      Hashtbl.modify_opt a (function None -> Some [ (v, r) ] | Some l -> Some ((v, r) :: l)) tbl
-    in
-    let f k v =
-      match v with
-      | `Assoc l -> List.iter (fun (a, r) -> insert_analysis_result a k.vname r) l
-      | _ -> failwith "Not sure if this is supposed to happen."
-    in
-    gh |> GHashtbl.map (fun _ -> GSpec.to_yojson) |> GHashtbl.iter f;
-    Hashtbl.to_list tbl
-
   let dot_of_fundec (fd : Cil.fundec) =
     let out = Legacy.open_out "null" in
     let dot = ref "" in
@@ -168,13 +142,9 @@ module Make (Cfg : MyCFG.CfgBidir) (Spec : Analyses.Spec) : Sig = struct
 
       method local_analyses = local_analyses lh'
 
-      method local_analyses_yojson = local_analyses_yojson lh'
-
       method has_local_analysis = has_local_analysis lh'
 
       method global_analyses = gh'
-
-      method global_analyses_yojson = transform_ghashtbl_yojson gh
 
       method dead_locations = dead
 
