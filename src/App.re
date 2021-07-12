@@ -97,7 +97,14 @@ let init_goblint = (solver, table, config, cil) => {
   Maingoblint.handle_flags();
 
   // Don't remove these either
-  Cilfacade.createCFG(cil);
+  Cil.iterGlobals(cil, glob =>
+    switch (glob) {
+    | GFun(fd, _) =>
+      Cil.prepareCFG(fd);
+      Cil.computeCFGInfo(fd, true);
+    | _ => ()
+    }
+  );
   Cilfacade.current_file := cil;
 
   let goblint = GvGoblint.unmarshal(~goblint=solver, cil);
