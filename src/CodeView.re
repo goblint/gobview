@@ -11,7 +11,7 @@ let make = (~goblint, ~warnings, ~file: GvDisplay.file, ~inspect, ~dispatch) => 
     style={React.Dom.Style.make(~backgroundColor="#f5f2f0", ())}>
     {String.split_on_char('\n', Option.default("", file.contents))
      |> List.mapi((i, l) => {
-          let line = GvInspect.Line.make(~file=file.path, ~num=i + 1);
+          let line = GvInspect.Line.make(file.path, i + 1);
           <CodeLine
             key={string_of_int(i)}
             text=l

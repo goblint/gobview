@@ -3,7 +3,7 @@ module Line = struct
 
   let empty = ("", -1)
 
-  let make ~file ~num = (file, num)
+  let make file num = (file, num)
 
   let valid (_, n) = n != -1
 
@@ -20,8 +20,8 @@ type node = Node.t
 
 type t = Line of line | Node of node
 
-let line ~file ~num = Line (file, num)
+let line file num = Line (file, num)
 
 let line_num = function Line ((_, n) as line) when Line.valid line -> Some n | _ -> None
 
-let node ~id = Node id
+let node id = Node id
