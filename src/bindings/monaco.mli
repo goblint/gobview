@@ -11,7 +11,8 @@ module Editor : sig
   module IViewZone : sig
     type t = private Ojs.t
 
-    val make : after_line_number:int -> dom_node:React.Dom.domElement -> t [@@js.builder]
+    val make : ?height_in_lines:float -> after_line_number:int -> dom_node:React.Dom.domElement -> t
+      [@@js.builder]
   end
 
   module IViewZoneChangeAccessor : sig

@@ -8,9 +8,18 @@ module IStandaloneCodeEditor = Editor.IStandaloneCodeEditor;
 module IViewZoneChangeAccessor = Editor.IViewZoneChangeAccessor;
 module IViewZone = Editor.IViewZone;
 
-type view_zone = {
-  element: React.element,
-  after_line_number: int,
+module ViewZone = {
+  type t = {
+    element: React.element,
+    after_line_number: int,
+    height_in_lines: option(float),
+  };
+
+  let make = (~height_in_lines=?, element, after_line_number) => {
+    element,
+    after_line_number,
+    height_in_lines,
+  };
 };
 
 type state = {
@@ -39,7 +48,8 @@ let make = (~value=?, ~read_only=?, ~view_zones=?) => {
           );
           s.view_zones =
             view_zones
-            |> List.map(({element, after_line_number}) => {
+            |> List.map(
+                 ({element, after_line_number, height_in_lines}: ViewZone.t) => {
                  let dom_node =
                    Js_of_ocaml.Dom_html.createDiv(
                      Js_of_ocaml.Dom_html.document,
@@ -47,7 +57,11 @@ let make = (~value=?, ~read_only=?, ~view_zones=?) => {
                  ignore(Dom.render(element, dom_node));
                  IViewZoneChangeAccessor.add_zone(
                    accessor,
-                   IViewZone.make(~after_line_number, ~dom_node),
+                   IViewZone.make(
+                     ~after_line_number,
+                     ~dom_node,
+                     ~height_in_lines?,
+                   ),
                  );
                });
           ();
