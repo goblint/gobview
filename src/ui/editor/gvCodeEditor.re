@@ -76,8 +76,13 @@ let make = (~value=?, ~read_only=?, ~view_zones=?) => {
       Js.Opt.iter(_, dom_element =>
         if (state |> React.Ref.current |> Option.is_none) {
           let model = Editor.create_model(~value="", ~language="c", ());
-          let editor =
-            Editor.create(~dom_element, ~options={model, read_only}, ());
+          let options =
+            Editor.IStandaloneEditorConstructionOptions.make(
+              ~model,
+              ~read_only,
+              (),
+            );
+          let editor = Editor.create(~dom_element, ~options, ());
           React.Ref.setCurrent(state, Some({editor, view_zones: []}));
         }
       ),

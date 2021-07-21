@@ -32,7 +32,9 @@ module Editor : sig
   end
 
   module IStandaloneEditorConstructionOptions : sig
-    type t = { model : ITextModel.t; read_only : bool }
+    type t = private Ojs.t
+
+    val make : ?model:ITextModel.t -> ?read_only:bool -> unit -> t [@@js.builder]
   end
 
   val create :
