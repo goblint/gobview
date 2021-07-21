@@ -6,6 +6,7 @@ module Js = Js_of_ocaml.Js;
 module Editor = Monaco.Editor;
 module IStandaloneCodeEditor = Editor.IStandaloneCodeEditor;
 module IViewZoneChangeAccessor = Editor.IViewZoneChangeAccessor;
+module IViewZone = Editor.IViewZone;
 
 type view_zone = {
   element: React.element,
@@ -46,7 +47,7 @@ let make = (~value=?, ~read_only=?, ~view_zones=?) => {
                  ignore(Dom.render(element, dom_node));
                  IViewZoneChangeAccessor.add_zone(
                    accessor,
-                   {after_line_number, dom_node},
+                   IViewZone.make(~after_line_number, ~dom_node),
                  );
                });
           ();

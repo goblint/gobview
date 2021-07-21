@@ -9,7 +9,9 @@ module Editor : sig
     [@@js.global "monaco.editor.createModel"]
 
   module IViewZone : sig
-    type t = { after_line_number : int; dom_node : React.Dom.domElement }
+    type t = private Ojs.t
+
+    val make : after_line_number:int -> dom_node:React.Dom.domElement -> t [@@js.builder]
   end
 
   module IViewZoneChangeAccessor : sig
