@@ -24,20 +24,29 @@ module ViewZone = {
 
 type state = {
   editor: IStandaloneCodeEditor.t,
+  mutable decorations: list(string),
   mutable view_zones: list(string),
 };
 
 [@react.component]
-let make = (~value=?, ~read_only=?, ~view_zones=?) => {
-  let (value, read_only, view_zones) =
-    Utils.fix_opt_args3(value, read_only, view_zones);
+let make = (~value=?, ~read_only=?, ~decorations=?, ~view_zones=?) => {
+  let (value, read_only, decorations, view_zones) =
+    Utils.fix_opt_args4(value, read_only, decorations, view_zones);
   let value = Option.default("", value);
   let read_only = Option.default(false, read_only);
+  let decorations = Option.default([], decorations);
   let view_zones = Option.default([], view_zones);
 
   let update = (aspect, {editor, _} as s) =>
     switch (aspect) {
     | `Value => IStandaloneCodeEditor.set_value(editor, value)
+    | `Decorations =>
+      s.decorations =
+        IStandaloneCodeEditor.delta_decorations(
+          editor,
+          s.decorations,
+          decorations,
+        )
     | `ViewZones =>
       IStandaloneCodeEditor.change_view_zones(
         editor,
@@ -83,7 +92,10 @@ let make = (~value=?, ~read_only=?, ~view_zones=?) => {
               (),
             );
           let editor = Editor.create(~dom_element, ~options, ());
-          React.Ref.setCurrent(state, Some({editor, view_zones: []}));
+          React.Ref.setCurrent(
+            state,
+            Some({editor, decorations: [], view_zones: []}),
+          );
         }
       ),
     );
@@ -94,6 +106,14 @@ let make = (~value=?, ~read_only=?, ~view_zones=?) => {
       None;
     },
     [|value|],
+  );
+
+  React.useEffect1(
+    () => {
+      state |> React.Ref.current |> Option.may(update(`Decorations));
+      None;
+    },
+    [|decorations|],
   );
 
   React.useEffect1(
