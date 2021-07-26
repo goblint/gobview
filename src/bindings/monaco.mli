@@ -1,7 +1,23 @@
+module Position : sig
+  type t = private Ojs.t
+
+  val make : int -> int -> t [@@js.new "monaco.Position"]
+
+  val column : t -> int
+
+  val line_number : t -> int
+end
+
 module Range : sig
   type t = private Ojs.t
 
   val make : int -> int -> int -> int -> t [@@js.new "monaco.Range"]
+end
+
+module IDisposable : sig
+  type t = private Ojs.t
+
+  val dispose : t -> unit
 end
 
 module IMarkdownString : sig
@@ -11,6 +27,12 @@ module IMarkdownString : sig
 end
 
 module Editor : sig
+  module ICursorPositionChangedEvent : sig
+    type t = private Ojs.t
+
+    val position : t -> Position.t
+  end
+
   module ITextModel : sig
     type t = private Ojs.t
 
@@ -54,6 +76,9 @@ module Editor : sig
 
   module IStandaloneCodeEditor : sig
     type t = private Ojs.t
+
+    val on_did_change_cursor_position :
+      t -> (ICursorPositionChangedEvent.t -> unit) -> IDisposable.t
 
     val set_value : t -> string -> unit [@@js.call]
 

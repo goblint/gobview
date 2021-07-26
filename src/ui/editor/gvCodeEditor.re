@@ -26,12 +26,32 @@ type state = {
   editor: IStandaloneCodeEditor.t,
   mutable decorations: list(string),
   mutable view_zones: list(string),
+  mutable on_did_change_cursor_position: option(Monaco.IDisposable.t),
 };
 
 [@react.component]
-let make = (~value=?, ~read_only=?, ~decorations=?, ~view_zones=?) => {
-  let (value, read_only, decorations, view_zones) =
-    Utils.fix_opt_args4(value, read_only, decorations, view_zones);
+let make =
+    (
+      ~value=?,
+      ~read_only=?,
+      ~decorations=?,
+      ~view_zones=?,
+      ~on_did_change_cursor_position=?,
+    ) => {
+  let (
+    value,
+    read_only,
+    decorations,
+    view_zones,
+    on_did_change_cursor_position,
+  ) =
+    Utils.fix_opt_args5(
+      value,
+      read_only,
+      decorations,
+      view_zones,
+      on_did_change_cursor_position,
+    );
   let value = Option.default("", value);
   let read_only = Option.default(false, read_only);
   let decorations = Option.default([], decorations);
@@ -76,6 +96,13 @@ let make = (~value=?, ~read_only=?, ~decorations=?, ~view_zones=?) => {
           ();
         },
       )
+    | `OnDidChangeCursorPosition =>
+      Option.may(Monaco.IDisposable.dispose, s.on_did_change_cursor_position);
+      s.on_did_change_cursor_position =
+        on_did_change_cursor_position
+        |> Option.map(
+             IStandaloneCodeEditor.on_did_change_cursor_position(editor),
+           );
     };
 
   let state = React.useRef(None);
@@ -94,7 +121,12 @@ let make = (~value=?, ~read_only=?, ~decorations=?, ~view_zones=?) => {
           let editor = Editor.create(~dom_element, ~options, ());
           React.Ref.setCurrent(
             state,
-            Some({editor, decorations: [], view_zones: []}),
+            Some({
+              editor,
+              decorations: [],
+              view_zones: [],
+              on_did_change_cursor_position: None,
+            }),
           );
         }
       ),
@@ -122,6 +154,16 @@ let make = (~value=?, ~read_only=?, ~decorations=?, ~view_zones=?) => {
       None;
     },
     [|view_zones|],
+  );
+
+  React.useEffect1(
+    () => {
+      state
+      |> React.Ref.current
+      |> Option.may(update(`OnDidChangeCursorPosition));
+      None;
+    },
+    [|on_did_change_cursor_position|],
   );
 
   <div ref style={Dom.Style.make(~height="600px", ())} />;
