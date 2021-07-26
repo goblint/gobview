@@ -6,21 +6,6 @@ module Js = Js_of_ocaml.Js;
 module Editor = Monaco.Editor;
 module IStandaloneCodeEditor = Editor.IStandaloneCodeEditor;
 module IViewZoneChangeAccessor = Editor.IViewZoneChangeAccessor;
-module IViewZone = Editor.IViewZone;
-
-module ViewZone = {
-  type t = {
-    element: React.element,
-    after_line_number: int,
-    height_in_lines: option(float),
-  };
-
-  let make = (~height_in_lines=?, element, after_line_number) => {
-    element,
-    after_line_number,
-    height_in_lines,
-  };
-};
 
 type state = {
   editor: IStandaloneCodeEditor.t,
@@ -66,14 +51,10 @@ let make =
     switch (aspect) {
     | `Value => IStandaloneCodeEditor.set_value(editor, value)
     | `ContentWidgets =>
-      List.iter(
-        IStandaloneCodeEditor.remove_content_widget(editor),
-        s.content_widgets,
-      );
-      List.iter(
-        IStandaloneCodeEditor.add_content_widget(editor),
-        content_widgets,
-      );
+      s.content_widgets
+      |> List.iter(IStandaloneCodeEditor.remove_content_widget(editor));
+      content_widgets
+      |> List.iter(IStandaloneCodeEditor.add_content_widget(editor));
       s.content_widgets = content_widgets;
     | `Decorations =>
       s.decorations =
@@ -86,33 +67,17 @@ let make =
       IStandaloneCodeEditor.change_view_zones(
         editor,
         accessor => {
-          List.iter(
-            IViewZoneChangeAccessor.remove_zone(accessor),
-            s.view_zones,
-          );
+          s.view_zones
+          |> List.iter(IViewZoneChangeAccessor.remove_zone(accessor));
           s.view_zones =
             view_zones
-            |> List.map(
-                 ({element, after_line_number, height_in_lines}: ViewZone.t) => {
-                 let dom_node =
-                   Js_of_ocaml.Dom_html.createDiv(
-                     Js_of_ocaml.Dom_html.document,
-                   );
-                 ignore(Dom.render(element, dom_node));
-                 IViewZoneChangeAccessor.add_zone(
-                   accessor,
-                   IViewZone.make(
-                     ~after_line_number,
-                     ~dom_node,
-                     ~height_in_lines?,
-                   ),
-                 );
-               });
+            |> List.map(IViewZoneChangeAccessor.add_zone(accessor));
           ();
         },
       )
     | `OnDidChangeCursorPosition =>
-      Option.may(Monaco.IDisposable.dispose, s.on_did_change_cursor_position);
+      s.on_did_change_cursor_position
+      |> Option.may(Monaco.IDisposable.dispose);
       s.on_did_change_cursor_position =
         on_did_change_cursor_position
         |> Option.map(
@@ -134,16 +99,15 @@ let make =
               (),
             );
           let editor = Editor.create(~dom_element, ~options, ());
-          React.Ref.setCurrent(
-            state,
-            Some({
-              editor,
-              content_widgets: [],
-              decorations: [],
-              view_zones: [],
-              on_did_change_cursor_position: None,
-            }),
-          );
+          {
+            editor,
+            content_widgets: [],
+            decorations: [],
+            view_zones: [],
+            on_did_change_cursor_position: None,
+          }
+          |> Option.some
+          |> React.Ref.setCurrent(state);
         }
       ),
     );
