@@ -24,6 +24,7 @@ module ViewZone = {
 
 type state = {
   editor: IStandaloneCodeEditor.t,
+  mutable content_widgets: list(Editor.IContentWidget.t),
   mutable decorations: list(string),
   mutable view_zones: list(string),
   mutable on_did_change_cursor_position: option(Monaco.IDisposable.t),
@@ -34,6 +35,7 @@ let make =
     (
       ~value=?,
       ~read_only=?,
+      ~content_widgets=?,
       ~decorations=?,
       ~view_zones=?,
       ~on_did_change_cursor_position=?,
@@ -41,25 +43,38 @@ let make =
   let (
     value,
     read_only,
+    content_widgets,
     decorations,
     view_zones,
     on_did_change_cursor_position,
   ) =
-    Utils.fix_opt_args5(
+    Utils.fix_opt_args6(
       value,
       read_only,
+      content_widgets,
       decorations,
       view_zones,
       on_did_change_cursor_position,
     );
   let value = Option.default("", value);
   let read_only = Option.default(false, read_only);
+  let content_widgets = Option.default([], content_widgets);
   let decorations = Option.default([], decorations);
   let view_zones = Option.default([], view_zones);
 
   let update = (aspect, {editor, _} as s) =>
     switch (aspect) {
     | `Value => IStandaloneCodeEditor.set_value(editor, value)
+    | `ContentWidgets =>
+      List.iter(
+        IStandaloneCodeEditor.remove_content_widget(editor),
+        s.content_widgets,
+      );
+      List.iter(
+        IStandaloneCodeEditor.add_content_widget(editor),
+        content_widgets,
+      );
+      s.content_widgets = content_widgets;
     | `Decorations =>
       s.decorations =
         IStandaloneCodeEditor.delta_decorations(
@@ -123,6 +138,7 @@ let make =
             state,
             Some({
               editor,
+              content_widgets: [],
               decorations: [],
               view_zones: [],
               on_did_change_cursor_position: None,
@@ -138,6 +154,14 @@ let make =
       None;
     },
     [|value|],
+  );
+
+  React.useEffect1(
+    () => {
+      state |> React.Ref.current |> Option.may(update(`ContentWidgets));
+      None;
+    },
+    [|content_widgets|],
   );
 
   React.useEffect1(
