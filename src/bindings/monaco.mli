@@ -101,7 +101,9 @@ module Editor : sig
   end
 
   module IModelDeltaDecoration : sig
-    type t = { options : IModelDecorationOptions.t; range : Range.t }
+    type t = private Ojs.t
+
+    val make : ?options:IModelDecorationOptions.t -> ?range:Range.t -> unit -> t [@@js.builder]
   end
 
   module IStandaloneCodeEditor : sig

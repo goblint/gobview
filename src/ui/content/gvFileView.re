@@ -70,14 +70,15 @@ let make =
     Enum.range(1, ~until=lines)
     |> Enum.filter_map(i =>
          if (goblint#is_dead(~file=file.path, ~line=i)) {
-           let range = Monaco.Range.make(i, 0, i, 0);
            let options =
              Monaco.Editor.IModelDecorationOptions.make(
                ~inline_class_name="text-decoration-line-through",
                ~is_whole_line=true,
                (),
              );
-           Monaco.Editor.IModelDeltaDecoration.{range, options} |> Option.some;
+           let range = Monaco.Range.make(i, 0, i, 0);
+           Monaco.Editor.IModelDeltaDecoration.make(~options, ~range, ())
+           |> Option.some;
          } else {
            None;
          }
@@ -88,15 +89,16 @@ let make =
     [
       line
       |> Option.map(((_, n)) =>
-           Monaco.Editor.IModelDeltaDecoration.{
-             range: Monaco.Range.make(n, 0, n, 0),
-             options:
+           Monaco.Editor.IModelDeltaDecoration.make(
+             ~options=
                Monaco.Editor.IModelDecorationOptions.make(
                  ~class_name="bg-info",
                  ~is_whole_line=true,
                  (),
                ),
-           }
+             ~range=Monaco.Range.make(n, 0, n, 0),
+             (),
+           )
          )
       |> Option.map_default(x => [x], []),
       decorations,
