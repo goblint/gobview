@@ -89,16 +89,16 @@ let make =
 
   let ref =
     Dom.Ref.callbackDomRef(
-      Js.Opt.iter(_, dom_element =>
+      Js.Opt.iter(_, dom =>
         if (state |> React.Ref.current |> Option.is_none) {
-          let model = Editor.create_model(~value="", ~language="c", ());
+          let model = Editor.create_model("", ~language="c", ());
           let options =
             Editor.IStandaloneEditorConstructionOptions.make(
               ~model,
               ~read_only,
               (),
             );
-          let editor = Editor.create(~dom_element, ~options, ());
+          let editor = Editor.create(dom, ~options, ());
           {
             editor,
             content_widgets: [],

@@ -68,7 +68,7 @@ module Editor : sig
     val id : t -> string
   end
 
-  val create_model : value:string -> ?language:string -> unit -> ITextModel.t
+  val create_model : string -> ?language:string -> unit -> ITextModel.t
     [@@js.global "monaco.editor.createModel"]
 
   module IViewZone : sig
@@ -130,7 +130,7 @@ module Editor : sig
   end
 
   val create :
-    dom_element:React.Dom.domElement ->
+    React.Dom.domElement ->
     ?options:IStandaloneEditorConstructionOptions.t ->
     unit ->
     IStandaloneCodeEditor.t
