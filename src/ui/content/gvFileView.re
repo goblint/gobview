@@ -33,7 +33,8 @@ let make =
                  () =>
                    render(
                      <span
-                       className="text-muted small link-like"
+                       className="text-muted link-like"
+                       style={React.Dom.Style.make(~fontSize="0.75rem", ())}
                        onClick={_ => dispatch(`InspectLine((file.path, i)))}>
                        {"Inspect" |> React.string}
                      </span>,
