@@ -50,6 +50,8 @@ module Editor : sig
       get_dom_node:(unit -> React.Dom.domElement) ->
       get_id:(unit -> string) ->
       get_position:(unit -> IContentWidgetPosition.t) ->
+      ?allow_editor_overflow:bool ->
+      unit ->
       t
       [@@js.builder]
   end
@@ -72,7 +74,8 @@ module Editor : sig
   module IViewZone : sig
     type t = private Ojs.t
 
-    val make : ?height_in_lines:float -> after_line_number:int -> dom_node:React.Dom.domElement -> t
+    val make :
+      after_line_number:int -> dom_node:React.Dom.domElement -> ?height_in_lines:float -> unit -> t
       [@@js.builder]
   end
 
