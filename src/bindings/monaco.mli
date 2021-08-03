@@ -1,3 +1,7 @@
+module MarkerSeverity : sig
+  type t = Hint [@js 1] | Info [@js 2] | Warning [@js 4] | Error [@js 8] [@@js.enum]
+end
+
 module Position : sig
   type t = private Ojs.t
 
@@ -68,8 +72,26 @@ module Editor : sig
     val id : t -> string
   end
 
+  module IMarkerData : sig
+    type t = private Ojs.t
+
+    val make :
+      end_column:int ->
+      end_line_number:int ->
+      message:string ->
+      severity:MarkerSeverity.t ->
+      start_column:int ->
+      start_line_number:int ->
+      unit ->
+      t
+      [@@js.builder]
+  end
+
   val create_model : string -> ?language:string -> unit -> ITextModel.t
     [@@js.global "monaco.editor.createModel"]
+
+  val set_model_markers : ITextModel.t -> string -> IMarkerData.t list -> unit
+    [@@js.global "monaco.editor.setModelMarkers"]
 
   module IViewZone : sig
     type t = private Ojs.t
