@@ -3,13 +3,26 @@
 (executables
  (names App)
  (modes js)
- (libraries batteries.unthreaded gen_js_api goblint-cil
-   goblint-cil.syntacticsearch goblint.lib js_of_ocaml-lwt jsoo-react.lib lwt
-   ppx_deriving.runtime ppx_deriving_yojson.runtime xml-light yojson zarith
-   zarith_stubs_js)
+ (libraries
+  batteries.unthreaded
+  gen_js_api
+  goblint-cil
+  goblint-cil.syntacticsearch
+  goblint.lib
+  js_of_ocaml-lwt
+  jsoo-react.lib
+  lwt
+  ppx_deriving_yojson.runtime
+  ppx_deriving.runtime
+  yojson
+  zarith
+  zarith_stubs_js)
  (js_of_ocaml
-  (javascript_files ../runtime/stubs.js ../runtime/marshal.js
-    react-requires.js static-requires.js))
+  (javascript_files
+   ../runtime/stubs.js
+   ../runtime/marshal.js
+   react-requires.js
+   static-requires.js))
  (preprocess
   (pps gen_js_api.ppx ppx_blob js_of_ocaml-ppx jsoo-react.ppx)))
 
