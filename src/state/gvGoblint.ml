@@ -83,10 +83,8 @@ module Make (Cfg : MyCFG.CfgBidir) (Spec : Analyses.Spec) : Sig = struct
     lh |> LHashtbl.enum
     |> Enum.map (fun (((_, c) as k), v) ->
            let id = LVar.var_id k in
-           [
-             (GvInspect.Line (LVar.file_name k, LVar.line_nr k), (id, c, v));
-             (GvInspect.Node id, (id, c, v));
-           ])
+           let loc = LVar.getLocation k in
+           [ (GvInspect.Line (loc.file, loc.line), (id, c, v)); (GvInspect.Node id, (id, c, v)) ])
     |> Enum.map List.enum |> Enum.concat |> Hashtbl.of_enum
 
   let local_analyses lh' l =
@@ -99,16 +97,13 @@ module Make (Cfg : MyCFG.CfgBidir) (Spec : Analyses.Spec) : Sig = struct
   let has_local_analysis lh' l = Hashtbl.mem lh' (GvInspect.Line l)
 
   let dead_locations lh =
-    let module NodeSet = Set.Make (Node.Node) in
+    let module NodeSet = Set.Make (Node) in
     let dead = ref NodeSet.empty in
     let live = ref NodeSet.empty in
     lh
     |> LHashtbl.iter (fun (n, _) d ->
            if Spec.D.is_bot d then dead := NodeSet.add n !dead else live := NodeSet.add n !live);
-    NodeSet.diff !dead !live |> NodeSet.to_list
-    |> List.map (function
-         | Node.Statement stmt -> get_stmtLoc stmt.skind
-         | FunctionEntry vi | Function vi -> vi.vdecl)
+    NodeSet.diff !dead !live |> NodeSet.to_list |> List.map Node.location
 
   let transform_ghashtbl gh =
     let tbl = Hashtbl.create (GHashtbl.length gh) in
@@ -127,7 +122,7 @@ module Make (Cfg : MyCFG.CfgBidir) (Spec : Analyses.Spec) : Sig = struct
     let out = Legacy.open_out "null" in
     let dot = ref "" in
     Sys_js.set_channel_flusher out (fun s -> dot := !dot ^ s);
-    MyCFG.printFun (module Cfg : MyCFG.CfgBidir) (fun _ -> true) fd out;
+    CfgTools.fprint_fundec_html_dot (module Cfg : MyCFG.CfgBidir) (fun _ -> true) fd out;
     !dot
 
   class solver_state_impl (lh, gh) =
