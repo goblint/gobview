@@ -19,9 +19,12 @@
       "optimistic" : false
     },
     "int" : {
+      "congruence" : false,
+      "congruence_no_overflow" : false,
       "def_exc" : false,
       "enums" : false,
       "interval" : true,
+      "refinement" : "never",
       "wrap_on_signed_overflow" : false
     },
     "mutex" : {
@@ -29,8 +32,7 @@
     },
     "octapron" : {
       "no_signed_overflow" : true,
-      "no_uints" : false,
-      "vars" : []
+      "no_uints" : false
     },
     "opt" : {
       "equal" : true,
@@ -76,6 +78,7 @@
   "custom_libc" : false,
   "dbg" : {
     "backtrace-signal" : "sigusr2",
+    "cilcfgdot" : false,
     "cilout" : "",
     "debug" : false,
     "dump" : "",
@@ -135,6 +138,9 @@
     "no-int-context" : false,
     "no-interval-context" : false,
     "no-narrow" : false,
+    "octapron" : {
+      "privatization" : "mutex-meet"
+    },
     "partition-arrays" : {
       "enabled" : true,
       "keep-expr" : "first",
@@ -153,7 +159,7 @@
         "restart_count" : 1
       },
       "td3" : {
-        "side_widen" : "cycle",
+        "side_widen" : "sides",
         "space" : false,
         "space_cache" : true,
         "space_restore" : true,
@@ -198,7 +204,7 @@
   "phases" : [],
   "printstats" : false,
   "result" : "none",
-  "save_run" : "../goblint-webfrontend-jsoo/public/goblint",
+  "save_run" : "public/goblint",
   "sem" : {
     "builtin_unreachable" : {
       "dead_code" : false
