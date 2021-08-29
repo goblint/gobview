@@ -10,6 +10,7 @@
       "simplify" : true,
       "validate" : true
     },
+    "arrayoob" : false,
     "cont" : {
       "class" : "",
       "localclass" : false
@@ -20,19 +21,16 @@
     },
     "int" : {
       "congruence" : false,
-      "congruence_no_overflow" : false,
       "def_exc" : false,
       "enums" : false,
       "interval" : true,
-      "refinement" : "never",
-      "wrap_on_signed_overflow" : false
+      "refinement" : "never"
     },
     "mutex" : {
       "disjoint_types" : true
     },
     "octapron" : {
-      "no_signed_overflow" : true,
-      "no_uints" : false
+      "no-context" : false
     },
     "opt" : {
       "equal" : true,
@@ -78,6 +76,9 @@
   "custom_libc" : false,
   "dbg" : {
     "backtrace-signal" : "sigusr2",
+    "cfg" : {
+      "loop-clusters" : false
+    },
     "cilcfgdot" : false,
     "cilout" : "",
     "debug" : false,
@@ -119,7 +120,6 @@
     "failing-locks" : false,
     "fast_global_inits" : false,
     "forward" : false,
-    "full-context" : false,
     "g2html_path" : ".",
     "gcc_path" : "/usr/bin/gcc-6",
     "globs_are_top" : false,
@@ -170,7 +170,6 @@
     "unique" : [],
     "volatiles_are_top" : true,
     "widen-context" : false,
-    "widen-context-partial" : false,
     "witness" : {
       "id" : "node",
       "invariant" : {
@@ -209,6 +208,9 @@
     "builtin_unreachable" : {
       "dead_code" : false
     },
+    "int" : {
+      "signed_overflow" : "assume_top"
+    },
     "unknown_function" : {
       "invalidate" : {
         "globals" : true
@@ -226,6 +228,17 @@
     }
   },
   "verify" : true,
-  "warn" : "post",
+  "warn" : {
+    "array" : true,
+    "behavior" : true,
+    "cast" : true,
+    "debug" : true,
+    "integer" : true,
+    "may" : true,
+    "must" : true,
+    "race" : true,
+    "unknown" : true
+  },
+  "warn_at" : "post",
   "warnstyle" : "pretty"
 }
