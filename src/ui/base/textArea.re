@@ -8,7 +8,7 @@ let make = (~class_=?, ~value, ~on_change) => {
   let onChange = ev => {
     React.Event.Synthetic.preventDefault(ev);
     React.Event.Synthetic.target(ev)
-    |> Ojs.get(_, "value")
+    |> Ojs.get_prop_ascii(_, "value")
     |> Ojs.string_of_js
     |> on_change;
   };

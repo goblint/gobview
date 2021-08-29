@@ -14,7 +14,7 @@ let make = (~options, ~compare=?, ~value, ~on_change) => {
     React.Event.Synthetic.preventDefault(ev);
     let i =
       React.Event.Synthetic.target(ev)
-      |> Ojs.get(_, "value")
+      |> Ojs.get_prop_ascii(_, "value")
       |> Ojs.string_of_js
       |> int_of_string;
     options |> List.assoc_opt(i) |> Option.map(fst) |> Option.may(on_change);
