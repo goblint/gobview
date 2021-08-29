@@ -15,9 +15,9 @@ depends: [
   "dune" {>= "2.7" & < "3"}
   "ocaml" {>= "4.10.0" & < "4.11.0"}
   "jsoo-react"
-  "zarith"
-  "zarith_stubs_js"
   "goblint-cil"
+  "goblint"
+  "zarith_stubs_js"
   "ocamlformat" {dev}
   "odoc" {with-doc}
 ]
@@ -39,6 +39,7 @@ dev-repo: "git+https://github.com/goblint/gobview.git"
 pin-depends: [
   ["gen_js_api.1.0.6" "git+https://github.com/jchavarri/gen_js_api.git#typ_var"]
   ["jsoo-react.dev" "git+https://github.com/reason-in-barcelona/jsoo-react.git#a013cf24dc998faf7ad8557d2a9bae78fd92be3a"]
+  ["goblint.dev" "git+https://github.com/goblint/analyzer.git#c08813c39173c49201477ca266f3c833c10c4f8f"]
   ["goblint-cil.1.8.1" "git+https://github.com/goblint/cil.git#208d2a2f9e51a42ee0a036f4587624ac7ac23ccb"]
   ["zarith.1.12-gob0" "git+https://github.com/goblint/Zarith.git#goblint-release-1.12"]
 ]

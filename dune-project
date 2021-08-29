@@ -30,7 +30,7 @@
     (>= 4.10.0)
     (< 4.11.0)))
   jsoo-react
-  zarith
-  zarith_stubs_js
   goblint-cil
+  goblint
+  zarith_stubs_js
   (ocamlformat :dev)))
