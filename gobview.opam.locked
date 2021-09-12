@@ -1,9 +1,14 @@
 opam-version: "2.0"
+name: "gobview"
+version: "~dev"
 synopsis: "Web frontend for Goblint"
 maintainer: [
   "Kerem Cakirer <kerem.cakirer@tum.de>" "Michael Schwarz <m.schwarz@tum.de>"
 ]
-authors: ["Alex Micheli <c1707-fisch@yahoo.de>"]
+authors: [
+  "Kerem Cakirer <kerem.cakirer@tum.de>"
+  "Alex Micheli <c1707-fisch@yahoo.de>"
+]
 license: "MIT"
 homepage: "https://github.com/goblint/gobview"
 bug-reports: "https://github.com/goblint/gobview/issues"
@@ -18,43 +23,49 @@ depends: [
   "biniou" {= "1.2.1"}
   "cmdliner" {= "1.0.4"}
   "conf-gmp" {= "3"}
+  "conf-perl" {= "1"}
   "cppo" {= "1.6.7"}
-  "csexp" {= "1.4.0"}
-  "dune" {= "2.8.4"}
-  "dune-configurator" {= "2.8.4"}
+  "csexp" {= "1.5.1"}
+  "dune" {= "2.9.1"}
+  "dune-build-info" {= "2.9.1"}
+  "dune-configurator" {= "2.9.1"}
   "easy-format" {= "1.3.2"}
   "fix" {= "20201120"}
   "fpath" {= "0.7.3"}
-  "gen_js_api" {= "1.0.6"}
-  "goblint-cil" {= "1.7.8"}
-  "js_of_ocaml" {= "3.7.1"}
-  "js_of_ocaml-compiler" {= "3.7.1"}
-  "js_of_ocaml-lwt" {= "3.7.1"}
-  "js_of_ocaml-ppx" {= "3.7.1"}
+  "gen_js_api" {= "1.0.8"}
+  "goblint" {= "dev"}
+  "goblint-cil" {= "1.8.1"}
+  "js_of_ocaml" {= "3.10.0"}
+  "js_of_ocaml-compiler" {= "3.10.0"}
+  "js_of_ocaml-lwt" {= "3.10.0"}
+  "js_of_ocaml-ppx" {= "3.10.0"}
   "jsoo-react" {= "dev"}
-  "lwt" {= "5.4.0"}
-  "menhir" {= "20210310"}
-  "menhirLib" {= "20210310"}
-  "menhirSdk" {= "20210310"}
+  "lwt" {= "5.4.2"}
+  "menhir" {= "20210419"}
+  "menhirLib" {= "20210419"}
+  "menhirSdk" {= "20210419"}
   "merlin-extend" {= "0.6"}
   "mmap" {= "1.1.0"}
   "num" {= "1.4"}
   "ocaml" {= "4.10.2"}
   "ocaml-base-compiler" {= "4.10.2"}
-  "ocaml-compiler-libs" {= "v0.12.3"}
+  "ocaml-compiler-libs" {= "v0.12.4"}
   "ocaml-config" {= "1"}
-  "ocaml-migrate-parsetree" {= "1.8.0"}
+  "ocaml-monadic" {= "0.5"}
   "ocamlbuild" {= "0.14.0"}
   "ocamlfind" {= "1.9.1"}
-  "ocamlformat" {= "0.15.0"}
+  "ocamlformat" {= "0.19.0" & dev}
+  "ocp-indent" {= "1.8.1"}
   "ocplib-endian" {= "1.1"}
-  "odoc" {= "1.5.2"}
+  "odoc-parser" {= "0.9.0"}
+  "ojs" {= "1.0.8"}
   "ppx_blob" {= "0.7.2"}
   "ppx_derivers" {= "1.2.1"}
-  "ppx_deriving" {= "5.1"}
+  "ppx_deriving" {= "5.2.1"}
   "ppx_deriving_yojson" {= "3.6.1"}
-  "ppx_tools_versioned" {= "5.4.0"}
-  "ppxlib" {= "0.15.0"}
+  "ppx_distr_guards" {= "0.3"}
+  "ppxlib" {= "0.23.0"}
+  "qcheck-core" {= "0.18"}
   "re" {= "1.9.0"}
   "reason" {= "3.7.0"}
   "result" {= "1.5"}
@@ -63,14 +74,12 @@ depends: [
   "stdio" {= "v0.14.0"}
   "stdlib-shims" {= "0.3.0"}
   "topkg" {= "1.0.3"}
-  "tyxml" {= "4.4.0"}
   "uchar" {= "0.0.2"}
   "uucp" {= "13.0.0"}
   "uuseg" {= "13.0.0"}
   "uutf" {= "1.0.2"}
-  "xml-light" {= "2.4"}
   "yojson" {= "1.7.0"}
-  "zarith" {= "1.12"}
+  "zarith" {= "1.12-gob0"}
   "zarith_stubs_js" {= "v0.14.0"}
 ]
 build: [
@@ -90,16 +99,19 @@ build: [
 dev-repo: "git+https://github.com/goblint/gobview.git"
 pin-depends: [
   [
-    "jsoo-react.dev" "git+https://github.com/jchavarri/jsoo-react.git#a013cf2"
+    "goblint.dev"
+    "git+https://github.com/goblint/analyzer.git#c08813c39173c49201477ca266f3c833c10c4f8f"
   ]
   [
-    "goblint-cil.1.7.8"
-    "git+https://github.com/keremc/cil.git#improve_js_compat"
+    "goblint-cil.1.8.1"
+    "git+https://github.com/goblint/cil.git#208d2a2f9e51a42ee0a036f4587624ac7ac23ccb"
   ]
   [
-    "gen_js_api.1.0.6"
-    "git+https://github.com/jchavarri/gen_js_api.git#typ_var"
+    "jsoo-react.dev"
+    "git+https://github.com/keremc/jsoo-react.git#f8e36e31d68704a80e1f92eacd1707a03c58b021"
+  ]
+  [
+    "zarith.1.12-gob0"
+    "git+https://github.com/goblint/Zarith.git#goblint-release-1.12"
   ]
 ]
-name: "gobview"
-version: "dev"
