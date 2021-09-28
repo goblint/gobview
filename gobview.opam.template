@@ -1,6 +1,6 @@
 pin-depends: [
   ["jsoo-react.dev" "git+https://github.com/keremc/jsoo-react.git#f8e36e31d68704a80e1f92eacd1707a03c58b021"]
-  ["goblint.dev" "git+https://github.com/goblint/analyzer.git#c08813c39173c49201477ca266f3c833c10c4f8f"]
+  ["goblint.dev" "git+https://github.com/goblint/analyzer.git#f4803ad2f820de4495072bd7e3c5fe24c867c13f"]
   ["goblint-cil.1.8.1" "git+https://github.com/goblint/cil.git#208d2a2f9e51a42ee0a036f4587624ac7ac23ccb"]
   ["ppx_deriving.5.2.1" "git+https://github.com/ocaml-ppx/ppx_deriving.git#0a89b619f94cbbfc3b0fb3255ab4fe5bc77d32d6"]
   ["zarith.1.12-gob0" "git+https://github.com/goblint/Zarith.git#goblint-release-1.12"]
