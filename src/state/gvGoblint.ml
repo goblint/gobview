@@ -64,11 +64,11 @@ module type Sig = sig
   val wrap_solver_state : t -> solver_state
 end
 
-module Make (Cfg : MyCFG.CfgBidir) (Spec : Analyses.Spec) : Sig = struct
-  module Inc = struct
-    let increment = Analyses.empty_increment_data ()
-  end
-
+module Make
+    (Cfg : MyCFG.CfgBidir)
+    (Spec : Analyses.Spec) (Inc : sig
+      val increment : Analyses.increment_data
+    end) : Sig = struct
   module EqSys = Constraints.FromSpec (Spec) (Cfg) (Inc)
   module LVar = EqSys.LVar
   module LSpec = Spec.D
@@ -156,8 +156,13 @@ let empty : solver_state = new empty_solver_state
 let unmarshal ~goblint cil =
   let (module Cfg) = Control.compute_cfg cil in
   let (module Spec) = Control.get_spec () in
-  Spec.init ();
-  Spec.finalize ();
-  let (module G : Sig) = (module Make (Cfg) (Spec)) in
+  Spec.init None;
+  ignore (Spec.finalize ());
+  let (module G : Sig) =
+    (module Make (Cfg) (Spec)
+              (struct
+                let increment = Analyses.empty_increment_data cil
+              end))
+  in
   let state = Marshal.from_string goblint 0 in
   G.wrap_solver_state state

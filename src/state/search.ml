@@ -30,12 +30,12 @@ module Query = struct
   let execute (q : t) cil =
     if is_semantic q then (
       ExpressionEvaluation.gv_query := Some q;
-      Maingoblint.do_analyze (Analyses.empty_increment_data ()) cil;
+      Maingoblint.do_analyze (Analyses.empty_increment_data cil) cil;
       let results = !ExpressionEvaluation.gv_results in
       let pred =
         if q.mode = `Must then snd %> Option.default false else snd %> Option.default true
       in
-      results |> List.filter pred |> List.map fst )
+      results |> List.filter pred |> List.map fst)
     else QueryMapping.map_query (to_syntactic_query q) cil
 
   let string_of_error e = match e with ParseError s -> s
