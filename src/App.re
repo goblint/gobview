@@ -65,7 +65,7 @@ let reorder_goblint_analysis_list =
          );
   });
 
-let init_goblint = (solver, table, config, cil) => {
+let init_goblint = (solver, spec, table, config, cil) => {
   AfterConfig.run(); // This registers the "base" analysis
 
   try(reorder_goblint_analysis_list(table)) {
@@ -77,12 +77,19 @@ let init_goblint = (solver, table, config, cil) => {
 
   Sys_js.create_file(~name="/goblint/solver.marshalled", ~content=solver);
   Sys_js.create_file(~name="/goblint/config.json", ~content=config);
+  Sys_js.create_file(~name="/goblint/spec_marshal", ~content=spec);
 
   GobConfig.merge_file("/goblint/config.json");
 
   GobConfig.set_bool("dbg.verbose", true);
   // TODO: Uncomment this to improve performance in future
   // GobConfig.set_bool("verify", false);
+
+  // For some reason, the standard Batteries output channels
+  // appear to be closed by default and writing to them
+  // raises [BatInnerIO.Output_closed]. This fixes it.
+  let out = IO.output_channel(Stdlib.stdout);
+  Messages.formatter := Format.formatter_of_output(out);
 
   GobConfig.set_string("load_run", "goblint");
 
@@ -107,12 +114,12 @@ let init_goblint = (solver, table, config, cil) => {
   );
   Cilfacade.current_file := cil;
 
-  let goblint = GvGoblint.unmarshal(~goblint=solver, cil);
+  let goblint = GvGoblint.unmarshal(solver, spec, cil);
 
   (goblint, cil);
 };
 
-let init = (solver, config, meta, cil, analyses, warnings, stats) => {
+let init = (solver, spec, config, meta, cil, analyses, warnings, stats) => {
   let cil =
     switch (cil) {
     | Ok(s) =>
@@ -124,10 +131,10 @@ let init = (solver, config, meta, cil, analyses, warnings, stats) => {
   print_endline("Restored Cabs2cil.environment");
 
   let (goblint, cil) =
-    switch (solver, analyses, config) {
-    | (Ok(s), Ok(t), Ok(c)) =>
+    switch (solver, spec, analyses, config) {
+    | (Ok(s), Ok(spec), Ok(t), Ok(c)) =>
       let t = Marshal.from_string(t, 0);
-      init_goblint(s, t, c, cil);
+      init_goblint(s, spec, t, c, cil);
     | _ => raise(InitFailed("Failed to load Goblint state"))
     };
   print_endline("Initialized Goblint");
@@ -169,6 +176,7 @@ let handle_error = exc => {
 
 [
   "/goblint/solver.marshalled",
+  "/goblint/spec_marshal",
   "/goblint/config.json",
   "/goblint/meta.json",
   "/goblint/cil.marshalled",
@@ -182,8 +190,8 @@ let handle_error = exc => {
   l =>
     Lwt.return(
       switch (l) {
-      | [solver, config, meta, cil, analyses, warnings, stats] =>
-        try(init(solver, config, meta, cil, analyses, warnings, stats)) {
+      | [solver, spec, config, meta, cil, analyses, warnings, stats] =>
+        try(init(solver, spec, config, meta, cil, analyses, warnings, stats)) {
         | exc => handle_error(exc)
         }
       | _ => ()
