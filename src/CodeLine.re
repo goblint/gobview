@@ -76,7 +76,7 @@ let make =
        warnings
        |> List.map(w =>
             <div className="warning">
-              {State.Warning.to_string(w) |> React.string}
+              {GvMessages.Message.to_string(w) |> React.string}
             </div>
           )
        |> React.list;

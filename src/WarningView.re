@@ -1,4 +1,5 @@
 open Batteries;
+module Message = GvMessages.Message;
 
 [@react.component]
 let make = (~warnings, ~dispatch) => {
@@ -9,19 +10,16 @@ let make = (~warnings, ~dispatch) => {
     </h3>
     <ul>
       {warnings
-       |> List.map(State.Warning.to_list)
-       |> List.flatten
-       |> List.mapi((i, (text, loc: Cil.location)) => {
-            <li
-              className="cursor warnitem"
-              key={string_of_int(i)}
-              onClick={_ => {
-                dispatch @@ `InspectLine(GvInspect.Line.of_location(loc))
-              }}>
-              <b> {text |> React.string} </b>
-              <br />
-              {string_of_int(loc.line) ++ " : " ++ loc.file |> React.string}
-            </li>
+       |> List.map(w => (Message.to_string(w), Message.location(w)))
+       |> List.mapi((i, (text, loc)) => {
+            let onClick =
+              loc
+              |> Option.map((loc, _) =>
+                   dispatch @@ `InspectLine(GvInspect.Line.of_location(loc))
+                 );
+            <li className="cursor warnitem" key={string_of_int(i)} ?onClick>
+              {text |> React.string}
+            </li>;
           })
        |> React.list}
     </ul>

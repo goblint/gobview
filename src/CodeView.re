@@ -19,7 +19,7 @@ let make = (~goblint, ~warnings, ~file: GvDisplay.file, ~inspect, ~dispatch) => 
             numb={i + 1}
             dispatch
             hasc={goblint#has_local_analysis(line)}
-            warnings={State.Warning.find_all(line, warnings)}
+            warnings={GvMessages.filter_by_line(line, warnings)}
             hasDeadCode={goblint#is_dead(~file=file.path, ~line=i + 1)}
             highlight={i + 1 == inspected_line}
           />;
