@@ -41,7 +41,9 @@ let make =
                    ),
                ~get_position=
                  () => {
-                   let position = Monaco.Position.make(i, 1);
+                   let position =
+                     Monaco.Position.make(i, 1)
+                     |> Monaco.IPosition.of_position;
                    Monaco.Editor.IContentWidgetPosition.make(
                      ~position,
                      ~preference=[
@@ -77,7 +79,8 @@ let make =
                ~is_whole_line=true,
                (),
              );
-           let range = Monaco.Range.make(i, 0, i, 0);
+           let range =
+             Monaco.Range.make(i, 0, i, 0) |> Monaco.IRange.of_range;
            Monaco.Editor.IModelDeltaDecoration.make(~options, ~range, ())
            |> Option.some;
          } else {
@@ -97,7 +100,7 @@ let make =
                  ~is_whole_line=true,
                  (),
                ),
-             ~range=Monaco.Range.make(n, 0, n, 0),
+             ~range=Monaco.Range.make(n, 0, n, 0) |> Monaco.IRange.of_range,
              (),
            )
          )

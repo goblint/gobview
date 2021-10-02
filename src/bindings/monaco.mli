@@ -27,21 +27,33 @@ end
 module IMarkdownString : sig
   type t = private Ojs.t
 
-  val make : value:string -> t [@@js.builder]
+  val make : value:string -> unit -> t [@@js.builder]
+end
+
+module IPosition : sig
+  type t = private Ojs.t
+
+  val of_position : Position.t -> t [@@js.cast]
+end
+
+module IRange : sig
+  type t = private Ojs.t
+
+  val of_range : Range.t -> t [@@js.cast]
 end
 
 module Editor : sig
   module ContentWidgetPositionPreference : sig
-    type t = Above [@js 1] | Below [@js 2] | Exact [@js 0] [@@js.enum]
+    type t = Exact [@js 0] | Above [@js 1] | Below [@js 2] [@@js.enum]
   end
 
   module IContentWidgetPosition : sig
     type t = private Ojs.t
 
     val make :
-      position:Position.t ->
+      position:IPosition.t ->
       preference:ContentWidgetPositionPreference.t list ->
-      ?range:Range.t ->
+      ?range:IRange.t ->
       unit ->
       t
       [@@js.builder]
@@ -51,10 +63,10 @@ module Editor : sig
     type t = private Ojs.t
 
     val make :
+      ?allow_editor_overflow:bool ->
       get_dom_node:(unit -> React.Dom.domElement) ->
       get_id:(unit -> string) ->
       get_position:(unit -> IContentWidgetPosition.t) ->
-      ?allow_editor_overflow:bool ->
       unit ->
       t
       [@@js.builder]
@@ -64,12 +76,6 @@ module Editor : sig
     type t = private Ojs.t
 
     val position : t -> Position.t [@@js.get]
-  end
-
-  module ITextModel : sig
-    type t = private Ojs.t
-
-    val id : t -> string [@@js.get]
   end
 
   module IMarkerData : sig
@@ -85,28 +91,6 @@ module Editor : sig
       unit ->
       t
       [@@js.builder]
-  end
-
-  val create_model : string -> ?language:string -> unit -> ITextModel.t
-    [@@js.global "monaco.editor.createModel"]
-
-  val set_model_markers : ITextModel.t -> string -> IMarkerData.t list -> unit
-    [@@js.global "monaco.editor.setModelMarkers"]
-
-  module IViewZone : sig
-    type t = private Ojs.t
-
-    val make :
-      after_line_number:int -> dom_node:React.Dom.domElement -> ?height_in_lines:float -> unit -> t
-      [@@js.builder]
-  end
-
-  module IViewZoneChangeAccessor : sig
-    type t = private Ojs.t
-
-    val add_zone : t -> IViewZone.t -> string [@@js.call]
-
-    val remove_zone : t -> string -> unit [@@js.call]
   end
 
   module IModelDecorationOptions : sig
@@ -125,7 +109,23 @@ module Editor : sig
   module IModelDeltaDecoration : sig
     type t = private Ojs.t
 
-    val make : ?options:IModelDecorationOptions.t -> ?range:Range.t -> unit -> t [@@js.builder]
+    val make : options:IModelDecorationOptions.t -> range:IRange.t -> unit -> t [@@js.builder]
+  end
+
+  module IViewZone : sig
+    type t = private Ojs.t
+
+    val make :
+      after_line_number:int -> dom_node:React.Dom.domElement -> ?height_in_lines:float -> unit -> t
+      [@@js.builder]
+  end
+
+  module IViewZoneChangeAccessor : sig
+    type t = private Ojs.t
+
+    val add_zone : t -> IViewZone.t -> string [@@js.call]
+
+    val remove_zone : t -> string -> unit [@@js.call]
   end
 
   module IStandaloneCodeEditor : sig
@@ -147,6 +147,12 @@ module Editor : sig
     val set_value : t -> string -> unit [@@js.call]
   end
 
+  module ITextModel : sig
+    type t = private Ojs.t
+
+    val id : t -> string [@@js.get]
+  end
+
   module IStandaloneEditorConstructionOptions : sig
     type t = private Ojs.t
 
@@ -159,4 +165,10 @@ module Editor : sig
     unit ->
     IStandaloneCodeEditor.t
     [@@js.global "monaco.editor.create"]
+
+  val create_model : string -> ?language:string -> unit -> ITextModel.t
+    [@@js.global "monaco.editor.createModel"]
+
+  val set_model_markers : ITextModel.t -> string -> IMarkerData.t list -> unit
+    [@@js.global "monaco.editor.setModelMarkers"]
 end
