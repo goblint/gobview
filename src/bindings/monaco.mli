@@ -157,6 +157,8 @@ module Editor : sig
     type t = private Ojs.t
 
     val make : ?model:ITextModel.t -> ?read_only:bool -> unit -> t [@@js.builder]
+
+    val set_model : t -> ITextModel.t -> unit [@@js.set]
   end
 
   val create :
