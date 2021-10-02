@@ -7,9 +7,9 @@ module Position : sig
 
   val make : int -> int -> t [@@js.new "monaco.Position"]
 
-  val column : t -> int
+  val column : t -> int [@@js.get]
 
-  val line_number : t -> int
+  val line_number : t -> int [@@js.get]
 end
 
 module Range : sig
@@ -21,7 +21,7 @@ end
 module IDisposable : sig
   type t = private Ojs.t
 
-  val dispose : t -> unit
+  val dispose : t -> unit [@@js.call]
 end
 
 module IMarkdownString : sig
@@ -63,13 +63,13 @@ module Editor : sig
   module ICursorPositionChangedEvent : sig
     type t = private Ojs.t
 
-    val position : t -> Position.t
+    val position : t -> Position.t [@@js.get]
   end
 
   module ITextModel : sig
     type t = private Ojs.t
 
-    val id : t -> string
+    val id : t -> string [@@js.get]
   end
 
   module IMarkerData : sig
@@ -104,9 +104,9 @@ module Editor : sig
   module IViewZoneChangeAccessor : sig
     type t = private Ojs.t
 
-    val add_zone : t -> IViewZone.t -> string
+    val add_zone : t -> IViewZone.t -> string [@@js.call]
 
-    val remove_zone : t -> string -> unit
+    val remove_zone : t -> string -> unit [@@js.call]
   end
 
   module IModelDecorationOptions : sig
@@ -133,14 +133,16 @@ module Editor : sig
 
     val on_did_change_cursor_position :
       t -> (ICursorPositionChangedEvent.t -> unit) -> IDisposable.t
+      [@@js.call]
 
-    val add_content_widget : t -> IContentWidget.t -> unit
+    val add_content_widget : t -> IContentWidget.t -> unit [@@js.call]
 
-    val change_view_zones : t -> (IViewZoneChangeAccessor.t -> unit) -> unit
+    val change_view_zones : t -> (IViewZoneChangeAccessor.t -> unit) -> unit [@@js.call]
 
     val delta_decorations : t -> string list -> IModelDeltaDecoration.t list -> string list
+      [@@js.call]
 
-    val remove_content_widget : t -> IContentWidget.t -> unit
+    val remove_content_widget : t -> IContentWidget.t -> unit [@@js.call]
 
     val set_value : t -> string -> unit [@@js.call]
   end
