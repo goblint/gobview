@@ -29,7 +29,6 @@ let make =
   let width = Option.default("100%", width);
   let height = Option.default("100%", height);
   let default_value = Option.default("", default_value);
-  let value = Option.default("", value);
   let language = Option.default("c", language);
   let options = Option.default(Options.make(), options);
   let on_mount = Option.default(_ => (), on_mount);
@@ -52,9 +51,10 @@ let make =
 
   React.useEffect1(
     () => {
-      let update = editor =>
-        Editor.IStandaloneCodeEditor.set_value(editor, value);
-      ref |> React.Ref.current |> Option.may(update);
+      switch (value, ref |> React.Ref.current) {
+      | (Some(v), Some(r)) => Editor.IStandaloneCodeEditor.set_value(r, v)
+      | _ => ()
+      };
       None;
     },
     [|value|],
