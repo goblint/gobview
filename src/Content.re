@@ -13,22 +13,13 @@ let make = (~state: State.t, ~dispatch) => {
     {switch (state.display) {
      | None => <Navigation state dispatch />
      | Some(File(file)) =>
-       <>
-         <CodeView
-           goblint={state.goblint}
-           warnings={state.warnings}
-           file
-           inspect={state.inspect}
-           dispatch
-         />
-         <GvFileView
-           goblint={state.goblint}
-           warnings={state.warnings}
-           file
-           line
-           dispatch
-         />
-       </>
+       <GvFileView
+         goblint={state.goblint}
+         warnings={state.warnings}
+         file
+         line
+         dispatch
+       />
      | Some(Func(func)) => <GvFuncView func dispatch />
      }}
   </div>;
