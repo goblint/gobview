@@ -21,7 +21,13 @@ let make = (~state: State.t, ~dispatch) => {
            inspect={state.inspect}
            dispatch
          />
-         <GvFileView goblint={state.goblint} file line dispatch />
+         <GvFileView
+           goblint={state.goblint}
+           warnings={state.warnings}
+           file
+           line
+           dispatch
+         />
        </>
      | Some(Func(func)) => <GvFuncView func dispatch />
      }}

@@ -128,6 +128,12 @@ module Editor : sig
     val remove_zone : t -> string -> unit [@@js.call]
   end
 
+  module ITextModel : sig
+    type t = private Ojs.t
+
+    val id : t -> string [@@js.get]
+  end
+
   module IStandaloneCodeEditor : sig
     type t = private Ojs.t
 
@@ -144,19 +150,17 @@ module Editor : sig
 
     val remove_content_widget : t -> IContentWidget.t -> unit [@@js.call]
 
+    val get_model : t -> ITextModel.t [@@js.call]
+
     val set_value : t -> string -> unit [@@js.call]
-  end
-
-  module ITextModel : sig
-    type t = private Ojs.t
-
-    val id : t -> string [@@js.get]
   end
 
   module IStandaloneEditorConstructionOptions : sig
     type t = private Ojs.t
 
-    val make : ?model:ITextModel.t -> ?read_only:bool -> unit -> t [@@js.builder]
+    val make :
+      ?model:ITextModel.t -> ?read_only:bool -> ?render_validation_decorations:string -> unit -> t
+      [@@js.builder]
 
     val set_model : t -> ITextModel.t -> unit [@@js.set]
   end

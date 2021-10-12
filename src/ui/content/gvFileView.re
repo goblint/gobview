@@ -2,6 +2,26 @@ open Batteries;
 open Js_of_ocaml;
 open Monaco;
 
+let make_markers = (warnings, file: GvDisplay.file) =>
+  warnings
+  |> List.filter_map(m =>
+       switch (GvMessages.Message.location(m)) {
+       | Some(loc) when loc.file == file.path => Some((m, loc))
+       | _ => None
+       }
+     )
+  |> List.map(((m, loc: Cil.location)) =>
+       Editor.IMarkerData.make(
+         ~message=GvMessages.Message.to_string(m),
+         ~severity=MarkerSeverity.Warning,
+         ~start_line_number=loc.line,
+         ~end_line_number=loc.line,
+         ~start_column=loc.column,
+         ~end_column=1000,
+         (),
+       )
+     );
+
 let make_inspect_link = (goblint, file: GvDisplay.file, dispatch, line) =>
   if (goblint#has_local_analysis((file.path, line))) {
     let span = Dom_html.createSpan(Dom_html.document);
@@ -56,6 +76,7 @@ type state = {
 let update =
     (
       goblint,
+      warnings,
       file: GvDisplay.file,
       contents,
       line,
@@ -63,6 +84,10 @@ let update =
       {editor, _} as s,
     ) => {
   let lines = String.count_char(contents, '\n') + 1;
+
+  let markers = make_markers(warnings, file);
+  let model = Editor.IStandaloneCodeEditor.get_model(editor);
+  Editor.set_model_markers(model, "goblint", markers);
 
   let decorations =
     line
@@ -134,32 +159,38 @@ let update =
   ();
 };
 
-let make_editor = (goblint, file, contents, line, dispatch) => {
+let make_editor = (goblint, warnings, file, contents, line, dispatch) => {
   let options =
-    Editor.IStandaloneEditorConstructionOptions.make(~read_only=true, ());
+    Editor.IStandaloneEditorConstructionOptions.make(
+      ~read_only=true,
+      ~render_validation_decorations="on",
+      (),
+    );
   let state = React.useRef(None);
   let on_mount = e =>
     {editor: e, decorations: [], content_widgets: [], view_zones: []}
     |> Option.some
     |> React.Ref.setCurrent(state);
 
-  React.useEffect4(
+  React.useEffect5(
     () => {
       state
       |> React.Ref.current
-      |> Option.may(update(goblint, file, contents, line, dispatch));
+      |> Option.may(
+           update(goblint, warnings, file, contents, line, dispatch),
+         );
       None;
     },
-    (goblint, file, line, dispatch),
+    (goblint, warnings, file, line, dispatch),
   );
 
   <GvEditor value=contents options on_mount />;
 };
 
 [@react.component]
-let make = (~goblint, ~file: GvDisplay.file, ~line, ~dispatch) =>
+let make = (~goblint, ~warnings, ~file: GvDisplay.file, ~line, ~dispatch) =>
   switch (file.contents) {
-  | Some(s) => make_editor(goblint, file, s, line, dispatch)
+  | Some(s) => make_editor(goblint, warnings, file, s, line, dispatch)
   | _ =>
     "Cannot display this file. It might be still loading or missing."
     |> React.string
