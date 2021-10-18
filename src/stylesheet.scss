@@ -3,3 +3,8 @@
 ol, ul {
   padding-left: 1rem;
 }
+
+.link-like:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}

@@ -2,16 +2,22 @@ open Batteries;
 
 [@react.component]
 let make = (~state: State.t, ~dispatch) => {
-  <div className="flex-fill overflow-auto">
+  let line =
+    switch (state.inspect) {
+    | Some(Line(_ as l)) => Some(l)
+    | _ => None
+    };
+
+  <div className="flex-fill overflow-hidden">
     <GvBreadcrumb display={state.display} dispatch />
     {switch (state.display) {
      | None => <Navigation state dispatch />
      | Some(File(file)) =>
-       <CodeView
+       <GvFileView
          goblint={state.goblint}
          warnings={state.warnings}
          file
-         inspect={state.inspect}
+         line
          dispatch
        />
      | Some(Func(func)) => <GvFuncView func dispatch />

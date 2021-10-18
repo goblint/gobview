@@ -13,16 +13,20 @@ module.exports = {
                     'css-loader',
                     {
                         loader: 'postcss-loader',
-                        options: { postcssOptions: { plugins: ['autoprefixer'] } }
+                        options: { postcssOptions: { plugins: ['autoprefixer'] } },
                     },
-                    'sass-loader'
-                ]
-            }
-        ]
+                    'sass-loader',
+                ],
+            },
+            {
+                test: /\.ttf$/,
+                use: 'file-loader',
+            },
+        ],
     },
     plugins: [new HtmlWebpackPlugin({ template: 'public/index.html' })],
     resolve: { fallback: { child_process: false, constants: false, fs: false, tty: false } },
     devServer: {
-        contentBase: path.resolve(__dirname, 'public')
-    }
+        contentBase: path.resolve(__dirname, 'public'),
+    },
 };
