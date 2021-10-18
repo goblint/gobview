@@ -100,12 +100,12 @@ dev-repo: "git+https://github.com/goblint/gobview.git"
 pin-depends: [
   [
   "goblint.dev"
-  "git+https://github.com/goblint/analyzer.git#f4803ad2f820de4495072bd7e3c5fe24c867c13f"
+  "git+https://github.com/goblint/analyzer.git#cbd7987327def50883abbe07fde03f08bc8776be"
 ]
   [
-    "goblint-cil.1.8.1"
-    "git+https://github.com/goblint/cil.git#208d2a2f9e51a42ee0a036f4587624ac7ac23ccb"
-  ]
+  "goblint-cil.1.8.1"
+  "git+https://github.com/goblint/cil.git#c16dddf74f6053a8b3fac07ca2feff18d4d56964"
+]
   [
     "jsoo-react.dev"
     "git+https://github.com/keremc/jsoo-react.git#f8e36e31d68704a80e1f92eacd1707a03c58b021"
