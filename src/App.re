@@ -114,7 +114,7 @@ let init_goblint = (solver, spec, table, config, cil) => {
   );
   Cilfacade.current_file := cil;
 
-  let goblint = GvGoblint.unmarshal(solver, spec, cil);
+  let goblint = GvGoblint.unmarshal(spec, cil);
 
   (goblint, cil);
 };

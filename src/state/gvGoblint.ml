@@ -61,7 +61,7 @@ class empty_solver_state =
 module type Sig = sig
   type t
 
-  val wrap_solver_state : t -> solver_state
+  val wrap_solver_state : unit -> solver_state
 end
 
 module Make
@@ -69,18 +69,19 @@ module Make
     (Spec : Analyses.Spec) (Inc : sig
       val increment : Analyses.increment_data
     end) : Sig = struct
-  module EqSys = Constraints.FromSpec (Spec) (Cfg) (Inc)
-  module LVar = EqSys.LVar
+  module A = Control.AnalyzeCFG (Cfg) (Spec) (Inc)
+  module EQSys = A.EQSys
+  module LVar = EQSys.LVar
   module LSpec = Spec.D
-  module LHashtbl = Hashtbl.Make (LVar)
-  module GVar = EqSys.GVar
+  module LHT = A.LHT
+  module GVar = EQSys.GVar
   module GSpec = Spec.G
-  module GHashtbl = Hashtbl.Make (GVar)
+  module GHT = A.GHT
 
-  type t = Spec.D.t LHashtbl.t * Spec.G.t GHashtbl.t
+  type t = Spec.D.t LHT.t * Spec.G.t GHT.t
 
-  let transform_lhashtbl lh =
-    lh |> LHashtbl.enum
+  let transform_lht lh =
+    lh |> LHT.enum
     |> Enum.map (fun (((_, c) as k), v) ->
            let id = LVar.var_id k in
            let loc = LVar.getLocation k in
@@ -101,12 +102,12 @@ module Make
     let dead = ref NodeSet.empty in
     let live = ref NodeSet.empty in
     lh
-    |> LHashtbl.iter (fun (n, _) d ->
+    |> LHT.iter (fun (n, _) d ->
            if Spec.D.is_bot d then dead := NodeSet.add n !dead else live := NodeSet.add n !live);
     NodeSet.diff !dead !live |> NodeSet.to_list |> List.map Node.location
 
-  let transform_ghashtbl gh =
-    let tbl = Hashtbl.create (GHashtbl.length gh) in
+  let transform_ght gh =
+    let tbl = Hashtbl.create (GHT.length gh) in
     let insert_analysis_result a v r =
       Hashtbl.modify_opt a (function None -> Some [ (v, r) ] | Some l -> Some ((v, r) :: l)) tbl
     in
@@ -115,7 +116,7 @@ module Make
       | `Assoc l -> List.iter (fun (a, r) -> insert_analysis_result a k.vname r) l
       | _ -> failwith "Not sure if this is supposed to happen."
     in
-    gh |> GHashtbl.map (fun _ -> representation_of_yojson % GSpec.to_yojson) |> GHashtbl.iter f;
+    gh |> GHT.map (fun _ -> representation_of_yojson % GSpec.to_yojson) |> GHT.iter f;
     Hashtbl.to_list tbl
 
   let dot_of_fundec (fd : Cil.fundec) =
@@ -129,9 +130,9 @@ module Make
     object
       inherit solver_state
 
-      val lh' = transform_lhashtbl lh
+      val lh' = transform_lht lh
 
-      val gh' = transform_ghashtbl gh
+      val gh' = transform_ght gh
 
       val dead = dead_locations lh
 
@@ -148,12 +149,22 @@ module Make
       method dot_of_fundec = dot_of_fundec
     end
 
-  let wrap_solver_state ((lh, gh) : t) = new solver_state_impl (lh, gh)
+  let wrap_solver_state () =
+    let module Arg = struct
+      include A.PostSolverArg
+
+      let should_prune = false
+    end in
+    let module S2' =
+      Constraints.GlobSolverFromEqSolver (Generic.LoadRunIncrSolver (Arg)) (EQSys) (LHT) (GHT)
+    in
+    let r2, _ = S2'.solve [] [] [] in
+    new solver_state_impl r2
 end
 
 let empty : solver_state = new empty_solver_state
 
-let unmarshal goblint spec cil =
+let unmarshal spec cil =
   let (module Cfg) = Control.compute_cfg cil in
   let (module Spec) = Control.get_spec () in
   Spec.init (Some (Marshal.from_string spec 0));
@@ -163,5 +174,4 @@ let unmarshal goblint spec cil =
                 let increment = Analyses.empty_increment_data cil
               end))
   in
-  let state = Marshal.from_string goblint 0 in
-  G.wrap_solver_state state
+  G.wrap_solver_state ()
