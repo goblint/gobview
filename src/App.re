@@ -175,14 +175,14 @@ let handle_error = exc => {
 };
 
 [
-  "/goblint/solver.marshalled",
-  "/goblint/spec_marshal",
-  "/goblint/config.json",
-  "/goblint/meta.json",
-  "/goblint/cil.marshalled",
-  "/goblint/analyses.marshalled",
-  "/goblint/warnings.marshalled",
-  "/goblint/stats.marshalled",
+  "/solver.marshalled",
+  "/spec_marshal",
+  "/config.json",
+  "/meta.json",
+  "/cil.marshalled",
+  "/analyses.marshalled",
+  "/warnings.marshalled",
+  "/stats.marshalled",
 ]
 |> List.map(HttpClient.get)
 |> Lwt.all
