@@ -34,4 +34,4 @@
 
 (alias
  (name default)
- (deps App.js static/primitive.css static/prism.css static/prism.js))
+ (deps App.bc.js static/primitive.css static/prism.css static/prism.js))
