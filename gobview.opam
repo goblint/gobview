@@ -13,7 +13,7 @@ homepage: "https://github.com/goblint/gobview"
 bug-reports: "https://github.com/goblint/gobview/issues"
 depends: [
   "dune" {>= "2.7" & < "3"}
-  "ocaml" {>= "4.10.0" & < "4.11.0"}
+  "ocaml" {>= "4.10.0"}
   "jsoo-react"
   "goblint-cil"
   "goblint"

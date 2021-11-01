@@ -26,9 +26,7 @@
   (dune
    (< 3))
   (ocaml
-   (and
-    (>= 4.10.0)
-    (< 4.11.0)))
+   (>= 4.10.0))
   jsoo-react
   goblint-cil
   goblint
