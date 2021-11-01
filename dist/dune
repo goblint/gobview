@@ -1,0 +1,8 @@
+(rule
+ (alias gobview)
+ (targets main.js)
+ (deps ../src/App.bc.js ../npm.log ../webpack.config.js)
+ (action
+  (chdir
+   ..
+   (run npx webpack build))))

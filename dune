@@ -1,0 +1,7 @@
+(rule
+ (targets npm.log)
+ (deps package-lock.json)
+ (action
+  (with-outputs-to
+   npm.log
+   (run npm ci))))
