@@ -1,7 +1,12 @@
 (rule
- (targets npm.log)
+ (alias gobview)
+ (targets dist)
+ (deps src/App.bc.js node_modules webpack.config.js)
+ (action
+  (run npx webpack build)))
+
+(rule
+ (targets node_modules)
  (deps package-lock.json)
  (action
-  (with-outputs-to
-   npm.log
-   (run npm ci))))
+  (run npm ci)))
