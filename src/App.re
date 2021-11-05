@@ -175,14 +175,14 @@ let handle_error = exc => {
 };
 
 [
-  "/solver.marshalled",
-  "/spec_marshal",
-  "/config.json",
-  "/meta.json",
-  "/cil.marshalled",
-  "/analyses.marshalled",
-  "/warnings.marshalled",
-  "/stats.marshalled",
+  "./solver.marshalled",
+  "./spec_marshal",
+  "./config.json",
+  "./meta.json",
+  "./cil.marshalled",
+  "./analyses.marshalled",
+  "./warnings.marshalled",
+  "./stats.marshalled",
 ]
 |> List.map(HttpClient.get)
 |> Lwt.all
