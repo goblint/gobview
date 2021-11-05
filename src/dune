@@ -9,6 +9,7 @@
   goblint-cil
   goblint-cil.syntacticsearch
   goblint.lib
+  goblint.sites.js
   js_of_ocaml-lwt
   jsoo-react.lib
   lwt
