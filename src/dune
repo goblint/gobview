@@ -22,6 +22,7 @@
   (javascript_files
    ../runtime/stubs.js
    ../runtime/marshal.js
+   ../runtime/sha_stubs.js
    react-requires.js
    static-requires.js))
  (preprocess
