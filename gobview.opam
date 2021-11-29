@@ -37,4 +37,5 @@ build: [
 dev-repo: "git+https://github.com/goblint/gobview.git"
 pin-depends: [
   ["jsoo-react.dev" "git+https://github.com/keremc/jsoo-react.git#090d5c49e0695c614f0c5b5d4019394632359d77"]
+  [ "zarith.1.12-gob0" "git+https://github.com/goblint/Zarith.git#goblint-release-1.12" ]
 ]
