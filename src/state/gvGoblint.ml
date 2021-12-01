@@ -113,7 +113,7 @@ module Make
     in
     let f k v =
       match v with
-      | `Assoc l -> List.iter (fun (a, r) -> insert_analysis_result a k.vname r) l
+      | `Assoc l -> List.iter (fun (a, r) -> insert_analysis_result a (Spec.V.show k) r) l
       | _ -> failwith "Not sure if this is supposed to happen."
     in
     gh |> GHT.map (fun _ -> representation_of_yojson % GSpec.to_yojson) |> GHT.iter f;
