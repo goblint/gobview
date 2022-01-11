@@ -18,4 +18,12 @@
 (package
  (name goblint-http-server)
  (synopsis "Goblint HTTP server")
- (depends))
+ (depends
+  batteries
+  cohttp-lwt
+  cohttp-lwt-unix
+  fileutils
+  lwt
+  lwt_ppx
+  (ocaml-lsp-server :dev)
+  (ocp-indent :dev)))

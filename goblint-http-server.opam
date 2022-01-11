@@ -9,6 +9,14 @@ homepage: "https://github.com/keremc/goblint-http-server"
 bug-reports: "https://github.com/keremc/goblint-http-server/issues"
 depends: [
   "dune" {>= "2.9"}
+  "batteries"
+  "cohttp-lwt"
+  "cohttp-lwt-unix"
+  "fileutils"
+  "lwt"
+  "lwt_ppx"
+  "ocaml-lsp-server" {dev}
+  "ocp-indent" {dev}
   "odoc" {with-doc}
 ]
 build: [
