@@ -1,0 +1,4 @@
+(executable
+ (name goblint_http)
+ (public_name goblint_http)
+ (libraries batteries))
