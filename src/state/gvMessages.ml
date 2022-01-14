@@ -5,9 +5,9 @@ module Message = struct
   include Message
 
   let location { multipiece; _ } =
-    let loc (p : Piece.t) = p.loc in
+    let loc (p : Piece.t) = Option.map Location.to_cil p.loc in
     match multipiece with
-    | Single p -> p.loc
+    | Single p -> loc p
     | Group { pieces; _ } -> pieces |> List.filter_map loc |> List.enum |> Enum.get
 
   let to_string msg =
