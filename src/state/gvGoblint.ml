@@ -113,10 +113,10 @@ module Make
     in
     let f k v =
       match v with
-      | `Assoc l -> List.iter (fun (a, r) -> insert_analysis_result a (Spec.V.show k) r) l
+      | `Assoc l -> List.iter (fun (a, r) -> insert_analysis_result a (EQSys.GVar.show k) r) l
       | _ -> failwith "Not sure if this is supposed to happen."
     in
-    gh |> GHT.map (fun _ -> representation_of_yojson % GSpec.to_yojson) |> GHT.iter f;
+    gh |> GHT.map (fun _ -> representation_of_yojson % EQSys.G.to_yojson) |> GHT.iter f;
     Hashtbl.to_list tbl
 
   let dot_of_fundec (fd : Cil.fundec) =
