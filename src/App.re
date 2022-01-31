@@ -18,59 +18,25 @@ let init_cil = environment => {
 // ID depends on the module registration order, which might
 // differ from build to build. This function reorders the
 // analysis list to match the native version of Goblint.
-let reorder_goblint_analysis_list =
-  List.iter(((id, ana)) => {
-    let (current_id, _) =
-      List.find(snd %> String.equal(ana), MCP.analyses_table^);
-    let spec = List.assoc(current_id, MCP.analyses_list'^);
-    let deps = List.assoc(current_id, MCP.dep_list'^);
+let renumber_goblint_analyses = registered_name => {
+  let old_registered = Hashtbl.copy(MCP.registered);
+  let old_registered_name = Hashtbl.copy(MCP.registered_name);
+  Hashtbl.clear(MCP.registered);
+  Hashtbl.clear(MCP.registered_name);
+  Hashtbl.iter((name, id) => {
+    let old_id = Hashtbl.find(old_registered_name, name);
+    let spec = Hashtbl.find(old_registered, old_id);
+    Hashtbl.replace(MCP.registered, id, spec);
+    Hashtbl.replace(MCP.registered_name, name, id);
+  }, registered_name);
+};
 
-    let actual_ana_with_id = List.assoc(id, MCP.analyses_table^);
-    MCP.analyses_table :=
-      MCP.analyses_table^
-      |> List.map(((i, a)) =>
-           if (i == id) {
-             (i, ana);
-           } else if (i == current_id) {
-             (i, actual_ana_with_id);
-           } else {
-             (i, a);
-           }
-         );
-
-    let actual_spec_with_id = List.assoc(id, MCP.analyses_list'^);
-    MCP.analyses_list' :=
-      MCP.analyses_list'^
-      |> List.map(((i, s)) =>
-           if (i == id) {
-             (i, spec);
-           } else if (i == current_id) {
-             (i, actual_spec_with_id);
-           } else {
-             (i, s);
-           }
-         );
-
-    let actual_deps_with_id = List.assoc(id, MCP.dep_list'^);
-    MCP.dep_list' :=
-      MCP.dep_list'^
-      |> List.map(((i, d)) =>
-           if (i == id) {
-             (i, deps);
-           } else if (i == current_id) {
-             (i, actual_deps_with_id);
-           } else {
-             (i, d);
-           }
-         );
-  });
-
-let init_goblint = (solver, spec, table, config, cil) => {
+let init_goblint = (solver, spec, registered_name, config, cil) => {
   AfterConfig.run(); // This registers the "base" analysis
 
-  try(reorder_goblint_analysis_list(table)) {
+  try(renumber_goblint_analyses(registered_name)) {
   | Not_found =>
-    raise(InitFailed("Failed to populate the Goblint analysis list"))
+    raise(InitFailed("Failed to renumber Goblint analyses"))
   };
 
   Sys.chdir("/"); // Don't remove this
