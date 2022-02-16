@@ -154,7 +154,7 @@ module Make
     let module S2' =
       Constraints.GlobSolverFromEqSolver (Generic.LoadRunIncrSolver (Arg)) (EQSys) (LHT) (GHT)
     in
-    let r2, _ = S2'.solve [] [] [] in
+    let r2, _ = S2'.solve [] [] [] None in
     new solver_state_impl r2
 end
 
