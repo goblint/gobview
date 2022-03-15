@@ -1,4 +1,6 @@
 (executable
  (name goblint_http)
  (public_name goblint_http)
- (libraries batteries cohttp))
+ (libraries batteries cohttp cohttp-lwt-unix lwt.unix)
+ (preprocess
+  (pps lwt_ppx)))

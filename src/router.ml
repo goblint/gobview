@@ -1,11 +1,17 @@
 open Cohttp
 
-type route = Code.meth * (string -> string option)
-type t = route list ref
+type 'a route = Code.meth * (string -> 'a option)
+type 'a t = 'a route list ref
 
-let add (router : t) meth fmt f =
+let add (router : 'a t) meth fmt f =
   let matcher path = try Some (Scanf.sscanf path fmt f) with Scanf.Scan_failure _ -> None in
   router := (meth, matcher) :: !router;
   router
 
-let make () : t = ref []
+let route (router : 'a t) req =
+  let meth = Request.meth req in
+  let uri = Request.uri req in
+  let path = Uri.path uri in
+  List.find_map (fun (m, f) -> if m = meth then f path else None) !router
+
+let make () : 'a t = ref []

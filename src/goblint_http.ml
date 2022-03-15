@@ -1,4 +1,5 @@
 open Batteries
+open Cohttp_lwt_unix
 
 let addr = ref "127.0.0.1"
 let port = ref 8080
@@ -17,7 +18,15 @@ let specs =
 
 let paths = ref []
 
+let main () =
+  let%lwt gob = Goblint.spawn !goblint (!rest @ !paths) in
+  let router = Routes.router gob in
+  let callback _ req _ = Router.route router req |> Option.default (Server.respond_not_found ()) in
+  let server = Server.make ~callback () in
+  Server.create ~mode:(`TCP (`Port !port)) server
+
 let () =
   let program = Sys.argv.(0) in
   let usage = Printf.sprintf "%s [-addr ADDR] [-port PORT] ... path [path ...]" program in
-  Arg.parse specs (fun s -> paths := s :: !paths) usage
+  Arg.parse specs (fun s -> paths := s :: !paths) usage;
+  Lwt_main.run (main ())
