@@ -23,7 +23,7 @@ depends: [
   "biniou" {= "1.2.1" & dev}
   "bos" {= "0.2.1"}
   "ca-certs" {= "0.2.2"}
-  "cmdliner" {= "1.0.4"}
+  "cmdliner" {= "1.1.0"}
   "cohttp" {= "5.0.0"}
   "cohttp-lwt" {= "5.0.0"}
   "cohttp-lwt-unix" {= "5.0.0"}
@@ -37,8 +37,8 @@ depends: [
   "csexp" {= "1.5.1"}
   "cstruct" {= "6.0.1"}
   "domain-name" {= "0.4.0"}
-  "dune" {= "2.9.1"}
-  "dune-build-info" {= "2.9.1" & dev}
+  "dune" {= "3.0.3"}
+  "dune-build-info" {= "3.0.3" & dev}
   "dune-configurator" {= "2.9.1"}
   "duration" {= "0.2.0"}
   "easy-format" {= "1.3.2" & dev}
@@ -68,7 +68,7 @@ depends: [
   "ocaml-base-compiler" {= "4.13.1"}
   "ocaml-compiler-libs" {= "v0.12.4"}
   "ocaml-config" {= "2"}
-  "ocaml-lsp-server" {= "1.9.1" & dev}
+  "ocaml-lsp-server" {= "1.10.3" & dev}
   "ocaml-options-vanilla" {= "1"}
   "ocaml-syntax-shims" {= "1.0.0"}
   "ocamlbuild" {= "0.14.0"}
