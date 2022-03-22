@@ -20,7 +20,7 @@ let specs =
 
 let paths = ref []
 
-let process name body =
+let process state name body =
   match Hashtbl.find_option Api.registry name with
   | None -> Server.respond_not_found ()
   | Some (module R) ->
@@ -33,21 +33,22 @@ let process name body =
       | exception Yojson_conv.Of_yojson_error (exn, _) ->
         Server.respond_error ~status:`Bad_request ~body:(Printexc.to_string exn) ()
       | body ->
-        let response = R.process body >|= R.yojson_of_response >|= Yojson.Safe.to_string in
+        let response = R.process state body >|= R.yojson_of_response >|= Yojson.Safe.to_string in
         response >>= fun body -> Server.respond_string ~status:`OK ~body ()
 
-let callback _ req body =
+let callback state _ req body =
   let uri = Request.uri req in
   let path = Uri.path uri in
   let parts = String.split_on_char '/' path |> List.filter (not % String.is_empty) in
   let meth = Request.meth req in
   match meth, parts with
-  | `POST, ["api"; name] -> process name body
+  | `POST, ["api"; name] -> process state name body
   | `GET, _ -> Server.respond_not_found () (* TODO: Forward Goblint state *)
   | _ -> Server.respond_not_found ()
 
 let main () =
-  let%lwt _ = Goblint.spawn !goblint (!rest @ !paths) in
+  let%lwt state = Goblint.spawn !goblint (!rest @ !paths) >|= State.make in
+  let callback = callback state in
   let server = Server.make ~callback () in
   Server.create ~mode:(`TCP (`Port !port)) server
 
