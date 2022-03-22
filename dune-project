@@ -25,5 +25,7 @@
   fileutils
   lwt
   lwt_ppx
+  ppx_yojson_conv
+  yojson
   (ocaml-lsp-server :dev)
   (ocp-indent :dev)))
