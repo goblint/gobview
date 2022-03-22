@@ -25,6 +25,7 @@ let process name body =
   | None -> Server.respond_not_found ()
   | Some (module R) ->
     let%lwt body = Body.to_string body in
+    let body = if body = "" then "null" else body in
     match Yojson.Safe.from_string body with
     | exception Yojson.Json_error err -> Server.respond_error ~status:`Bad_request ~body:err ()
     | json ->
