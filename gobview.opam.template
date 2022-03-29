@@ -1,6 +1,4 @@
 pin-depends: [
-  [ "jsoo-react.dev" "git+https://github.com/ml-in-barcelona/jsoo-react.git#de14ae6fbd5b8a51965a128619710d7351e685aa" ]
-  # pin reason for OCaml 4.13
-  [ "reason.dev" "git+https://github.com/reasonml/reason.git#ccc34729994b4a80d4f6274cc0165cd9113444d6" ]
+  [ "jsoo-react.dev" "git+https://github.com/sim642/jsoo-react.git#bc9cc4c00761c6c9d09101cddca437731de96eae" ]
   [ "zarith.1.12-gob0" "git+https://github.com/goblint/Zarith.git#goblint-release-1.12" ]
 ]
