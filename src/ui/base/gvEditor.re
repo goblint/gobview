@@ -1,3 +1,4 @@
+open React.Dom.Dsl.Html;
 open Batteries;
 open Monaco;
 
@@ -33,23 +34,23 @@ let make =
   let options = Option.default(Options.make(), options);
   let on_mount = Option.default(_ => (), on_mount);
 
-  let ref = React.useRef(None);
+  let ref = React.use_ref(None);
 
   let dom_ref =
-    Dom.Ref.callbackDomRef(
+    Dom.Ref.callback_dom_ref(
       Js.Opt.iter(_, dom =>
         if (ref |> React.Ref.current |> Option.is_none) {
           let model = Editor.create_model(default_value, ~language, ());
           Options.set_model(options, model);
           let editor = Editor.create(dom, ~options, ());
-          editor |> Option.some |> React.Ref.setCurrent(ref);
+          editor |> Option.some |> React.Ref.set_current(ref);
           on_mount(editor);
           ();
         }
       ),
     );
 
-  React.useEffect1(
+  React.use_effect1(
     () => {
       switch (value, ref |> React.Ref.current) {
       | (Some(v), Some(r)) => Editor.IStandaloneCodeEditor.set_value(r, v)
@@ -60,5 +61,5 @@ let make =
     [|value|],
   );
 
-  <div ref=dom_ref style={Dom.Style.make(~width, ~height, ())} />;
+  <div ref_=dom_ref style=Dom.Style.make([|Dom.Style.width(width), Dom.Style.height(height)|]) />;
 };

@@ -1,3 +1,4 @@
+open React.Dom.Dsl.Html;
 open Batteries;
 
 let make_breadcrumb_items = (display: State.display, dispatch) => {
@@ -11,7 +12,7 @@ let make_breadcrumb_items = (display: State.display, dispatch) => {
        <>
          <li className="breadcrumb-item">
            <Link on_click callback_data={`DisplayFile(f.file)}>
-             {f.file |> React.string}
+             ...{f.file |> React.string}
            </Link>
          </li>
          <li className="breadcrumb-item active"> {f.name |> React.string} </li>

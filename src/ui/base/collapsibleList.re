@@ -1,3 +1,4 @@
+open React.Dom.Dsl.Html;
 open Batteries;
 
 module ToggledSet = Set.Make(Int);
@@ -10,7 +11,7 @@ let make = (~collapsed=?, ~class_=?, ~style=?, ~override_class=?, ~children) => 
   let class_ = Option.default([], class_);
   let style = Option.default(`Default, style);
 
-  let (toggled, set_toggled) = React.useState(() => ToggledSet.empty);
+  let (toggled, set_toggled) = React.use_state(() => ToggledSet.empty);
 
   let on_toggle = (i, ()) => {
     set_toggled(t =>
@@ -39,10 +40,10 @@ let make = (~collapsed=?, ~class_=?, ~style=?, ~override_class=?, ~children) => 
     };
 
   <ul className>
-    {React.Children.mapWithIndex(children, (elt, i) => {
-       React.cloneElement(
+    {React.Children.mapi(children, (elt, i) => {
+       React.clone_element(
          elt,
-         CollapsibleListItem.makeProps(
+         CollapsibleListItem.make(
            ~key=string_of_int(i),
            ~collapsed={
              ToggledSet.mem(i, toggled) != collapsed;

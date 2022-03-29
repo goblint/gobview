@@ -1,8 +1,10 @@
+open React.Dom.Dsl.Html;
+
 [@react.component]
 let make = (~value, ~on_change) => {
   let value = value |> List.mapi((i, e) => (i, e));
 
-  let (new_elem, set_new_elem) = React.useState(() => "");
+  let (new_elem, set_new_elem) = React.use_state(() => "");
 
   let on_remove = (i, _) => {
     let value' = value |> List.remove_assoc(i) |> List.map(((_, e)) => e);
@@ -20,8 +22,7 @@ let make = (~value, ~on_change) => {
   };
 
   <ul className="list-group">
-    {value
-     |> List.map(((i, e)) => {
+    ...{List.map(((i, e)) => {
           <li
             key={string_of_int(i)}
             className="list-group-item d-flex justify-content-between align-items-center">
@@ -32,9 +33,9 @@ let make = (~value, ~on_change) => {
               onClick={on_remove(i)}
             />
           </li>
-        })
-     |> React.list}
-    <li className="list-group-item p-0">
+        }, value)
+     @
+    [<li className="list-group-item p-0">
       <div className="input-group">
         <Input value=new_elem on_change=on_type on_submit=on_add />
         <button
@@ -42,6 +43,7 @@ let make = (~value, ~on_change) => {
           {"Add" |> React.string}
         </button>
       </div>
-    </li>
+    </li>]
+}
   </ul>;
 };

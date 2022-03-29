@@ -14,6 +14,6 @@ let make = (~class_=?, ~value, ~on_change, ~children) => {
 
   <>
     <Input class_=input_class value on_change />
-    <InvalidFeedback> children </InvalidFeedback>
+    <InvalidFeedback> ...children </InvalidFeedback>
   </>;
 };

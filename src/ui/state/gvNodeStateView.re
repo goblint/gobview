@@ -3,10 +3,10 @@ open Batteries;
 let make_single = (ctx, path) => {
   <CollapsibleList collapsed=false override_class=[]>
     <CollapsibleListItem name="Context" override_class=[]>
-      <GvRepresentationView represent=ctx />
+      ...<GvRepresentationView represent=ctx />
     </CollapsibleListItem>
     <CollapsibleListItem name="Path" override_class=[]>
-      <GvRepresentationView represent=path />
+      ...<GvRepresentationView represent=path />
     </CollapsibleListItem>
   </CollapsibleList>;
 };
@@ -17,29 +17,27 @@ let make = (~goblint, ~inspect) =>
   | None => React.null
   | Some(inspect) =>
     <CollapsibleList collapsed=false style=`Flush>
-      {goblint#local_analyses(inspect)
+      ...{goblint#local_analyses(inspect)
        |> List.group(((id, _), (id', _)) => String.compare(id, id'))
        |> List.map(
             fun
             | [(id, (ctx, path))] =>
               <CollapsibleListItem name={"Node: " ++ id}>
-                {make_single(ctx, path)}
+                ...{make_single(ctx, path)}
               </CollapsibleListItem>
             | [(id, _), ..._] as group =>
               <CollapsibleListItem name={"Node: " ++ id}>
-                <CollapsibleList style=`Flush>
-                  {group
+                ...<CollapsibleList style=`Flush>
+                  ...{group
                    |> List.mapi((i, (_, (ctx, path))) =>
                         <CollapsibleListItem
                           name={"Tuple: " ++ string_of_int(i)}>
-                          {make_single(ctx, path)}
+                          ...{make_single(ctx, path)}
                         </CollapsibleListItem>
-                      )
-                   |> React.list}
+                      )}
                 </CollapsibleList>
               </CollapsibleListItem>
             | _ => failwith("List.group returned an empty group"),
-          )
-       |> React.list}
+          )}
     </CollapsibleList>
   };

@@ -21,7 +21,7 @@ let make = (~kind, ~target, ~find, ~structure, ~expression, ~mode, ~dispatch) =>
     <SearchExpressionBuilder value=expression on_change=on_change_expression />
     <SearchModeBuilder value=mode on_change=on_change_mode />
     <Button type_=`Button on_click disabled={Result.is_error(target)}>
-      {"Execute" |> React.string}
+      ...{"Execute" |> React.string}
     </Button>
   </>;
 };

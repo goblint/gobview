@@ -1,3 +1,4 @@
+open React.Dom.Dsl.Html;
 open Batteries;
 open Syntacticsearch;
 
@@ -10,7 +11,7 @@ let options = [
 [@react.component]
 let make = (~value, ~on_change) => {
   <div className="mb-3">
-    <Label> {"Type" |> React.string} </Label>
+    <Label> ...{"Type" |> React.string} </Label>
     <Select options value on_change />
   </div>;
 };

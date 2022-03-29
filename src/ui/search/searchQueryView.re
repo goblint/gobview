@@ -1,3 +1,4 @@
+open React.Dom.Dsl.Html;
 open Batteries;
 
 [@react.component]
@@ -27,14 +28,14 @@ let make = (~search: Search.t, ~dispatch) => {
         dispatch
       />
       <Link on_click={switch_on_click(Search.Json)}>
-        <div className="mt-4"> {"Switch to JSON editor" |> React.string} </div>
+        ...<div className="mt-4"> {"Switch to JSON editor" |> React.string} </div>
       </Link>
     </>
   | Json =>
     <>
       <SearchQueryEditor json query dispatch />
       <Link on_click={switch_on_click(Search.Graphical)}>
-        <div className="mt-4">
+        ...<div className="mt-4">
           {"Switch to graphical editor" |> React.string}
         </div>
       </Link>

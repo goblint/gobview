@@ -1,3 +1,4 @@
+open React.Dom.Dsl.Html;
 open Batteries;
 
 [@react.component]
@@ -16,12 +17,12 @@ let make = (~url=?, ~class_=?, ~on_click=?, ~callback_data=?, ~children) => {
 
   let onClick =
     switch (on_click, url) {
-    | (None, None) => Some(ev => React.Event.Mouse.preventDefault(ev))
+    | (None, None) => Some(ev => React.Event.Mouse.prevent_default(ev))
     | (None, Some(_)) => None
     | (Some(f), None) =>
       Some(
         ev => {
-          React.Event.Mouse.preventDefault(ev);
+          React.Event.Mouse.prevent_default(ev);
           f(callback_data, ev);
         },
       )

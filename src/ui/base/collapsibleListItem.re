@@ -1,3 +1,4 @@
+open React.Dom.Dsl.Html;
 open Batteries;
 
 [@react.component]
@@ -22,7 +23,7 @@ let make =
         class_=["btn", "btn-sm", "dropdown-toggle"]
         color=`None
         on_click=?on_toggle>
-        React.null
+        ...React.null
       </Button>
     </div>
     {if (collapsed) {React.null} else {children}}

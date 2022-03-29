@@ -1,3 +1,4 @@
+open React.Dom.Dsl.Html;
 open Batteries;
 open State;
 
@@ -10,13 +11,12 @@ let views = [
 
 let make_nav_pills = (current, dispatch) => {
   let on_click = (act, ev) => {
-    React.Event.Mouse.preventDefault(ev);
+    React.Event.Mouse.prevent_default(ev);
     dispatch @@ act;
   };
 
   <ul className="nav nav-pills border-top border-bottom">
-    {views
-     |> List.mapi((i, (v, n)) => {
+    ...{List.mapi((i, (v, n)) => {
           <li key={string_of_int(i)} className="nav-item">
             <a
               href="#"
