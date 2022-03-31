@@ -14,7 +14,7 @@ let spawn path args =
   let _proc = Lwt_process.open_process_none (path, cmd) in
   let sock = Lwt_unix.socket PF_UNIX SOCK_STREAM 0 in
   (* Wait a bit for the server to be initialized. *)
-  let%lwt () = Lwt_unix.sleep 0.1 in
+  let%lwt () = Lwt_unix.sleep 0.5 in
   let%lwt () = Lwt_unix.connect sock (ADDR_UNIX "goblint.sock") in
   let input = Lwt_io.of_fd ~mode:Lwt_io.Input sock in
   let output = Lwt_io.of_fd ~mode:Lwt_io.Output sock in
