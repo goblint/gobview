@@ -43,3 +43,18 @@ let ping goblint =
     let%lwt _ = send goblint "ping" None in
     Lwt.return_unit
   in with_lock goblint ping
+
+let option_whitelist = [] |> Set.of_list
+
+exception Forbidden_option of string
+
+let config goblint name value =
+  if not (Set.mem name option_whitelist) then
+    raise (Forbidden_option name);
+  let config () =
+    let params = `List [`String name; value] in
+    let%lwt resp = send goblint "config" (Some params) in
+    match resp.result with
+    | Ok _ -> Lwt.return_unit
+    | Error err -> raise (Invalid_argument err.message)
+  in with_lock goblint config

@@ -24,4 +24,13 @@ module Ping = struct
   let process state () = Goblint.ping state.goblint
 end
 
-let () = register (module Ping)
+module Config = struct
+  let name = "config"
+  type body = string * Json.t [@@deriving yojson]
+  type response = unit [@@deriving yojson]
+  let process state (conf, json) = Goblint.config state.goblint conf json
+end
+
+let () =
+  register (module Ping);
+  register (module Config)
