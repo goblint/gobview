@@ -22,6 +22,10 @@ let spawn path args =
 
 let with_lock goblint = Lwt_mutex.with_lock goblint.mutex
 
+let assert_ok (resp: Jsonrpc.Response.t) s = match resp.result with
+  | Ok _ -> ()
+  | Error _ -> failwith s
+
 let send goblint name params =
   let id = `Int goblint.counter in
   goblint.counter <- goblint.counter + 1;
@@ -35,12 +39,13 @@ let send goblint name params =
     >|= Yojson.Safe.from_string
     >|= Jsonrpc.Response.t_of_yojson in
   if resp.id <> id then
-    failwith "response ID doesn't match request";
+    failwith "Response ID doesn't match request ID";
   Lwt.return resp
 
 let ping goblint =
   let ping () =
-    let%lwt _ = send goblint "ping" None in
+    let%lwt resp = send goblint "ping" None in
+    assert_ok resp "Ping failed";
     Lwt.return_unit
   in with_lock goblint ping
 
@@ -56,3 +61,15 @@ let config goblint name value =
     | Ok _ -> Lwt.return_unit
     | Error err -> invalid_arg err.message
   in with_lock goblint config
+
+let analyze ?reanalyze goblint =
+  let analyze () =
+    let reset = match reanalyze with
+      | Some `All -> true
+      | _ -> false
+    in
+    let params = `Assoc [("reset", `Bool reset)] in
+    let%lwt resp = send goblint "analyze" (Some params) in
+    assert_ok resp "Analysis failed";
+    Lwt.return_unit
+  in with_lock goblint analyze
