@@ -1,4 +1,5 @@
 open Batteries
+open State
 
 module type Request = sig
   val name: string
@@ -20,7 +21,7 @@ module Ping = struct
   let name = "ping"
   type body = unit [@@deriving yojson]
   type response = unit [@@deriving yojson]
-  let process _ () = Lwt.return_unit
+  let process state () = Goblint.ping state.goblint
 end
 
 let () = register (module Ping)
