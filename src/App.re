@@ -69,15 +69,17 @@ let init_goblint = (solver, spec, registered_name, config, cil) => {
   Maingoblint.handle_extraspecials();
   Maingoblint.handle_flags();
 
-  // Don't remove these either
-  Cil.iterGlobals(cil, glob =>
-    switch (glob) {
-    | GFun(fd, _) =>
-      Cil.prepareCFG(fd);
-      Cil.computeCFGInfo(fd, true);
-    | _ => ()
-    }
-  );
+  // NOTE: Commenting this out since it breaks the node view. Semantic search
+  // may depend on this code but it is currently broken because of unrelated
+  // (and uknown) reasons anyway.
+  // Cil.iterGlobals(cil, glob =>
+  //   switch (glob) {
+  //   | GFun(fd, _) =>
+  //     Cil.prepareCFG(fd);
+  //     Cil.computeCFGInfo(fd, true);
+  //   | _ => ()
+  //   }
+  // );
   Cilfacade.current_file := cil;
 
   let goblint = GvGoblint.unmarshal(spec, cil);
