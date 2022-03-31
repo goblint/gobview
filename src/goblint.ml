@@ -46,11 +46,9 @@ let ping goblint =
 
 let option_whitelist = [] |> Set.of_list
 
-exception Forbidden_option of string
-
 let config goblint name value =
   if not (Set.mem name option_whitelist) then
-    raise (Forbidden_option name);
+    invalid_arg (Printf.sprintf "Option '%s' is not in the whitelist" name);
   let config () =
     let params = `List [`String name; value] in
     let%lwt resp = send goblint "config" (Some params) in
