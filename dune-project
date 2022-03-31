@@ -23,6 +23,7 @@
   cohttp-lwt
   cohttp-lwt-unix
   fileutils
+  jsonrpc
   lwt
   lwt_ppx
   ppx_yojson_conv

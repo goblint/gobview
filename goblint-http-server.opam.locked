@@ -50,6 +50,7 @@ depends: [
   "ipaddr" {= "5.3.0"}
   "ipaddr-sexp" {= "5.3.0"}
   "jsonm" {= "1.0.1"}
+  "jsonrpc" {= "1.10.3"}
   "logs" {= "0.7.0"}
   "lwt" {= "5.5.0"}
   "lwt_ppx" {= "2.0.3"}
