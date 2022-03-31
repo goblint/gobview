@@ -56,5 +56,5 @@ let config goblint name value =
     let%lwt resp = send goblint "config" (Some params) in
     match resp.result with
     | Ok _ -> Lwt.return_unit
-    | Error err -> raise (Invalid_argument err.message)
+    | Error err -> invalid_arg err.message
   in with_lock goblint config

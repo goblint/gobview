@@ -33,8 +33,13 @@ let process state name body =
       | exception Yojson_conv.Of_yojson_error (exn, _) ->
         Server.respond_error ~status:`Bad_request ~body:(Printexc.to_string exn) ()
       | body ->
-        let response = R.process state body >|= R.yojson_of_response >|= Yojson.Safe.to_string in
-        response >>= fun body -> Server.respond_string ~status:`OK ~body ()
+        Lwt.catch
+          (fun () ->
+             R.process state body
+             >|= R.yojson_of_response
+             >|= Yojson.Safe.to_string
+             >>= fun body -> Server.respond_string ~status:`OK ~body ())
+          (fun exn -> Server.respond_error ~status:`Bad_request ~body:(Printexc.to_string exn) ())
 
 let callback state _ req body =
   let uri = Request.uri req in
