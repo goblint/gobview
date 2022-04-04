@@ -41,6 +41,12 @@ let process state name body =
              >>= fun body -> Server.respond_string ~status:`OK ~body ())
           (fun exn -> Server.respond_error ~status:`Bad_request ~body:(Printexc.to_string exn) ())
 
+let forward (state: State.t) path = match state.save_run with
+  | Some save_run ->
+    let fname = Filename.concat save_run path in
+    Server.respond_file ~fname ()
+  | None -> Server.respond_not_found ()
+
 let callback state _ req body =
   let uri = Request.uri req in
   let path = Uri.path uri in
@@ -48,7 +54,7 @@ let callback state _ req body =
   let meth = Request.meth req in
   match meth, parts with
   | `POST, ["api"; name] -> process state name body
-  | `GET, _ -> Server.respond_not_found () (* TODO: Forward Goblint state *)
+  | `GET, _ -> forward state path
   | _ -> Server.respond_not_found ()
 
 let main () =
