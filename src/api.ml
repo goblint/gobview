@@ -31,6 +31,17 @@ module Config = struct
   let process state (conf, json) = Goblint.config state.goblint conf json
 end
 
+module Analyze = struct
+  let name = "analyze"
+  type body = [`All | `Functions of string list] option [@@deriving yojson]
+  type response = unit [@@deriving yojson]
+  let process state reanalyze =
+    let%lwt save_run = Goblint.analyze state.goblint ?reanalyze in
+    state.save_run <- Some save_run;
+    Lwt.return_unit
+end
+
 let () =
   register (module Ping);
-  register (module Config)
+  register (module Config);
+  register (module Analyze)

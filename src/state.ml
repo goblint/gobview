@@ -1,7 +1,7 @@
 type t = {
   goblint: Goblint.t;
   (* Descriptor for the Goblint server instance *)
-  save_run: string option;
+  mutable save_run: string option;
   (* The directory from which we serve the marshalled analysis state *)
 }
 
