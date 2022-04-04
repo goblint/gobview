@@ -49,27 +49,42 @@ let ping goblint =
     Lwt.return_unit
   in with_lock goblint ping
 
+let config_raw goblint name value =
+  let params = `List [`String name; value] in
+  let%lwt resp = send goblint "config" (Some params) in
+  match resp.result with
+  | Ok _ -> Lwt.return_unit
+  | Error err -> invalid_arg err.message
+
 let option_whitelist = [] |> Set.of_list
 
 let config goblint name value =
   if not (Set.mem name option_whitelist) then
     invalid_arg (Printf.sprintf "Option '%s' is not in the whitelist" name);
-  let config () =
-    let params = `List [`String name; value] in
-    let%lwt resp = send goblint "config" (Some params) in
-    match resp.result with
-    | Ok _ -> Lwt.return_unit
-    | Error err -> invalid_arg err.message
-  in with_lock goblint config
+  with_lock goblint (fun () -> config_raw goblint name value)
 
 let analyze ?reanalyze goblint =
+  let set_force_reanalyze () = match reanalyze with
+    | Some `Functions xs ->
+      config_raw goblint "incremental.force-reanalyze.funs" (`List (List.map (fun s -> `String s) xs))
+    | _ -> Lwt.return_unit
+  in
+  let reset_force_reanalyze () = match reanalyze with
+    | Some `Functions _ ->
+      config_raw goblint "incremental.force-reanalyze.funs" (`List [])
+    | _ -> Lwt.return_unit
+  in
   let analyze () =
     let reset = match reanalyze with
       | Some `All -> true
       | _ -> false
     in
     let params = `Assoc [("reset", `Bool reset)] in
-    let%lwt resp = send goblint "analyze" (Some params) in
-    assert_ok resp "Analysis failed";
-    Lwt.return_unit
+    Lwt.finalize
+      (fun () ->
+         let%lwt () = set_force_reanalyze () in
+         let%lwt resp = send goblint "analyze" (Some params) in
+         assert_ok resp "Analysis failed";
+         Lwt.return_unit)
+      reset_force_reanalyze
   in with_lock goblint analyze
