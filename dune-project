@@ -23,8 +23,7 @@
  (name gobview)
  (synopsis "Web frontend for Goblint")
  (depends
-  (dune
-   (< 3))
+  dune
   (ocaml
    (>= 4.10.0))
   jsoo-react
