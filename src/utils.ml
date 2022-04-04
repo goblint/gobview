@@ -6,7 +6,7 @@ let temp_dir prefix suffix =
   let rec loop count =
     if count <= 0 then
       failwith "Cannot create temporary directory";
-    let random = Random.int Int.max_num in
+    let random = Random.int 100_000 in
     let name = Printf.sprintf "%s%d%s" prefix random suffix in
     let path = Filename.concat temp_dir_name name in
     try
