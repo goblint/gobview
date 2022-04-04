@@ -63,6 +63,8 @@ let config goblint name value =
     invalid_arg (Printf.sprintf "Option '%s' is not in the whitelist" name);
   with_lock goblint (fun () -> config_raw goblint name value)
 
+let temp_dir () = Utils.temp_dir "goblint-http-server." ""
+
 let analyze ?reanalyze goblint =
   let set_force_reanalyze () = match reanalyze with
     | Some `Functions xs ->
@@ -82,9 +84,11 @@ let analyze ?reanalyze goblint =
     let params = `Assoc [("reset", `Bool reset)] in
     Lwt.finalize
       (fun () ->
+         let save_run = temp_dir () in
+         let%lwt () = config_raw goblint "save_run" (`String save_run) in
          let%lwt () = set_force_reanalyze () in
          let%lwt resp = send goblint "analyze" (Some params) in
          assert_ok resp "Analysis failed";
-         Lwt.return_unit)
+         Lwt.return save_run)
       reset_force_reanalyze
   in with_lock goblint analyze
