@@ -45,7 +45,7 @@ let init_goblint = (solver, spec, registered_name, config, cil) => {
   Sys_js.create_file(~name="/goblint/config.json", ~content=config);
   Sys_js.create_file(~name="/goblint/spec_marshal", ~content=spec);
 
-  GobConfig.merge_file("/goblint/config.json");
+  GobConfig.merge_file(Fpath.v("/goblint/config.json"));
 
   GobConfig.set_bool("dbg.verbose", true);
   // TODO: Uncomment this to improve performance in future
