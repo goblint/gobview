@@ -10,6 +10,7 @@ let reducer (s : Search.t) cil = function
         | `Structure structure -> { gu with structure }
         | `Expression expression -> { gu with expression }
         | `Mode mode -> { gu with mode }
+        | `Join join -> {gu with join}
       in
       { s with graphical_ui }
   | `ParseSearchQuery text ->

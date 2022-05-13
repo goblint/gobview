@@ -7,8 +7,8 @@ module Query = struct
 
   let create ?(kind = CodeQuery.Var_k) ?(target = CodeQuery.Name_t "") ?(find = CodeQuery.Uses_f)
       ?(structure = CodeQuery.None_s) ?(limitation = CodeQuery.None_c) ?(expression = "")
-      ?(mode = `Must) () : t =
-    { kind; target; find; structure; limitation; expression; mode }
+      ?(mode = `Must) ?(join = false) () : t =
+          { kind; target; find; structure; limitation; expression; mode; join }
 
   let default = create ()
 
@@ -33,10 +33,16 @@ module Query = struct
       Maingoblint.do_analyze (Analyses.empty_increment_data cil) cil;
       let results = !ExpressionEvaluation.gv_results in
       let pred =
-        if q.mode = `Must then snd %> Option.default false else snd %> Option.default true
+        if q.mode = `Must then snd %> fst %> Option.default false else snd %> fst %> Option.default true
       in
-      results |> List.filter pred |> List.map fst)
-    else QueryMapping.map_query (to_syntactic_query q) cil
+      let construct_element e =
+        let (v, (_, c)) = e in
+        (v, c)
+      in
+      results |> List.filter pred |> List.map construct_element)
+    else 
+      let result = QueryMapping.map_query (to_syntactic_query q) cil in
+      List.map (fun e -> (e, None)) result
 
   let string_of_error e = match e with ParseError s -> s
 end
@@ -53,18 +59,20 @@ module GraphicalUi = struct
     structure : CodeQuery.structure;
     expression : string;
     mode : [ `Must | `May ];
+    join: bool;
   }
 
   let create ?(kind = Query.default.kind) ?(target = Ok Query.default.target)
       ?(find = Query.default.find) ?(structure = Query.default.structure)
-      ?(expression = Query.default.expression) ?(mode = Query.default.mode) () =
-    { kind; target; find; structure; expression; mode }
+      ?(expression = Query.default.expression) ?(mode = Query.default.mode)
+      ?(join=Query.default.join) () =
+          { kind; target; find; structure; expression; mode; join }
 
   let default = create ()
 
-  let to_query { kind; target; find; structure; expression; mode } =
+  let to_query { kind; target; find; structure; expression; mode; join } =
     let target = Result.to_option target in
-    Query.create ~kind ?target ~find ~structure ~expression ~mode ()
+    Query.create ~kind ?target ~find ~structure ~expression ~mode ~join ()
 end
 
 type graphical_ui = GraphicalUi.t
@@ -73,8 +81,8 @@ type json_ui = { text : string; query : query option * Query.error option }
 
 let graphical_ui_of_json_ui ju =
   match fst ju.query with
-  | Some { kind; target; find; structure; expression; mode; _ } ->
-      GraphicalUi.create ~kind ~target:(Ok target) ~find ~structure ~expression ~mode ()
+  | Some { kind; target; find; structure; expression; mode; join; _ } ->
+      GraphicalUi.create ~kind ~target:(Ok target) ~find ~structure ~expression ~mode ~join ()
   | _ -> GraphicalUi.default
 
 let json_ui_of_graphical_ui gu =
@@ -84,7 +92,7 @@ let json_ui_of_graphical_ui gu =
 type mode = Graphical | Json
 
 module Matches = struct
-  type t = None | Loading | Done of (string * Cil.location * string * int) list
+  type t = None | Loading | Done of ((string * Cil.location * string * int) * Printable.json option) list
 end
 
 type matches = Matches.t

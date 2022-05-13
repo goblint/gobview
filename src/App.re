@@ -63,7 +63,8 @@ let init_goblint = (solver, spec, registered_name, config, cil) => {
   GobConfig.set_string("save_run", "");
   GobConfig.set_bool("gobview", false);
 
-  GobConfig.set_auto("trans.activated[+]", "'expeval'");
+  //GobConfig.set_auto("trans.activated[+]", "'expeval'");
+  GobConfig.set_string("query", "query");
 
   Cilfacade.init();
   Maingoblint.handle_extraspecials();

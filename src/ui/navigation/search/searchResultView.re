@@ -1,5 +1,17 @@
 open Batteries;
 
+let make_single = (ctx) => {
+    switch (ctx) {
+        | None => <div></div>
+        | Some(c) =>
+  <CollapsibleList collapsed=true override_class=[]>
+    <CollapsibleListItem name="Context" override_class=[]>
+      <GvRepresentationView represent={GvGoblint.representation_of_yojson(c)} />
+    </CollapsibleListItem>
+  </CollapsibleList>;
+    }
+};
+
 let make_table = (matches, dispatch) => {
   let clear = () => dispatch @@ `ClearSearchMatches;
 
@@ -19,11 +31,12 @@ let make_table = (matches, dispatch) => {
           <th scope="col"> {"Name" |> React.string} </th>
           <th scope="col"> {"Signature" |> React.string} </th>
           <th scope="col"> {"Location" |> React.string} </th>
+          <th scope="col"> {"Context" |> React.string} </th>
         </tr>
       </thead>
       <tbody>
         {matches
-         |> List.mapi((i, m) => {
+         |> List.mapi((i, (m,c)) => {
               let (name, loc, signature, _) = m;
               let key = string_of_int(i);
               <tr key>
@@ -38,6 +51,7 @@ let make_table = (matches, dispatch) => {
                      |> React.string}
                   </Link>
                 </td>
+                <td> {make_single(c)} </td>
               </tr>;
             })
          |> React.list}

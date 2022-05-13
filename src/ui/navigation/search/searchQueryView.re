@@ -8,6 +8,7 @@ let make = (~search: Search.t, ~dispatch) => {
   let structure = search.graphical_ui.structure;
   let expression = search.graphical_ui.expression;
   let mode = search.graphical_ui.mode;
+  let join = search.graphical_ui.join;
 
   let json = search.json_ui.text;
   let query = search.json_ui.query;
@@ -24,6 +25,7 @@ let make = (~search: Search.t, ~dispatch) => {
         structure
         expression
         mode
+        join
         dispatch
       />
       <Link on_click={switch_on_click(Search.Json)}>
