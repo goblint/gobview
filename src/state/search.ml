@@ -30,7 +30,7 @@ module Query = struct
   let execute (q : t) cil =
     if is_semantic q then (
       ExpressionEvaluation.gv_query := Some q;
-      Maingoblint.do_analyze (Analyses.empty_increment_data cil) cil;
+      Maingoblint.do_analyze (Analyses.empty_increment_data ()) cil;
       let results = !ExpressionEvaluation.gv_results in
       let pred =
         if q.mode = `Must then snd %> Option.default false else snd %> Option.default true
