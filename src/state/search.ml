@@ -6,7 +6,7 @@ module Query = struct
   type error = ParseError of string
 
   let create ?(kind = CodeQuery.Var_k) ?(target = CodeQuery.Name_t "") ?(find = CodeQuery.Uses_f)
-      ?(structure = CodeQuery.None_s) ?(limitation = CodeQuery.None_c) ?(expression = "")
+      ?(structure = CodeQuery.None_s) ?(limitation = CodeQuery.None_c) ?(expression = "") (* TODO: limitation argument never used *)
       ?(mode = `Must) () : t =
     { kind; target; find; structure; limitation; expression; mode }
 

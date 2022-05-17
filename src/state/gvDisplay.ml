@@ -26,7 +26,7 @@ type func = Func.t
 
 type t = File of file | Func of func
 
-let file ~path ?contents () = File (File.make ~path ?contents ())
+let file ~path ?contents () = File (File.make ~path ?contents ()) (* TODO: contents argument never used *)
 
 (* TODO: unused *)
 let func ~name ~file ?dot () = Func (Func.make ~name ~file ?dot ())
