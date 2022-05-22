@@ -171,7 +171,7 @@ let unmarshal spec cil =
   let (module G : Sig) =
     (module Make (Cfg) (Spec)
               (struct
-                let increment = Analyses.empty_increment_data cil
+                let increment = Analyses.empty_increment_data ()
               end))
   in
   G.wrap_solver_state ()
