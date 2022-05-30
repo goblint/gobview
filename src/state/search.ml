@@ -6,7 +6,7 @@ module Query = struct
   type error = ParseError of string
 
   let create ?(kind = CodeQuery.Var_k) ?(target = CodeQuery.Name_t "") ?(find = CodeQuery.Uses_f)
-      ?(structure = CodeQuery.None_s) ?(limitation = CodeQuery.None_c) ?(expression = "")
+      ?(structure = CodeQuery.None_s) ?(limitation = CodeQuery.None_c) ?(expression = "") (* TODO: limitation argument never used *)
       ?(mode = `Must) () : t =
     { kind; target; find; structure; limitation; expression; mode }
 
@@ -30,7 +30,7 @@ module Query = struct
   let execute (q : t) cil =
     if is_semantic q then (
       ExpressionEvaluation.gv_query := Some q;
-      Maingoblint.do_analyze (Analyses.empty_increment_data cil) cil;
+      Maingoblint.do_analyze (Analyses.empty_increment_data ()) cil;
       let results = !ExpressionEvaluation.gv_results in
       let pred =
         if q.mode = `Must then snd %> Option.default false else snd %> Option.default true

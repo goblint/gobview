@@ -19,6 +19,7 @@ end
 
 type t = Message.t list
 
+(* TODO: unused *)
 let filter_by_line (file, line) =
   let pred msg =
     match Message.location msg with

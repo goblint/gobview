@@ -14,6 +14,7 @@ let get url =
       (fun () -> Lwt.return (Error NoContentAvailable))
       (fun c -> Lwt.return (Ok (Typed_array.String.of_arrayBuffer c)))
 
+(* TODO: unused *)
 let get_opt url = get url >>= fun resp -> Lwt.return (Result.to_option resp)
 
 let on_get f url =
