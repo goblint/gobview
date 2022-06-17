@@ -16,6 +16,8 @@ depends: [
   "ocaml" {>= "4.10.0"}
   "jsoo-react"
   "goblint-cil"
+  "integers_stubs_js"
+  "ctypes_stubs_js"
   "zarith_stubs_js"
   "ocamlformat" {dev}
   "odoc" {with-doc}
