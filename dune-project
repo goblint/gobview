@@ -28,5 +28,7 @@
    (>= 4.10.0))
   jsoo-react
   goblint-cil
+  ctypes_stubs_js
+  integers_stubs_js
   zarith_stubs_js
   (ocamlformat :dev)))
