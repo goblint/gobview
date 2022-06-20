@@ -27,6 +27,7 @@ depends: [
   "conf-perl" {= "2"}
   "cppo" {= "1.6.8"}
   "csexp" {= "1.5.1"}
+  "ctypes_stubs_js" {= "0.1"}
   "dune" {= "3.0.3"}
   "dune-build-info" {= "3.0.3"}
   "dune-configurator" {= "3.0.3"}
@@ -37,6 +38,7 @@ depends: [
   "fpath" {= "0.7.3"}
   "gen_js_api" {= "1.0.9"}
   "goblint-cil" {= "1.8.2"}
+  "integers_stubs_js" {= "1.0"}
   "js_of_ocaml" {= "4.0.0"}
   "js_of_ocaml-compiler" {= "4.0.0"}
   "js_of_ocaml-lwt" {= "4.0.0"}
