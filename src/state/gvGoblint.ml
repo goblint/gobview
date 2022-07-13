@@ -1,6 +1,5 @@
 open Batteries
 open Cil
-open Js_of_ocaml
 
 let rec representation_of_yojson (json : Yojson.Safe.t) : Representation.t =
   match json with
@@ -120,11 +119,7 @@ module Make
     Hashtbl.to_list tbl
 
   let dot_of_fundec (fd : Cil.fundec) =
-    let out = Legacy.open_out "null" in
-    let dot = ref "" in
-    Sys_js.set_channel_flusher out (fun s -> dot := !dot ^ s);
-    CfgTools.fprint_fundec_html_dot (module Cfg : MyCFG.CfgBidir) (fun _ -> true) fd out;
-    !dot
+    CfgTools.sprint_fundec_html_dot (module Cfg : MyCFG.CfgBidir) (fun _ -> true) fd;
 
   class solver_state_impl (lh, gh) =
     object
