@@ -9,7 +9,7 @@ let make = (~dispatch, ~locations) => {
     </h3>
     <ul>
       {locations
-       |> List.mapi((i, loc: Cil.location) => {
+       |> List.mapi((i, loc: GoblintCil.location) => {
             <li
               className="cursor warnitem"
               key={string_of_int(i)}

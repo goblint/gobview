@@ -1,4 +1,5 @@
 open Batteries;
+module Stats = GoblintCil.Stats;
 
 let rec make_task_list = tasks =>
   if (List.is_empty(tasks)) {

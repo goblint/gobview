@@ -1,5 +1,5 @@
 open Batteries
-open Cil
+open GoblintCil
 open Js_of_ocaml
 
 let rec representation_of_yojson (json : Yojson.Safe.t) : Representation.t =
