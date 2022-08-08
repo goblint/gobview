@@ -1,3 +1,4 @@
+open Goblint_lib
 open Batteries
 
 module Query = struct

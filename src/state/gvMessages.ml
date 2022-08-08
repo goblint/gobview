@@ -1,5 +1,5 @@
 open Batteries
-open Messages
+open Goblint_lib.Messages
 
 module Message = struct
   include Message
