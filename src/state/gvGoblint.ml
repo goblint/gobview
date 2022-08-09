@@ -1,5 +1,5 @@
 open Batteries
-open Cil
+open GoblintCil
 
 let rec representation_of_yojson (json : Yojson.Safe.t) : Representation.t =
   match json with

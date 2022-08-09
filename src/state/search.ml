@@ -1,4 +1,6 @@
 open Batteries
+open GoblintCil
+open Syntacticsearch
 
 module Query = struct
   type t = ExpressionEvaluation.query

@@ -10,7 +10,7 @@ let make_markers = (warnings, file: GvDisplay.file) =>
        | _ => None
        }
      )
-  |> List.map(((m, loc: Cil.location)) =>
+  |> List.map(((m, loc: GoblintCil.location)) =>
        Editor.IMarkerData.make(
          ~message=GvMessages.Message.to_string(m),
          ~severity=MarkerSeverity.Warning,

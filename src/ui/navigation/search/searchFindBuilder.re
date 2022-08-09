@@ -1,4 +1,5 @@
 open Batteries;
+open Syntacticsearch;
 
 let options = [
   (CodeQuery.Uses_f, "Uses"),
