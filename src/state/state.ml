@@ -1,4 +1,5 @@
 open Batteries
+open GoblintCil
 
 module SelectedSidebar = struct
   type t = Nodes | Globals
