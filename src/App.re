@@ -1,6 +1,7 @@
 open Batteries;
 open Js_of_ocaml;
 open Lwt.Infix;
+module Cabs2cil = GoblintCil.Cabs2cil;
 
 exception InitFailed(string);
 

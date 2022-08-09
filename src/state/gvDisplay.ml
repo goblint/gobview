@@ -1,4 +1,5 @@
 open Batteries
+open GoblintCil
 
 module File = struct
   type t = { path : string; contents : string option }

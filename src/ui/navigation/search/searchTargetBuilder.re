@@ -1,4 +1,5 @@
 open Batteries;
+open Syntacticsearch;
 
 module GUi = Search.GraphicalUi;
 

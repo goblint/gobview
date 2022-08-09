@@ -1,4 +1,5 @@
 open Batteries;
+open GoblintCil;
 
 let make_func_list = (file, funcs, dispatch) => {
   let on_click = (data, _) => Option.may(dispatch, data);
