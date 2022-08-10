@@ -1,3 +1,4 @@
+open Goblint_lib;
 open Batteries;
 open Js_of_ocaml;
 open Lwt.Infix;
