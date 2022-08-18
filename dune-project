@@ -27,7 +27,7 @@
   (ocaml
    (>= 4.10.0))
   jsoo-react
-  goblint-cil
+  (goblint-cil (>= 2.0.0))
   ctypes_stubs_js
   integers_stubs_js
   zarith_stubs_js
