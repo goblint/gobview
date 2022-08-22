@@ -1,12 +1,12 @@
 (rule
  (alias gobview)
- (targets dist)
- (deps src/App.bc.js node_modules webpack.config.js)
+ (targets (dir dist))
+ (deps src/App.bc.js node_modules webpack.config.js (sandbox always))
  (action
   (run npx webpack build)))
 
 (rule
- (targets node_modules)
- (deps package-lock.json)
+ (targets (dir node_modules))
+ (deps package.json package-lock.json (sandbox always))
  (action
   (run npm ci)))
