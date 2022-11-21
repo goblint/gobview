@@ -70,13 +70,13 @@ module Make
       val increment : Analyses.increment_data
     end) : Sig = struct
   module A = Control.AnalyzeCFG (Cfg) (Spec) (Inc)
-  module EQSys = A.EQSys
+  module EQSys = A.SpecSys.EQSys
   module LVar = EQSys.LVar
   module LSpec = Spec.D
-  module LHT = A.LHT
+  module LHT = A.SpecSys.LHT
   module GVar = EQSys.GVar
   module GSpec = Spec.G
-  module GHT = A.GHT
+  module GHT = A.SpecSys.GHT
 
   type t = Spec.D.t LHT.t * Spec.G.t GHT.t
 
