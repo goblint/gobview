@@ -34,7 +34,7 @@ depends: [
   "fmt" {= "0.9.0" & with-doc}
   "fpath" {= "0.7.3"}
   "gen_js_api" {= "1.0.9"}
-  "goblint-cil" {= "2.0.0"}
+  "goblint-cil" {= "2.0.1"}
   "integers_stubs_js" {= "1.0"}
   "js_of_ocaml" {= "4.0.0"}
   "js_of_ocaml-compiler" {= "4.0.0"}
