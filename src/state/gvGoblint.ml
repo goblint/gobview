@@ -67,7 +67,7 @@ end
 module Make
     (Cfg : MyCFG.CfgBidir)
     (Spec : Analyses.Spec) (Inc : sig
-      val increment : Analyses.increment_data
+      val increment : Analyses.increment_data option
     end) : Sig = struct
   module A = Control.AnalyzeCFG (Cfg) (Spec) (Inc)
   module EQSys = A.EQSys
@@ -154,7 +154,7 @@ module Make
     let module S2' =
       Constraints.GlobSolverFromEqSolver (Generic.LoadRunIncrSolver (Arg)) (EQSys) (LHT) (GHT)
     in
-    let r2, _ = S2'.solve [] [] [] in
+    let r2, _ = S2'.solve [] [] [] None in
     new solver_state_impl r2
 end
 
@@ -167,7 +167,7 @@ let unmarshal spec cil =
   let (module G : Sig) =
     (module Make (Cfg) (Spec)
               (struct
-                let increment = Analyses.empty_increment_data ()
+                let increment = None
               end))
   in
   G.wrap_solver_state ()
