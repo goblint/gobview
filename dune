@@ -10,8 +10,3 @@
  (deps package-lock.json)
  (action
   (run npm ci)))
-
-(env
- (_
-  (env-vars
-   (NODE_OPTIONS --openssl-legacy-provider)))) ; TODO: update node dependencies
