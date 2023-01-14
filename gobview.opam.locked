@@ -49,10 +49,10 @@ depends: [
   "menhirSdk" {= "20220210"}
   "merlin-extend" {= "0.6.1"}
   "ocaml" {= "4.14.0"}
-  "ocaml-base-compiler" {= "4.14.0"}
+  "ocaml-variants" {= "4.14.0+options"}
   "ocaml-compiler-libs" {= "v0.12.4"}
   "ocaml-config" {= "2"}
-  "ocaml-options-vanilla" {= "1"}
+  "ocaml-option-flambda" {= "1"}
   "ocaml-version" {= "3.5.0"}
   "ocamlbuild" {= "0.14.2"}
   "ocamlfind" {= "1.9.5"}
