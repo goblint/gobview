@@ -7,7 +7,7 @@ let views = [
   (SelectedSidebar.Search, "Search"),
 ];
 
-let make_nav = (active, dispatch) => {
+let make_tabs = (active, dispatch) => {
   let on_click = (act, _) => Option.may(dispatch, act);
 
   <ul className="nav nav-tabs">
@@ -27,8 +27,8 @@ let make_nav = (active, dispatch) => {
 
 [@react.component]
 let make = (~active, ~dispatch, ~search, ~cil) => {
-  <>
-    {make_nav(active, dispatch)}
+  <div>
+    {make_tabs(active, dispatch)}
     <div className="tab-content">
       <div className="tab-pane active">
         {switch (active) {
@@ -38,5 +38,5 @@ let make = (~active, ~dispatch, ~search, ~cil) => {
          }}
       </div>
     </div>
-  </>;
+  </div>;
 };
