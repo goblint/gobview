@@ -23,6 +23,7 @@ type t = {
   warnings : GvMessages.t;
   meta : Yojson.Safe.t;
   stats : Stats.t * Gc.stat;
+  file_loc : (string, string) Hashtbl.t;
   display : display option;
   inspect : inspect option;
   selected_sidebar : selected_sidebar;
@@ -37,6 +38,7 @@ let default =
     warnings = [];
     meta = `Null;
     stats = (Stats.top, Gc.quick_stat ());
+    file_loc = Hashtbl.create 113;
     display = None;
     inspect = None;
     selected_sidebar = SelectedSidebar.Nodes;
@@ -44,5 +46,5 @@ let default =
     search = Search.default;
   }
 
-let make ~cil ~goblint ~warnings ~meta ~stats () =
-  { default with cil; goblint; warnings; meta; stats }
+let make ~cil ~goblint ~warnings ~meta ~stats ~file_loc () =
+  { default with cil; goblint; warnings; meta; stats; file_loc }

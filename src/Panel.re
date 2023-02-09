@@ -52,8 +52,7 @@ let make = (~state, ~dispatch) => {
     <div className="tab-content">
       <div className="tab-pane active">
         {switch (current) {
-         | Some(Warnings) =>
-           <WarningView warnings={state.warnings} dispatch />
+         | Some(Warnings) => <WarningView warnings={state.warnings} dispatch />
          | Some(DeadCode) => <DeadCodeView locations dispatch />
          | Some(Parameters) => <ParameterView parameters />
          | Some(Statistics) => <GvStatisticsView stats={state.stats} />
