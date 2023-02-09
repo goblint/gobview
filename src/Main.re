@@ -50,17 +50,25 @@ let make = (~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc) => {
 
   <div className="container-fluid">
     <div className="row">
-      <div className="col-3 border-end overflow-auto vh-100">
-        <Sidebar
-          active={state.selected_sidebar}
+      <div className="col-2 border-end vh-100">
+        <SidebarLeft
+          active={state.selected_sidebar_left}
           goblint
           inspect={state.inspect}
           dispatch
         />
       </div>
-      <div className="col-9 d-flex flex-column vh-100">
+      <div className="col-8 d-flex flex-column vh-100 p-0">
         <Content state dispatch />
         <Panel state dispatch />
+      </div>
+      <div className="col-2 border-end overflow-auto vh-100">
+          <SidebarRight
+            active={state.selected_sidebar_right}
+            goblint
+            inspect={state.inspect}
+            dispatch
+          />
       </div>
     </div>
   </div>;

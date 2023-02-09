@@ -27,7 +27,7 @@ let make_breadcrumb_items = (display: State.display, dispatch) => {
 
 [@react.component]
 let make = (~display, ~dispatch) => {
-  <nav className="mt-2">
+  <nav >
     <ol className="breadcrumb">
       {switch (display) {
        | Some(d) => make_breadcrumb_items(d, dispatch)

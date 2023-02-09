@@ -26,7 +26,8 @@ type t = {
   file_loc : (string, string) Hashtbl.t;
   display : display option;
   inspect : inspect option;
-  selected_sidebar : selected_sidebar;
+  selected_sidebar_left : selected_sidebar;
+  selected_sidebar_right : selected_sidebar;
   selected_panel : selected_panel option;
   search : Search.t;
 }
@@ -49,7 +50,8 @@ let default =
     file_loc = Hashtbl.create 113;
     display = None;
     inspect = None;
-    selected_sidebar = SelectedSidebar.Nodes;
+    selected_sidebar_left = SelectedSidebar.Nodes;
+    selected_sidebar_right = SelectedSidebar.Nodes;
     selected_panel = None;
     search = Search.default;
   }

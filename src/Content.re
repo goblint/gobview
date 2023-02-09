@@ -8,7 +8,7 @@ let make = (~state: State.t, ~dispatch) => {
     | _ => None
     };
 
-  <div className="h-75 overflow-auto">
+  <div className="d-flex flex-column h-75 overflow-auto p-2">
     <GvBreadcrumb display={state.display} dispatch />
     {switch (state.display) {
      | None => <Navigation state dispatch />

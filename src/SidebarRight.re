@@ -16,7 +16,7 @@ let make_nav = (active, dispatch) => {
           let class_ =
             [["nav-link"], v == active ? ["active"] : []] |> List.concat;
           <li key={string_of_int(i)} className="nav-item">
-            <Link class_ on_click callback_data={`SwitchSidebar(v)}>
+            <Link class_ on_click callback_data={`SwitchSidebarRight(v)}>
               {n |> React.string}
             </Link>
           </li>;
