@@ -3,8 +3,8 @@ open Batteries;
 module SelectedSidebar = State.SelectedSidebar;
 
 let views = [
-  (SelectedSidebar.Nodes, "Nodes"),
-  (SelectedSidebar.Globals, "Globals"),
+  (SelectedSidebar.Files, "Files"),
+  (SelectedSidebar.Search, "Search"),
 ];
 
 let make_nav = (active, dispatch) => {
@@ -26,14 +26,15 @@ let make_nav = (active, dispatch) => {
 };
 
 [@react.component]
-let make = (~active, ~goblint, ~inspect, ~dispatch) => {
+let make = (~active, ~dispatch, ~search, ~cil) => {
   <>
     {make_nav(active, dispatch)}
     <div className="tab-content">
       <div className="tab-pane active">
         {switch (active) {
-         | SelectedSidebar.Nodes => <GvNodeStateView goblint inspect />
-         | Globals => <GvGlobalStateView analyses=goblint#global_analyses />
+         | Files => <GvFileList cil dispatch />
+         | Search => <SearchView search dispatch />
+         | _ => <div/>
          }}
       </div>
     </div>

@@ -27,12 +27,6 @@ let make_nav_pills = (current, dispatch) => {
           </li>
         })
      |> React.list}
-    <li className="nav-item">
-      <a
-        href="#" className="nav-link" onClick={on_click(`SwitchPanel(None))}>
-        {"✖" |> React.string}
-      </a>
-    </li>
   </ul>;
 };
 
@@ -47,9 +41,9 @@ let make = (~state, ~dispatch) => {
   let locations = (state.goblint)#dead_locations;
 
   let current = state.selected_panel;
-  <div className="border-right border-left">
+  <div className="d-flex flex-column border-right border-left h-25">
     {make_nav_pills(current, dispatch)}
-    <div className="tab-content">
+    <div className="tab-content flex-fill overflow-auto">
       <div className="tab-pane active">
         {switch (current) {
          | Some(Warnings) => <WarningView warnings={state.warnings} dispatch />

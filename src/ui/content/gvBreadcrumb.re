@@ -4,11 +4,6 @@ let make_breadcrumb_items = (display: State.display, dispatch) => {
   let on_click = (act, _) => Option.may(dispatch, act);
 
   <>
-    <li className="breadcrumb-item">
-      <Link on_click callback_data=`DisplayNothing>
-        {"Analysis" |> React.string}
-      </Link>
-    </li>
     {switch (display) {
      | File(f) =>
        <li className="breadcrumb-item active"> {f.path |> React.string} </li>
@@ -31,10 +26,7 @@ let make = (~display, ~dispatch) => {
     <ol className="breadcrumb">
       {switch (display) {
        | Some(d) => make_breadcrumb_items(d, dispatch)
-       | _ =>
-         <li className="breadcrumb-item active">
-           {"Analysis" |> React.string}
-         </li>
+       | _ => <div/>
        }}
     </ol>
   </nav>;

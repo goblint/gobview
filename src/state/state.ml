@@ -2,7 +2,7 @@ open Batteries
 open GoblintCil
 
 module SelectedSidebar = struct
-  type t = Nodes | Globals
+  type t = Nodes | Globals | Files | Search
 end
 
 type selected_sidebar = SelectedSidebar.t
@@ -50,7 +50,7 @@ let default =
     file_loc = Hashtbl.create 113;
     display = None;
     inspect = None;
-    selected_sidebar_left = SelectedSidebar.Nodes;
+    selected_sidebar_left = SelectedSidebar.Files;
     selected_sidebar_right = SelectedSidebar.Nodes;
     selected_panel = None;
     search = Search.default;

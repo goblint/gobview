@@ -32,8 +32,9 @@ let make = (~active, ~goblint, ~inspect, ~dispatch) => {
     <div className="tab-content">
       <div className="tab-pane active">
         {switch (active) {
-         | SelectedSidebar.Nodes => <GvNodeStateView goblint inspect />
+         | Nodes => <GvNodeStateView goblint inspect />
          | Globals => <GvGlobalStateView analyses=goblint#global_analyses />
+         | _ => <div/>
          }}
       </div>
     </div>
