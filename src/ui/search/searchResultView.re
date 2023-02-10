@@ -12,37 +12,45 @@ let make_table = (matches, dispatch) => {
     <Button class_=["btn", "my-2"] color=`Danger outline=true on_click=clear>
       {"Clear results" |> React.string}
     </Button>
-    <table className="table table-hover">
-      <thead>
-        <tr>
-          <th scope="col"> {"#" |> React.string} </th>
-          <th scope="col"> {"Name" |> React.string} </th>
-          <th scope="col"> {"Signature" |> React.string} </th>
-          <th scope="col"> {"Location" |> React.string} </th>
-        </tr>
-      </thead>
-      <tbody>
-        {matches
-         |> List.mapi((i, m) => {
-              let (name, loc, signature, _) = m;
-              let key = string_of_int(i);
-              <tr key>
-                <th scope="row"> {key |> React.string} </th>
-                <td> {name |> React.string} </td>
-                <td> {signature |> React.string} </td>
-                <td>
-                  <Link on_click={on_click(loc)}>
-                    {loc.file
-                     ++ ":"
-                     ++ string_of_int(loc.line)
-                     |> React.string}
-                  </Link>
-                </td>
-              </tr>;
-            })
-         |> React.list}
-      </tbody>
-    </table>
+    <CollapsibleList collapsed=false>
+      {matches
+        |> List.mapi((i,m) => {
+          let (name, loc, signature, _) = m;
+          let key = string_of_int(i);
+            <CollapsibleListItem key=key name=key>
+              <table className="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row"> {"Name" |> React.string} </th>
+                    <td> {name |> React.string} </td>
+                  </tr>
+                  <tr>
+                    <th scope="row"> {"Signature" |> React.string} </th>
+                    <td> {signature |> React.string} </td>
+                  </tr>
+                  <tr>
+                    <th scope="row"> {"Location" |> React.string} </th>
+                    <td>
+                      <Link on_click={on_click(loc)}>
+                        {loc.file
+                        ++ ":"
+                        ++ string_of_int(loc.line)
+                        |> React.string}
+                      </Link>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </CollapsibleListItem>
+        })
+        |> React.list
+      }
+    </CollapsibleList>
   </>;
 };
 
@@ -63,7 +71,6 @@ let make = (~matches: Search.matches, ~dispatch) => {
   };
 
   <>
-    <h5 className="card-title"> {"Results" |> React.string} </h5>
     {switch (matches) {
      | Loading =>
        <div className="d-flex justify-content-center">

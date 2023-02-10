@@ -53,7 +53,7 @@ let make = (~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc) => {
     <div className="navbar-brand mx-2" >{React.string("Gobview")}</div>
   </header>
   <div className="main row vh-100">
-    <div className="col-2 border-end overflow-auto bg-light py-2 h-100">
+    <div className="col-3 border-end overflow-auto bg-light py-2 h-100">
       <SidebarLeft
         active={state.selected_sidebar_left}
         dispatch
@@ -61,7 +61,7 @@ let make = (~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc) => {
         cil={state.cil}
       />
     </div>
-    <div className="col-7 d-flex flex-column">
+    <div className="col-6 d-flex flex-column">
       {switch (state.display) {
       | None => <div className="d-flex flex-column h-75 overflow-auto p-4" />
       | Some(f) => <Content state display=f dispatch />
