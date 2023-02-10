@@ -67,18 +67,16 @@ ul,
   transform: rotate(90deg);
 }
 
-
-
 .remove-margin {
   margin: 0px;
 }
 
-.filebox {
-  background-color: #f5f2f0;
+.tab-content {
+  padding-top: ($spacer * .5) !important;
 }
 
-.filebox h3 {
-  margin-top: 0px;
+.filebox {
+  background-color: #f5f2f0;
 }
 
 .filebox ul {
