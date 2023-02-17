@@ -12,23 +12,28 @@ function unix_setitimer(which, newval) {
 }
 
 //Provides: unix_times
+//only used for timing statistics in Goblint
 function unix_times(x) {
-  return x;
+  return 0;
 }
 
 //Provides: max_float
+//from Goblint specific stubs for C float operations
 function max_float(x) {
-  return x;
+  return Number.MAX_VALUE;
 }
 
 //Provides: smallest_float
+//from Goblint specific stubs for C float operations
+//returns the smallest positive and normalized float
 function smallest_float(x) {
-  return x;
+  return 2.2250738585072014e-308;
 }
 
 //Provides: ml_z_of_int
+//Requires: ml_z_of_int64, ml_z_to_int64
 function ml_z_of_int(x) {
-    return x | 0;
+    return ml_z_of_int64(ml_z_to_int64(x));
 }
 
 //Provides: caml_thread_initialize const
