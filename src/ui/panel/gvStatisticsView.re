@@ -1,5 +1,7 @@
 open Batteries;
 
+module Timing = Goblint_timing
+
 let rec make_task_list = tasks =>
   if (List.is_empty(tasks)) {
     React.null;

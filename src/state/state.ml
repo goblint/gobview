@@ -22,7 +22,7 @@ type t = {
   goblint : GvGoblint.solver_state;
   warnings : GvMessages.t;
   meta : Yojson.Safe.t;
-  stats : Timing.tree * Gc.stat;
+  stats : Goblint_timing.tree * Gc.stat;
   file_loc : (string, string) Hashtbl.t;
   display : display option;
   inspect : inspect option;
@@ -31,13 +31,21 @@ type t = {
   search : Search.t;
 }
 
+let timing_default : Goblint_timing.tree = {
+  name = "";
+  cputime = 0.0;
+  walltime = 0.0;
+  allocated = 0.0;
+  count = 0;
+  children = [];
+}
 let default =
   {
     cil = Cil.dummyFile;
     goblint = GvGoblint.empty;
     warnings = [];
     meta = `Null;
-    stats = (Timing.create_tree "default", Gc.quick_stat ());
+    stats = (timing_default, Gc.quick_stat ());
     file_loc = Hashtbl.create 113;
     display = None;
     inspect = None;
