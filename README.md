@@ -1,7 +1,7 @@
 # Web Frontend for Goblint
 
 The Web Frontend allows inspecting the analyzed files and results of an analysis run with Goblint.
-It is based on [jsoo-react](https://github.com/jchavarri/jsoo-react) and was originally developed by Alex Micheli for his Bachelor's thesis at TUM i2.
+It is based on [jsoo-react](https://github.com/jchavarri/jsoo-react) and was originally developed by Alex Micheli for his Bachelor's thesis at TUM i2, significantly extended by Kerem Cakirer, and is now maintained by the Goblint team.
 
 ## Installing
 
