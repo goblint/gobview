@@ -5,7 +5,7 @@ let make = (~dispatch, ~locations) => {
   <div className="filebox">
     {
       if (List.length(locations) == 0)
-        {<h2>{"No dead code found!" |> React.string}</h2>}
+        {<p>{"No dead code found!" |> React.string}</p>}
       else {
         <ul>
           {locations
