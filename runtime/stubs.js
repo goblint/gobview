@@ -30,10 +30,11 @@ function smallest_float(x) {
   return 2.2250738585072014e-308;
 }
 
-//Provides: ml_z_of_int
-//Requires: ml_z_of_int64, ml_z_to_int64
-function ml_z_of_int(x) {
-    return ml_z_of_int64(ml_z_to_int64(x));
+//external of_int: int -> t
+//Provides: ml_z_of_int const
+//Requires: bigInt
+function ml_z_of_int(i) {
+  return i | 0;
 }
 
 //Provides: caml_thread_initialize const
