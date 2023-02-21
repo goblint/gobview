@@ -11,14 +11,14 @@ let make = (~warnings, ~dispatch) => {
     } else {
       <ul>
         {warnings
-        |> List.map(w => (Message.to_string(w), Message.location(w)))
-        |> List.mapi((i, (text, loc)) => {
+        |> List.map(w => (Message.to_string(w), Message.location(w), Message.severity_to_bs_alert(w)))
+        |> List.mapi((i, (text, loc, alert)) => {
               let onClick =
                 loc
                 |> Option.map((loc, _) =>
                     dispatch @@ `InspectLine(GvInspect.Line.of_location(loc))
                   );
-              <li className="cursor warnitem" key={string_of_int(i)} ?onClick>
+              <li className={"link-like alert " ++ alert} key={string_of_int(i)} ?onClick>
                 {text |> React.string}
               </li>;
             })

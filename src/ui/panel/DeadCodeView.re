@@ -11,7 +11,7 @@ let make = (~dispatch, ~locations) => {
           {locations
           |> List.mapi((i, loc: GoblintCil.location) => {
                 <li
-                  className="cursor warnitem"
+                  className="link-like alert alert-secondary"
                   key={string_of_int(i)}
                   onClick={_ => {
                     dispatch @@ `DisplayFile(loc.file);
