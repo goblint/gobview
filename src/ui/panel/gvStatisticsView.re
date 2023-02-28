@@ -1,5 +1,6 @@
 open Batteries;
-module Stats = GoblintCil.Stats;
+
+module Timing = Goblint_timing
 
 let rec make_task_list = tasks =>
   if (List.is_empty(tasks)) {
@@ -7,15 +8,15 @@ let rec make_task_list = tasks =>
   } else {
     <ul>
       {tasks
-       |> List.mapi((i, task: Stats.t) => {
+       |> List.mapi((i, task: Timing.tree) => {
             let key = string_of_int(i);
             <li key>
               {task.name
                ++ ": "
-               ++ string_of_float(task.time)
+               ++ string_of_float(task.cputime)
                ++ " s"
                |> React.string}
-              {task.sub |> List.rev |> make_task_list}
+              {task.children |> List.rev |> make_task_list}
             </li>;
           })
        |> React.list}
@@ -26,16 +27,23 @@ let as_megabytes = words => Printf.sprintf("%.2f MB", words /. 131072.0);
 
 [@react.component]
 let make = (~stats) => {
-  let (time: Stats.t, gc: Gc.stat) = stats;
+  let (time: Timing.tree, gc: Gc.stat) = stats;
   let total =
-    time.sub |> List.fold_left((acc, sub: Stats.t) => acc +. sub.time, 0.0);
+    time.children |> List.fold_left((acc, sub: Timing.tree) => acc +. sub.cputime, 0.0);
 
   <div>
-    <span>
+    {if(total == 0.) {
+      <div className="bg-warning">
+        {"For timing statistics the analysis has to be run with -v (alternatively, either option dbg.verbose or dbg.timing.enabled can be activated)" |> React.string}
+      </div>;
+    } else {
+      React.null
+    }}
+    <div>
       {"Total: " ++ string_of_float(total) ++ " s" |> React.string}
-    </span>
-    {time.sub |> List.rev |> make_task_list}
-    <span>
+    </div>
+    {time.children |> List.rev |> make_task_list}
+    <div>
       {Printf.sprintf(
          "Memory: total=%s, max=%s, minor=%s, major=%s, promoted=%s, minor collections=%d, major collections=%d, compactions=%d",
          as_megabytes(gc.minor_words +. gc.major_words -. gc.promoted_words),
@@ -48,6 +56,6 @@ let make = (~stats) => {
          gc.compactions,
        )
        |> React.string}
-    </span>
+    </div>
   </div>;
 };

@@ -89,7 +89,7 @@ let init_goblint = (solver, spec, registered_name, config, cil) => {
   (goblint, cil);
 };
 
-let init = (solver, spec, config, meta, cil, analyses, warnings, stats) => {
+let init = (solver, spec, config, meta, cil, analyses, warnings, stats, file_loc) => {
   let cil =
     switch (cil) {
     | Ok(s) =>
@@ -128,9 +128,15 @@ let init = (solver, spec, config, meta, cil, analyses, warnings, stats) => {
     | _ => raise(InitFailed("Failed to load runtime stats"))
     };
 
+  let file_loc =
+    switch (file_loc) {
+    | Ok(s) => Marshal.from_string(s, 0)
+    | _ => raise(InitFailed("Failed to load file path table"))
+    };
+
   print_endline("Rendering app...");
   React.Dom.renderToElementWithId(
-    <Main cil goblint warnings meta stats />,
+    <Main cil goblint warnings meta stats file_loc/>,
     "app",
   );
 };
@@ -153,6 +159,7 @@ let handle_error = exc => {
   "./analyses.marshalled",
   "./warnings.marshalled",
   "./stats.marshalled",
+  "./file_loc.marshalled",
 ]
 |> List.map(HttpClient.get)
 |> Lwt.all
@@ -160,8 +167,8 @@ let handle_error = exc => {
   l =>
     Lwt.return(
       switch (l) {
-      | [solver, spec, config, meta, cil, analyses, warnings, stats] =>
-        try(init(solver, spec, config, meta, cil, analyses, warnings, stats)) {
+      | [solver, spec, config, meta, cil, analyses, warnings, stats, file_loc] =>
+        try(init(solver, spec, config, meta, cil, analyses, warnings, stats, file_loc)) {
         | exc => handle_error(exc)
         }
       | _ => ()

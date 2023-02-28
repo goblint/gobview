@@ -10,6 +10,7 @@
   goblint-cil
   goblint-cil.syntacticsearch
   goblint.lib
+  goblint.timing
   goblint.sites.js
   goblint.build-info.js
   integers_stubs_js

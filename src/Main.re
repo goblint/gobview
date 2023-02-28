@@ -1,11 +1,11 @@
 open Batteries;
 
 [@react.component]
-let make = (~cil, ~goblint, ~warnings, ~meta, ~stats) => {
+let make = (~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc) => {
   let (state, dispatch) =
     React.useReducer(
       Reducer.reducer,
-      State.make(~cil, ~goblint, ~warnings, ~meta, ~stats, ()),
+      State.make(~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc, ()),
     );
 
   let fetch_file =
@@ -38,7 +38,7 @@ let make = (~cil, ~goblint, ~warnings, ~meta, ~stats) => {
   React.useEffect1(
     () => {
       switch (state.display) {
-      | Some(File(f)) when Option.is_none(f.contents) => fetch_file(f.path)
+      | Some(File(f)) when Option.is_none(f.contents) => fetch_file(Hashtbl.find(file_loc, f.path))
       | Some(Func(f)) when Option.is_none(f.dot) =>
         fetch_dot(f.name, f.file)
       | _ => ()

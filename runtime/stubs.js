@@ -11,11 +11,37 @@ function unix_setitimer(which, newval) {
     return newval;
 }
 
-//Provides: ml_z_mul_overflows
-function ml_z_mul_overflows(x) {
-    // This is necessary until https://github.com/janestreet/zarith_stubs_js/pull/8 is fixed.
-    return true;
+//Provides: unix_times
+//only used for timing statistics in Goblint
+function unix_times(x) {
+  return 0;
 }
+
+//Provides: max_float
+//from Goblint specific stubs for C float operations
+function max_float(x) {
+  return Number.MAX_VALUE;
+}
+
+//Provides: smallest_float
+//from Goblint specific stubs for C float operations
+//returns the smallest positive and normalized float
+function smallest_float(x) {
+  return 2.2250738585072014e-308;
+}
+
+//external of_int: int -> t
+//Provides: ml_z_of_int const
+//Requires: bigInt
+function ml_z_of_int(i) {
+  return i | 0;
+}
+
+//Provides: caml_thread_initialize const
+function caml_thread_initialize() {}
+
+//Provides: caml_mutex_new const
+function caml_mutex_new() {}
 
 //Provides: camlidl_apron_init
 function camlidl_apron_init() { return 0; }
@@ -28,6 +54,9 @@ function camlidl_oct_oct_manager_alloc() { return 0; }
 
 //Provides: camlidl_polka_pk_manager_alloc_loose
 function camlidl_polka_pk_manager_alloc_loose() { return 0; }
+
+//Provides: camlidl_polka_pk_manager_alloc_equalities
+function camlidl_polka_pk_manager_alloc_equalities() { return 0; }
 
 //Provides: camlidl_box_box_manager_alloc
 function camlidl_box_box_manager_alloc() { return 0; }
@@ -43,3 +72,9 @@ function camlidl_abstract1_ap_abstract1_top() { return 0; }
 
 //Provides: camlidl_var_ap_var_hash
 function camlidl_var_ap_var_hash() { return 0; }
+
+//Provides: camlidl_mpq_mpq_init
+function camlidl_mpq_mpq_init() { return 0; }
+
+//Provides: camlidl_mpq_mpq_set_si
+function camlidl_mpq_mpq_set_si() { return 0; }
