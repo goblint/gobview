@@ -49,19 +49,33 @@ let make = (~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc) => {
   );
 
   <div className="container-fluid">
-    <div className="row">
-      <div className="col-3 border-end overflow-auto vh-100">
-        <Sidebar
-          active={state.selected_sidebar}
+  <header className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap shadow p-1">
+    <div className="navbar-brand mx-2" >{React.string("Gobview")}</div>
+  </header>
+  <div className="main row vh-100">
+    <div className="col-3 border-end overflow-auto bg-light py-2 h-100">
+      <SidebarLeft
+        active={state.selected_sidebar_left}
+        dispatch
+        search={state.search}
+        cil={state.cil}
+      />
+    </div>
+    <div className="col-6 d-flex flex-column h-100">
+      {switch (state.display) {
+      | None => <div className="d-flex flex-column h-75 overflow-auto p-4" />
+      | Some(f) => <Content state display=f dispatch />
+      }}
+      <Panel state dispatch />
+    </div>
+    <div className="col-3 border-start overflow-auto py-2 h-100">
+        <SidebarRight
+          active={state.selected_sidebar_right}
           goblint
           inspect={state.inspect}
           dispatch
         />
-      </div>
-      <div className="col-9 d-flex flex-column vh-100">
-        <Content state dispatch />
-        <Panel state dispatch />
-      </div>
     </div>
+  </div>
   </div>;
 };

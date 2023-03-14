@@ -1,5 +1,6 @@
 let reducer (s : State.t) = function
-  | `SwitchSidebar selected_sidebar -> { s with selected_sidebar }
+  | `SwitchSidebarLeft selected_sidebar_left -> { s with selected_sidebar_left }
+  | `SwitchSidebarRight selected_sidebar_right -> { s with selected_sidebar_right }
   | `SwitchPanel selected_panel -> { s with selected_panel }
   | (`DisplayNothing | `DisplayFile _ | `DisplayFunc _ | `UpdateFileContents _ | `UpdateFuncDot _)
     as a ->

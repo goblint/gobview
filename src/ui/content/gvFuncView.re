@@ -25,7 +25,15 @@ let make = (~func: GvDisplay.func, ~dispatch) => {
         "Cannot display the function graph. The generated DOT file is probably too large."
         |> Js.string
       }>
-      <Graphviz dot={dot |> Js.string} />
+      <Graphviz
+        dot={dot |> Js.string}
+        options={Js.Unsafe.obj([|
+          ("height", Js.Unsafe.inject("100%")),
+          ("width", Js.Unsafe.inject("100%")),
+          ("zoom", Js.Unsafe.inject(true)),
+        |])}
+        className={"fun-cfg" |> Js.string}
+      />
     </ErrorBoundary>
   | _ => React.null
   };
