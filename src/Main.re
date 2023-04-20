@@ -63,7 +63,7 @@ let make = (~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc) => {
     </div>
     <div className="col-6 d-flex flex-column h-100">
       {switch (state.display) {
-      | None => <div className="d-flex flex-column h-75 overflow-auto p-4" />
+      | None => <div className="content d-flex flex-column h-75 overflow-auto p-4" />
       | Some(f) => <Content state display=f dispatch />
       }}
       <Panel state dispatch />

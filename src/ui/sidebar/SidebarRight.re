@@ -27,7 +27,7 @@ let make_nav = (active, dispatch) => {
 
 [@react.component]
 let make = (~active, ~goblint, ~inspect, ~dispatch) => {
-  <>
+  <div className="sidebar-right">
     {make_nav(active, dispatch)}
     <div className="tab-content">
       <div className="tab-pane active">
@@ -38,5 +38,5 @@ let make = (~active, ~goblint, ~inspect, ~dispatch) => {
          }}
       </div>
     </div>
-  </>;
+  </div>;
 };

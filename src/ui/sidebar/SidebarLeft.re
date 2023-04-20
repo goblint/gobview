@@ -27,7 +27,7 @@ let make_tabs = (active, dispatch) => {
 
 [@react.component]
 let make = (~active, ~dispatch, ~search, ~cil) => {
-  <div>
+  <div className="sidebar-left">
     {make_tabs(active, dispatch)}
     <div className="tab-content">
       <div className="tab-pane active">
