@@ -9,8 +9,22 @@ let make_breadcrumb_items = (display: State.display, dispatch) => {
 
   <>
     {switch (display) {
-     | File(f) =>
-       <li className="breadcrumb-item active"> {f.path |> React.string} </li>
+    | File(f) =>
+      <div className="d-flex justify-content-between w-100">
+        <li className="breadcrumb-item active"> {f.path |> React.string} </li>
+        <Button on_click={() => dispatch @@ `DisplayCil(f.path)} type_=`Button>
+          ...{"CIL" |> React.string}
+        </Button>
+      </div>
+    | Cil(f) =>
+      <div className="d-flex justify-content-between w-100">
+        <li className="breadcrumb-item active">
+          {f.source_file_path |> React.string}
+        </li>
+          <Button on_click={() => dispatch @@ `DisplayFile(f.source_file_path)} type_=`Button>
+            ...{"C File" |> React.string}
+          </Button>
+      </div>
      | Func(f) =>
        <>
          <li className="breadcrumb-item">

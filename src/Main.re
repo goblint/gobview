@@ -64,6 +64,8 @@ let make = (~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc) => {
         };
       | Some(Func(f)) when Option.is_none(f.dot) =>
         fetch_dot(f.name, f.file)
+      | Some(Cil(f)) when Option.is_none(f.contents) =>
+        fetch_file(f.path)
       | _ => ()
       };
       None;

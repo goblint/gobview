@@ -20,6 +20,14 @@ let make = (~state: State.t, ~display: GvDisplay.t, ~dispatch) => {
         dispatch
       />
     | Func(func) => <GvFuncView func dispatch />
+    | Cil(file) =>
+      <GvFileView
+        goblint={state.goblint}
+        warnings={state.warnings}
+        file={GvDisplay.cilfile_to_file(file)}
+        line
+        dispatch
+      />
     }}
   </div>;
 };
