@@ -21,7 +21,6 @@ let make = (~parameters) => {
     let list_elements = map_history_entry_to_list_entry(history)
 
     React.useEffect1(() => {
-        //list_elements = history |> map_history_entry_to_list_entry
         None
     }, [|history|]);
 
@@ -46,15 +45,14 @@ let make = (~parameters) => {
         //</div>
         <div className="container-fluid text-center">
             <div className="row">
-                <Button on_click={on_submit}>
-                    <IconPlay fill="bi bi-play-fill" />
-                    {"Run" |> React.string}
-                </Button>
-                <Input value on_change on_submit />
+                <div className="d-flex align-content-between flex-wrap">
+                    <Button on_click={on_submit}>
+                        <IconPlay fill="bi bi-play-fill" />
+                        {"Run" |> React.string}
+                    </Button>
+                    <Input value on_change on_submit />
+                </div>
             </div>
-            <Button>
-                {"Hello World" |> React.string}
-            </Button>
             <div className="row align-items-center">
                 {"History" |> React.string}
             </div>
