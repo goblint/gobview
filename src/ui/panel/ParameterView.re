@@ -1,3 +1,5 @@
+module ReactDOM = React.Dom
+
 [@react.component]
 let make = (~parameters) => {
 
@@ -43,16 +45,17 @@ let make = (~parameters) => {
     <div>
         //<div className="d-flex justify-content-between">
         //</div>
-        <div className="container-fluid text-center">
-            <div className="row">
-                <div className="d-flex align-content-between flex-wrap">
-                    <Button on_click={on_submit}>
-                        <IconPlay fill="bi bi-play-fill" />
-                        {"Run" |> React.string}
-                    </Button>
-                    <Input value on_change on_submit />
-                </div>
-            </div>
+        <div className="input-group">
+            <Button on_click={on_submit}>
+                <IconPlay fill="bi bi-play-fill" />
+                {"Run" |> React.string}
+            </Button>
+            <Button color={`Danger} outline={true}>
+                {"Cancel" |> React.string}
+            </Button>
+            <Input value on_change on_submit />
+        </div>
+        <div className="container-fluid text-center" style={ReactDOM.Style.make(~height="120px", ())}>
             <div className="row align-items-center">
                 {"History" |> React.string}
             </div>
