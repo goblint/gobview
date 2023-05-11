@@ -40,18 +40,20 @@ let make = (~state, ~dispatch) => {
 
   let locations = (state.goblint)#dead_locations;
 
+  let panel = switch (current) {
+    | Some(Warnings) => <WarningView warnings={state.warnings} dispatch />
+    | Some(DeadCode) => <DeadCodeView locations dispatch />
+    | Some(Parameters) => <ParameterView parameters />
+    | Some(Statistics) => <GvStatisticsView stats={state.stats} />
+    | _ => React.null
+  };
+
   let current = state.selected_panel;
   <div className="panel d-flex flex-column border-right border-left h-25">
     {make_nav_pills(current, dispatch)}
     <div className="tab-content overflow-auto">
       <div className="tab-pane active">
-        {switch (current) {
-         | Some(Warnings) => <WarningView warnings={state.warnings} dispatch />
-         | Some(DeadCode) => <DeadCodeView locations dispatch />
-         | Some(Parameters) => <ParameterView parameters />
-         | Some(Statistics) => <GvStatisticsView stats={state.stats} />
-         | _ => React.null
-         }}
+        {panel}
       </div>
     </div>
   </div>;

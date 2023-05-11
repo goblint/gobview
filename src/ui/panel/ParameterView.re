@@ -43,8 +43,6 @@ let make = (~parameters) => {
     };
 
     <div>
-        //<div className="d-flex justify-content-between">
-        //</div>
         <div className="input-group">
             <Button on_click={on_submit}>
                 <IconPlay fill="bi bi-play-fill" />
@@ -55,11 +53,11 @@ let make = (~parameters) => {
             </Button>
             <Input value on_change on_submit />
         </div>
-        <div className="container-fluid text-center" style={ReactDOM.Style.make(~height="120px", ())}>
+        <div className="container-fluid text-center">
             <div className="row align-items-center">
                 {"History" |> React.string}
             </div>
-            <div className="row">
+            <div className="row" style={ReactDOM.Style.make(~height="120px", ~maxHeight="100%", ~overflow="auto", ())}>
                 <ol key={"params_list"} className="list-group">
                     {list_elements |> Array.to_list |> React.list}
                 </ol>
