@@ -10,17 +10,8 @@ let make = (~parameters) => {
         |> String.concat(" ");
 
     let (history, setHistory) = React.useState(_ => [|params|]);
-    let (value, setValue) = React.useState(_ => params)
+    let (value, setValue) = React.useState(_ => params);
 
-    let map_history_entry_to_list_entry = (arr) => {
-        arr |> Array.mapi((i, entry) =>
-            {<li key={String.cat("params_", string_of_int(i))} className="list-group-item">
-                {entry |> React.string}
-            </li>}
-        )
-    }
-
-    let list_elements = map_history_entry_to_list_entry(history)
 
     React.useEffect1(() => {
         None
@@ -42,12 +33,24 @@ let make = (~parameters) => {
         // TODO execute newly transformed params
     };
 
+    let playButton = <Button on_click={on_submit}>
+                         <IconPlay fill="bi bi-play-fill" />
+                         {"Run" |> React.string}
+                     </Button>;
+
+    let map_history_entry_to_list_entry = (arr) => {
+        arr |> Array.mapi((i, entry) =>
+            {<li key={String.cat("params_", string_of_int(i))} className="list-group-item">
+                {entry |> React.string}
+            </li>}
+        )
+    };
+
+    let list_elements = map_history_entry_to_list_entry(history);
+
     <div>
         <div className="input-group">
-            <Button on_click={on_submit}>
-                <IconPlay fill="bi bi-play-fill" />
-                {"Run" |> React.string}
-            </Button>
+            {playButton}
             <Button color={`Danger} outline={true}>
                 {"Cancel" |> React.string}
             </Button>
