@@ -41,7 +41,16 @@ let make = (~parameters) => {
     let map_history_entry_to_list_entry = (arr) => {
         arr |> Array.mapi((i, entry) =>
             {<li key={String.cat("params_", string_of_int(i))} className="list-group-item">
-                {entry |> React.string}
+                <div className="container text-center">
+                    <div className="row">
+                        <div className="col-1">
+                            <IconCheckmark />
+                        </div>
+                        <div className="col">
+                            {entry |> React.string}
+                        </div>
+                    </div>
+                </div>
             </li>}
         )
     };
