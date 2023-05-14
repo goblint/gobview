@@ -1,3 +1,5 @@
+open Unix
+
 module ReactDOM = React.Dom
 
 [@react.component]
@@ -9,7 +11,20 @@ let make = (~parameters) => {
         |> List.map((s) => { String.sub(s, 1, String.length(s)-2)})
         |> String.concat(" ");
 
-    let (history, setHistory) = React.useState(_ => [|params|]);
+    let timeToString = (time) => {
+        string_of_int(time.tm_min)
+        |> String.cat(":")
+        |> String.cat(string_of_int(time.tm_hour))
+        |> String.cat(" ");
+    }
+
+    let getLocalTime = () => {
+        Unix.time()
+        |> Unix.localtime
+        |> timeToString;
+    }
+
+    let (history, setHistory) = React.useState(_ => [|(params, getLocalTime())|]);
     let (value, setValue) = React.useState(_ => params);
 
 
@@ -26,7 +41,7 @@ let make = (~parameters) => {
     };
 
     let on_submit = () => {
-        let new_history = Array.append(history, [|value|])
+        let new_history = Array.append(history, [|(value, getLocalTime())|])
         setHistory(_ => new_history)
 
         // TODO transform param string with "' '" seperation mask
@@ -39,12 +54,16 @@ let make = (~parameters) => {
                      </Button>;
 
     let map_history_entry_to_list_entry = (arr) => {
-        arr |> Array.mapi((i, entry) =>
+        arr |> Array.mapi((i, (entry, time)) =>
             {<li key={String.cat("params_", string_of_int(i))} className="list-group-item">
                 <div className="container text-center">
                     <div className="row">
-                        <div className="col-1">
+                        <div className="col-2">
                             <IconCheckmark />
+                        </div>
+                        <div className="col-2">
+                            <IconClock />
+                            {time |> React.string}
                         </div>
                         <div className="col">
                             {entry |> React.string}
@@ -58,7 +77,7 @@ let make = (~parameters) => {
     let list_elements = map_history_entry_to_list_entry(history);
 
     <div>
-        <div className="input-group">
+        <div className="input-group mb-2">
             {playButton}
             <Button color={`Danger} outline={true}>
                 {"Cancel" |> React.string}
@@ -69,8 +88,23 @@ let make = (~parameters) => {
             <div className="row align-items-center">
                 {"History" |> React.string}
             </div>
-            <div className="row" style={ReactDOM.Style.make(~height="120px", ~maxHeight="100%", ~overflow="auto", ())}>
+            <div className="row" style={ReactDOM.Style.make(~height="115px", ~maxHeight="100%", ~overflow="auto", ())}>
                 <ol key={"params_list"} className="list-group">
+                    {<li key={"params_header_item"} className="list-group-item">
+                         <div className="container text-center">
+                             <div className="row">
+                                 <div className="col-2">
+                                     {"Status" |> React.string}
+                                 </div>
+                                 <div className="col-2">
+                                     {"Time" |> React.string}
+                                 </div>
+                                 <div className="col">
+                                     {"Parameters" |> React.string}
+                                 </div>
+                             </div>
+                         </div>
+                     </li>}
                     {list_elements |> Array.to_list |> React.list}
                 </ol>
             </div>
