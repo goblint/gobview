@@ -8,6 +8,7 @@ module ReactDOM = React.Dom
 
 type paramState = Executed | Executing | Canceled | Error;
 
+// TODO FIX BUG: make param history permanently available until GobView is closed again => clear afterwards
 [@react.component]
 let make = (~parameters) => {
 
