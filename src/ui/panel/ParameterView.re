@@ -1,4 +1,3 @@
-open Unix
 //open Lwt
 //open Cohttp
 //open Cohttp_lwt_unix
@@ -8,36 +7,11 @@ module ReactDOM = React.Dom
 
 type paramState = Executed | Executing | Canceled | Error;
 
-// TODO FIX BUG: make param history permanently available until GobView is closed again => clear afterwards
 [@react.component]
-let make = (~parameters) => {
+let make = (~parameters, ~history, ~setHistory) => {
 
-    let initParams =
-        parameters
-        |> String.split_on_char(' ')
-        |> List.map((s) => { String.sub(s, 1, String.length(s)-2)})
-        |> String.concat(" ");
-
-    let timeToString = (time) => {
-        string_of_int(time.tm_min)
-        |> String.cat(":")
-        |> String.cat(string_of_int(time.tm_hour))
-        |> String.cat(" ");
-    }
-
-    let getLocalTime = () => {
-        Unix.time()
-        |> Unix.localtime
-        |> timeToString;
-    }
-
-    let (history, setHistory) = React.useState(_ => [|(initParams, getLocalTime(), Executed)|]);
-    let (value, setValue) = React.useState(_ => initParams);
+    let (value, setValue) = React.useState(_ => parameters);
     let (disableCancel, setDisableCancel) = React.useState(_ => true);
-
-    React.useEffect1(() => {
-        None
-    }, [|history|]);
 
     React.useEffect1(() => {
         None
@@ -48,7 +22,7 @@ let make = (~parameters) => {
     };
 
     let on_submit = () => {
-        let newHistory = Array.append(history, [|(value, getLocalTime(), Executing)|])
+        let newHistory = Array.append(history, [|(value, Time.getLocalTime(), Executing)|])
         setHistory(_ => newHistory)
 
         // TODO transform param string with "' '" seperation mask
@@ -101,7 +75,7 @@ let make = (~parameters) => {
         )
     };
 
-    let list_elements = map_history_entry_to_list_entry(history);
+    let list_elements = history |> map_history_entry_to_list_entry;
 
     <div>
         <div className="input-group mb-2">

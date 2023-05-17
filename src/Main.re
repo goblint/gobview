@@ -48,6 +48,16 @@ let make = (~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc) => {
     [|state.display|],
   );
 
+  let parameters = state |> ParameterUtils.getParameters;
+  Util.log(parameters);
+
+  let destructuredParameters = parameters |> ParameterUtils.concatParameters;
+  let (history, setHistory) = React.useState(_ => [|(destructuredParameters, Time.getLocalTime(), ParameterView.Executed)|]);
+
+  React.useEffect1(() => {
+      None
+  }, [|history|]);
+
   <div className="container-fluid">
   <header className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap shadow p-1">
     <div className="navbar-brand mx-2" >{React.string("Gobview")}</div>
@@ -66,7 +76,7 @@ let make = (~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc) => {
       | None => <div className="content d-flex flex-column h-75 overflow-auto p-4" />
       | Some(f) => <Content state display=f dispatch />
       }}
-      <Panel state dispatch />
+      <Panel state dispatch parameters={destructuredParameters} history setHistory />
     </div>
     <div className="col-3 border-start overflow-auto py-2 h-100">
         <SidebarRight

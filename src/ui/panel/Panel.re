@@ -31,12 +31,7 @@ let make_nav_pills = (current, dispatch) => {
 };
 
 [@react.component]
-let make = (~state, ~dispatch) => {
-  let parameters =
-    switch (Yojson.Safe.Util.member("command", state.meta)) {
-    | `String(command) => command
-    | _ => ""
-    };
+let make = (~state, ~dispatch, ~parameters, ~history, ~setHistory) => {
 
   let locations = (state.goblint)#dead_locations;
 
@@ -46,7 +41,7 @@ let make = (~state, ~dispatch) => {
     | Some(Warnings) => <WarningView warnings={state.warnings} dispatch />
     | Some(DeadCode) => <DeadCodeView locations dispatch />
     | Some(Statistics) => <GvStatisticsView stats={state.stats} />
-    | Some(Parameters) => <ParameterView parameters />
+    | Some(Parameters) => <ParameterView parameters history setHistory />
     | _ => React.null
   };
 
