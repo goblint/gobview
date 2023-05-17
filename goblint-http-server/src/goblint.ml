@@ -24,7 +24,7 @@ let with_lock goblint = Lwt_mutex.with_lock goblint.mutex
 
 let assert_ok (resp: Jsonrpc.Response.t) s = match resp.result with
   | Ok _ -> ()
-  | Error _ -> failwith s
+  | Error e -> failwith (Format.sprintf "%s (%s)" s e.message)
 
 let send goblint name params =
   let id = `Int goblint.counter in
@@ -33,6 +33,7 @@ let send goblint name params =
     Jsonrpc.Message.create ?params ~id ~method_:name ()
     |> Jsonrpc.Message.yojson_of_request
     |> Yojson.Safe.to_string in
+  Printf.printf "send jsonrpc message:\n%s\n" req;
   let%lwt () = Lwt_io.fprintl goblint.output req in
   let%lwt resp =
     Lwt_io.read_line goblint.input

@@ -11,7 +11,7 @@
 (maintainers "Kerem Çakırer <kerem.cakirer@tum.de>")
 
 (source
- (github keremc/goblint-http-server))
+ (github goblint/goblint-http-server))
 
 (generate_opam_files true)
 

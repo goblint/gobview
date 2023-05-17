@@ -5,8 +5,8 @@ synopsis: "Goblint HTTP server"
 maintainer: "Kerem Çakırer <kerem.cakirer@tum.de>"
 authors: "Kerem Çakırer <kerem.cakirer@tum.de>"
 license: "ISC"
-homepage: "https://github.com/keremc/goblint-http-server"
-bug-reports: "https://github.com/keremc/goblint-http-server/issues"
+homepage: "https://github.com/goblint/goblint-http-server"
+bug-reports: "https://github.com/goblint/goblint-http-server/issues"
 depends: [
   "angstrom" {= "0.15.0"}
   "asn1-combinators" {= "0.2.6"}
@@ -122,4 +122,4 @@ build: [
   ]
   ["dune" "install" "-p" name "--create-install-files" name]
 ]
-dev-repo: "git+https://github.com/keremc/goblint-http-server.git"
+dev-repo: "git+https://github.com/goblint/goblint-http-server.git"

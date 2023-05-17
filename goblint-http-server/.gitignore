@@ -1,3 +1,5 @@
+# executable
+goblint-http
 
 # Created by https://www.toptal.com/developers/gitignore/api/ocaml,emacs,vim,visualstudiocode,linux,macos,windows
 # Edit at https://www.toptal.com/developers/gitignore?templates=ocaml,emacs,vim,visualstudiocode,linux,macos,windows
@@ -74,7 +76,8 @@ flycheck_*.el
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
