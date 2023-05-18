@@ -30,8 +30,8 @@ let send goblint name params =
   let id = `Int goblint.counter in
   goblint.counter <- goblint.counter + 1;
   let req =
-    Jsonrpc.Message.create ?params ~id ~method_:name ()
-    |> Jsonrpc.Message.yojson_of_request
+    Jsonrpc.Request.create ?params ~id ~method_:name ()
+    |> Jsonrpc.Request.yojson_of_t
     |> Yojson.Safe.to_string in
   Printf.printf "send jsonrpc message:\n%s\n" req;
   let%lwt () = Lwt_io.fprintl goblint.output req in
