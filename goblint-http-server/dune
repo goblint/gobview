@@ -6,6 +6,7 @@
   cohttp
   cohttp-lwt
   cohttp-lwt-unix
+  cohttp-server-lwt-unix
   conduit-lwt-unix
   jsonrpc
   lwt.unix
