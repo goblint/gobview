@@ -147,6 +147,8 @@ let callback state _ req body =
 
 let main () =
   let%lwt state = Goblint.spawn !goblint (!rest @ !paths) >|= State.make in
+  (* run Goblint once with option gobview enabled to copy the index.html and main.js files into the served directory *)
+  let%lwt _ = Goblint.analyze ~save_dir:!docroot ~gobview:true state.goblint in
   let callback = callback state in
   let server = Server.make ~callback () in
   Server.create ~mode:(`TCP (`Port !port)) server

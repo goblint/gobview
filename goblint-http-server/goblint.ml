@@ -66,7 +66,7 @@ let config goblint name value =
 
 let temp_dir () = Utils.temp_dir "goblint-http-server." ""
 
-let analyze ?reanalyze goblint =
+let analyze ?reanalyze ?save_dir ?(gobview = false) goblint =
   let set_force_reanalyze () = match reanalyze with
     | Some `Functions xs ->
       config_raw goblint "incremental.force-reanalyze.funs" (`List (List.map (fun s -> `String s) xs))
@@ -77,6 +77,8 @@ let analyze ?reanalyze goblint =
       config_raw goblint "incremental.force-reanalyze.funs" (`List [])
     | _ -> Lwt.return_unit
   in
+  let set_gobview () = if gobview then config_raw goblint "gobview" (`Bool true) else Lwt.return_unit in
+  let reset_gobview () = if gobview then config_raw goblint "gobview" (`Bool false) else Lwt.return_unit in
   let analyze () =
     let reset = match reanalyze with
       | Some `All -> true
@@ -85,11 +87,17 @@ let analyze ?reanalyze goblint =
     let params = `Assoc [("reset", `Bool reset)] in
     Lwt.finalize
       (fun () ->
-         let save_run = temp_dir () in
-         let%lwt () = config_raw goblint "save_run" (`String save_run) in
-         let%lwt () = set_force_reanalyze () in
-         let%lwt resp = send goblint "analyze" (Some params) in
-         assert_ok resp "Analysis failed";
-         Lwt.return save_run)
-      reset_force_reanalyze
+          let save_run = match save_dir with
+          | None -> temp_dir ()
+          | Some d -> d in
+          let%lwt () = config_raw goblint "save_run" (`String save_run) in
+          let%lwt () = set_force_reanalyze () in
+          let%lwt () = set_gobview () in
+          let%lwt resp = send goblint "analyze" (Some params) in
+          assert_ok resp "Analysis failed";
+          Lwt.return save_run)
+      (fun () ->
+          let%lwt () = reset_force_reanalyze () in
+          let%lwt () = reset_gobview () in
+          Lwt.return_unit)
   in with_lock goblint analyze
