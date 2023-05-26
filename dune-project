@@ -1,4 +1,5 @@
-(lang dune 2.7)
+(lang dune 3.0)
+(using directory-targets 0.1)
 
 (name gobview)
 

@@ -12,7 +12,7 @@ license: "MIT"
 homepage: "https://github.com/goblint/gobview"
 bug-reports: "https://github.com/goblint/gobview/issues"
 depends: [
-  "dune" {>= "2.7"}
+  "dune" {>= "3.0"}
   "ocaml" {>= "4.10.0"}
   "jsoo-react"
   "goblint-cil" {>= "2.0.0"}
