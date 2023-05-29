@@ -1,8 +1,8 @@
-//open Lwt
-//open Cohttp
-//open Cohttp_lwt_unix
-// TODO use above mentioned packages for http client to call goblint http server
+open Lwt
+open Cohttp
+open Cohttp_lwt
 
+module Client = Cohttp_lwt_jsoo.Client
 module ReactDOM = React.Dom
 
 type paramState = Executed | Executing | Canceled | Error;
@@ -18,17 +18,31 @@ let make = (~parameters, ~history, ~setHistory) => {
     }, [|value|]);
 
     let on_change = (new_value) => {
-        setValue(_ => new_value)
+        setValue(_ => new_value);
     };
 
     let on_submit = () => {
         let newHistory = Array.append(history, [|(value, Time.getLocalTime(), Executing)|])
-        setHistory(_ => newHistory)
+        setHistory(_ => newHistory);
 
-        // TODO transform param string with "' '" seperation mask
-        // TODO execute newly transformed params
+        let /*parameterList*/ _ = ParameterUtils.constructParameters(value);
+        let headers = Header.init_with("Content-Type", "application/json");
+        let body = "{
+                    \"jsonrpc\": \"2.0\",
+                    \"id\": \"5\",
+                    \"method\": \"analyze\",
+                    \"params\": {\"reset\": false}
+                    }"
+                    |> Body.of_string;
+        let url = "127.0.0.1:8001" |> Uri.of_string;
 
-        // TODO use cohttp to call goblint server
+        let _ = Client.put(url, ~body=body, ~headers=headers) >>= ((res, _ /*body*/)) => {
+            res |> Response.status |> Code.code_of_status |> string_of_int |> Util.log;
+            /*body |> Body.to_string >|= (b) => {
+                Util.log(b);
+            };*/
+            Lwt.return ();
+        };
 
         setDisableCancel(_ => false);
     };
