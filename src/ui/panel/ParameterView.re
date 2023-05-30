@@ -38,7 +38,7 @@ let make = (~parameters, ~history, ~setHistory) => {
         let state = ref(Executing);
         let element = (value, time, state.contents);
 
-        let new_history = Array.append(history, [|element|]);
+        let new_history = [|element|] |> Array.append(history);
         setHistory(_ => new_history);
         setDisableCancel(_ => false);
 
@@ -59,11 +59,8 @@ let make = (~parameters, ~history, ~setHistory) => {
 
         let uri = Printf.sprintf("%s://%s:%d%s", scheme, host, port, path) |> Uri.of_string;
 
-        let new_state = Client.post(uri, ~body=body, ~headers=headers) >>= ((res, _ /*body*/)) => {
+        let new_state = Client.post(uri, ~body=body, ~headers=headers) >>= ((res, _)) => {
             let code = res |> Response.status |> Code.code_of_status
-            /*body |> Body.to_string >|= (b) => {
-                Util.log(b);
-            };*/
 
             if (code < 200 || code >= 400) {
                 Lwt.return(Error)
@@ -85,7 +82,7 @@ let make = (~parameters, ~history, ~setHistory) => {
 
             let new_element = (value, time, res_state);
 
-            let new_history = Array.append(intermediateHistory, [|new_element|]);
+            let new_history = [|new_element|] |> Array.append(intermediateHistory);
             setHistory(_ => new_history);
             setDisableCancel(_ => true);
         }
