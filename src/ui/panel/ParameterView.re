@@ -7,6 +7,16 @@ module ReactDOM = React.Dom
 
 type paramState = Executed | Executing | Canceled | Error;
 
+// For debugging purposes and potential further use
+let paramState_to_string = (p: paramState) => {
+    switch (p) {
+        | Executed => "Executed";
+        | Executing => "Executing";
+        | Canceled => "Canceled";
+        | Error => "Error";
+    };
+};
+
 [@react.component]
 let make = (~parameters, ~history, ~setHistory) => {
 
@@ -22,8 +32,15 @@ let make = (~parameters, ~history, ~setHistory) => {
     };
 
     let on_submit = () => {
-        let newHistory = Array.append(history, [|(value, Time.getLocalTime(), Executing)|])
-        setHistory(_ => newHistory);
+        history |> Array.length |> string_of_int |> Util.log;
+
+        let time = Time.getLocalTime();
+        let state = ref(Executing);
+        let element = (value, time, state.contents);
+
+        let new_history = Array.append(history, [|element|]);
+        setHistory(_ => new_history);
+        setDisableCancel(_ => false);
 
         let /*parameterList*/ _ = ParameterUtils.constructParameters(value);
         let headers = Header.init_with("Content-Type", "application/json");
@@ -34,17 +51,45 @@ let make = (~parameters, ~history, ~setHistory) => {
                     \"params\": {\"reset\": false}
                     }"
                     |> Body.of_string;
-        let url = "127.0.0.1:8001" |> Uri.of_string;
 
-        let _ = Client.put(url, ~body=body, ~headers=headers) >>= ((res, _ /*body*/)) => {
-            res |> Response.status |> Code.code_of_status |> string_of_int |> Util.log;
+        let scheme = "http";
+        let host = "localhost";
+        let port = 8080;
+        let path = "/api/analyze";
+
+        let uri = Printf.sprintf("%s://%s:%d%s", scheme, host, port, path) |> Uri.of_string;
+
+        let new_state = Client.post(uri, ~body=body, ~headers=headers) >>= ((res, _ /*body*/)) => {
+            let code = res |> Response.status |> Code.code_of_status
             /*body |> Body.to_string >|= (b) => {
                 Util.log(b);
             };*/
-            Lwt.return ();
+
+            if (code < 200 || code >= 400) {
+                Lwt.return(Error)
+            } else {
+                Lwt.return(Executed)
+            };
         };
 
-        setDisableCancel(_ => false);
+        let res_state = switch (new_state |> Lwt.poll) {
+            | Some(p) => p
+            | None => Error
+        };
+
+        let lastElemIndexInHistory = Array.length(new_history) - 1;
+        let lastElement = lastElemIndexInHistory |> Array.get(new_history);
+
+        if (element == lastElement) {
+            let intermediateHistory = lastElemIndexInHistory |> Array.sub(new_history, 0);
+
+            let new_element = (value, time, res_state);
+
+            let new_history = Array.append(intermediateHistory, [|new_element|]);
+            setHistory(_ => new_history);
+            setDisableCancel(_ => true);
+        }
+        
     };
 
     let on_cancel = () => {
@@ -52,8 +97,8 @@ let make = (~parameters, ~history, ~setHistory) => {
         let (param, time, _) = Array.get(history, lastElemIndex);
 
         let intermediateHistory = Array.sub(history, 0, lastElemIndex);
-        let newHistory = Array.append(intermediateHistory, [|(param, time, Canceled)|]);
-        setHistory(_ => newHistory);
+        let new_history = Array.append(intermediateHistory, [|(param, time, Canceled)|]);
+        setHistory(_ => new_history);
 
         setDisableCancel(_ => true);
     }
