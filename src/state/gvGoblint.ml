@@ -66,7 +66,7 @@ end
 
 module Make
     (Cfg : MyCFG.CfgBidir)
-    (Spec : Analyses.Spec) (Inc : sig
+    (Spec : Analyses.PostSpec) (Inc : sig
       val increment : Analyses.increment_data option
     end) : Sig = struct
   module A = Control.AnalyzeCFG (Cfg) (Spec) (Inc)
