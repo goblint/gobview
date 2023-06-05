@@ -23,7 +23,7 @@ let port = 8000;
 let path = "/api/analyze";
 
 let headers = [
-    ("Content-Type", "application/json"),
+    ("Content-Type", "application/json-rpc"),
     ("Access-Control-Allow-Origin", Printf.sprintf("%s://%s:%d", scheme, host, port)),
     ("Access-Control-Allow-Headers", "Content-Type"),
     ("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
@@ -44,24 +44,27 @@ let make = (~parameters, ~history, ~setHistory) => {
     };
 
     let on_submit = () => {
-        let time = Time.getLocalTime();
+        let time = Time.get_local_time();
         let element = (value, time, Executing);
 
         let new_history = [|element|] |> Array.append(history);
         setHistory(_ => new_history);
         setDisableCancel(_ => false);
 
-        let /*parameterList*/ _ = ParameterUtils.constructParameters(value);
+        let /*(_, parameter_list)*/ _ = ParameterUtils.constructParameters(value);
 
-        let body = `Assoc([
-            ("jsonrpc", `String("2.0")),
-            ("id", `String("5")),
-            ("method", `String("analyze")),
-            ("params", `Assoc ([
-                    ("reset", `Bool (false))
+        let body = `List([
+            //("jsonrpc", `String("2.0")),
+            //("id", `String("5")),
+            //("method", `String("analyze")),
+            /*("params", `Assoc ([
+                    //("reset", `Bool (false))
+                    ("Functions", `List ([])) // Either you give a list of functions to be reanalyzed or "All" functions will be re-evaluated
                 ])
-            )
-        ])|> Yojson.Basic.to_string |> Body.of_string;
+            )*/
+         `String ("Functions"),
+         `List ([`String ("main"), `String ("bsearch"), `String ("qsort")])
+        ])|> Yojson.Safe.to_string |> Body.of_string;
 
         let uri = Printf.sprintf("%s://%s:%d%s", scheme, host, port, path) |> Uri.of_string;
 
@@ -139,13 +142,15 @@ let make = (~parameters, ~history, ~setHistory) => {
 
     let list_elements = history |> map_history_entry_to_list_entry;
 
+    // TODO Show real goblint path in tooltip
     <div>
         <div className="input-group mb-2">
             {playButton}
             <Button color={`Danger} outline={true} on_click={on_cancel} disabled={disableCancel}>
                 {"Cancel" |> React.string}
             </Button>
-            <Input value on_change on_submit />
+            <label data="tooltip" title="TODO Show real goblint path here" className="input-group-text" type_="inputGroupFile01">{"./goblint" |> React.string}</label>
+            <Input key="inputGroupFile01" value on_change on_submit />
         </div>
         <div className="container-fluid text-center">
             <div className="row align-items-center">

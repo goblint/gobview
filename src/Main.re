@@ -50,7 +50,7 @@ let make = (~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc) => {
 
   let parameters = state |> ParameterUtils.getParameters;
   let destructuredParameters = parameters |> ParameterUtils.concatParameters;
-  let (history, setHistory) = React.useState(_ => [|(destructuredParameters, Time.getLocalTime(), ParameterView.Executed)|]);
+  let (history, setHistory) = React.useState(_ => [|(destructuredParameters, Time.get_local_time(), ParameterView.Executed)|]);
 
   React.useEffect1(() => {
       None

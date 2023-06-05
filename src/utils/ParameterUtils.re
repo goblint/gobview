@@ -13,9 +13,11 @@ let getParameters = (state) => {
         | _ => ""
     }
 };
-
+ 
 let constructParameters = (parameters) => {
-    parameters
-    |> String.split_on_char(' ')
-    |> List.map((s) => "'" |> String.cat(s) |> String.cat("'"))
+    let param_list = parameters
+                     |> String.split_on_char(' ')
+                     |> List.map((s) => "'" |> String.cat(s) |> String.cat("'"));
+    
+    (param_list |> List.hd, param_list)
 }

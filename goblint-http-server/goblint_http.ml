@@ -39,8 +39,8 @@ let process state name body =
     | exception Yojson.Json_error err -> Server.respond_error ~headers:cors_headers ~status:`Bad_request ~body:err ()
     | json ->
       match R.body_of_yojson json with
-      | exception Yojson_conv.Of_yojson_error (exn, json) ->
-        Server.respond_error ~headers:cors_headers ~status:`Bad_request ~body:(Printf.sprintf "Exception: %s\nJson:%s" (Printexc.to_string exn) (Yojson.Safe.pretty_to_string json)) ()
+      | exception Yojson_conv.Of_yojson_error (exn, _) ->
+        Server.respond_error ~headers:cors_headers ~status:`Bad_request ~body:(Printexc.to_string exn) ()
       | body ->
         Lwt.catch
           (fun () ->

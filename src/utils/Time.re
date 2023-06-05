@@ -1,6 +1,6 @@
 open Unix
 
-let timeToString = (time) => {
+let time_to_string = (time) => {
     let rawMinutes = string_of_int(time.tm_min);
 
     rawMinutes
@@ -10,8 +10,8 @@ let timeToString = (time) => {
     |> String.cat(" ");
 };
 
-let getLocalTime = () => {
+let get_local_time = () => {
     Unix.time()
     |> Unix.localtime
-    |> timeToString;
+    |> time_to_string;
 };
