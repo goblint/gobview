@@ -53,14 +53,6 @@ let make = (~parameters, ~history, ~setHistory) => {
 
         let /*parameterList*/ _ = ParameterUtils.constructParameters(value);
 
-        // TODO fix body to remove Yojson raised exceptions
-        /* "{
-            \"jsonrpc\": \"2.0\",
-            \"id\": \"5\",
-            \"method\": \"analyze\",
-            \"params\": {\"reset\": false}
-            }" */
-
         let body = `Assoc([
             ("jsonrpc", `String("2.0")),
             ("id", `String("5")),
@@ -69,7 +61,7 @@ let make = (~parameters, ~history, ~setHistory) => {
                     ("reset", `Bool (false))
                 ])
             )
-        ])|> Yojson.Basic.Util.to_string |> Body.of_string;
+        ])|> Yojson.Basic.to_string |> Body.of_string;
 
         let uri = Printf.sprintf("%s://%s:%d%s", scheme, host, port, path) |> Uri.of_string;
 
