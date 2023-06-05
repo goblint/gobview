@@ -3,12 +3,13 @@ open Cohttp_lwt
 open Cohttp_lwt_unix
 open Lwt.Infix
 
+module Header = Cohttp.Header
 module Yojson_conv = Ppx_yojson_conv_lib.Yojson_conv
 
 let docroot = ref "run"
 let index = ref "index.html"
 let addr = ref "127.0.0.1"
-let port = ref 8080
+let port = ref 8000
 let goblint = ref "goblint"
 let rest = ref []
 
@@ -24,6 +25,10 @@ let specs =
 
 let paths = ref []
 
+let cors_headers = Header.of_list [("Access-Control-Allow-Origin", "*");
+                    ("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Origin, Access-Control-Allow-Methods, Access-Control-Allow-Headers");
+                    ("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")]
+
 let process state name body =
   match Hashtbl.find_option Api.registry name with
   | None -> Server.respond_not_found ()
@@ -31,24 +36,24 @@ let process state name body =
     let%lwt body = Body.to_string body in
     let body = if body = "" then "null" else body in
     match Yojson.Safe.from_string body with
-    | exception Yojson.Json_error err -> Server.respond_error ~status:`Bad_request ~body:err ()
+    | exception Yojson.Json_error err -> Server.respond_error ~headers:cors_headers ~status:`Bad_request ~body:err ()
     | json ->
       match R.body_of_yojson json with
-      | exception Yojson_conv.Of_yojson_error (exn, _) ->
-        Server.respond_error ~status:`Bad_request ~body:(Printexc.to_string exn) ()
+      | exception Yojson_conv.Of_yojson_error (exn, json) ->
+        Server.respond_error ~headers:cors_headers ~status:`Bad_request ~body:(Printf.sprintf "Exception: %s\nJson:%s" (Printexc.to_string exn) (Yojson.Safe.pretty_to_string json)) ()
       | body ->
         Lwt.catch
           (fun () ->
              R.process state body
              >|= R.yojson_of_response
              >|= Yojson.Safe.to_string
-             >>= fun body -> Server.respond_string ~status:`OK ~body ())
-          (fun exn -> Server.respond_error ~status:`Bad_request ~body:(Printexc.to_string exn) ())
+             >>= fun body -> Server.respond_string ~headers:cors_headers ~status:`OK ~body ())
+          (fun exn -> Server.respond_error ~headers:cors_headers ~status:`Bad_request ~body:(Printexc.to_string exn) ())
 
 (* The serving of files is implemented similar as in the binary https://github.com/mirage/ocaml-cohttp/blob/master/cohttp-lwt-unix/bin/cohttp_server_lwt.ml *)
 let serve_file ~docroot ~uri =
   let fname = Cohttp.Path.resolve_local_file ~docroot ~uri in
-  Server.respond_file ~fname ()
+  Server.respond_file ~headers:cors_headers ~fname ()
 
 let sort lst =
   let compare_kind = function
@@ -102,7 +107,7 @@ let serve uri path =
       | Unix.S_DIR -> (
           let path_len = String.length path in
           if path_len <> 0 && path.[path_len - 1] <> '/' then (
-            Server.respond_redirect ~uri:(Uri.with_path uri (path ^ "/")) ())
+            Server.respond_redirect ~headers:cors_headers ~uri:(Uri.with_path uri (path ^ "/")) ())
           else (
             match Sys.file_exists (Filename.concat file_name !index) with
             | true -> (
@@ -122,12 +127,12 @@ let serve uri path =
                                 f ))
                           (fun _exn -> Lwt.return (None, f))) files in
                 let body = html_of_listing uri path (sort listing) in
-                Server.respond_string ~status:`OK ~body ()))
+                Server.respond_string ~headers:cors_headers ~status:`OK ~body ()))
       | Unix.S_REG -> serve_file ~docroot:!docroot ~uri
       | _ -> (
           let body = Printf.sprintf "<html><body><h2>Forbidden</h2><p><b>%s</b> is not a normal file or \
           directory</p><hr/></body></html>" path in
-          Server.respond_string ~status:`OK ~body ()))
+          Server.respond_string ~headers:cors_headers ~status:`OK ~body ()))
     (function
       | Unix.Unix_error (Unix.ENOENT, "stat", p) as e ->
           if p = file_name then (
@@ -143,6 +148,7 @@ let callback state _ req body =
   match meth, parts with
   | `POST, ["api"; name] -> process state name body
   | `GET, _ -> serve uri path
+  | `OPTIONS, _ -> Server.respond ~headers:cors_headers ~status:`OK ~body:`Empty () (* Used for preflight and CORS requests *)
   | _ -> Server.respond_not_found ()
 
 let main () =

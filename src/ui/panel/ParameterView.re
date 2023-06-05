@@ -17,6 +17,18 @@ let paramState_to_string = (p: paramState) => {
     };
 };
 
+let scheme = "http";
+let host = "127.0.0.1";
+let port = 8000;
+let path = "/api/analyze";
+
+let headers = [
+    ("Content-Type", "application/json"),
+    ("Access-Control-Allow-Origin", Printf.sprintf("%s://%s:%d", scheme, host, port)),
+    ("Access-Control-Allow-Headers", "Content-Type"),
+    ("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+] |> Header.of_list;
+
 [@react.component]
 let make = (~parameters, ~history, ~setHistory) => {
 
@@ -32,30 +44,32 @@ let make = (~parameters, ~history, ~setHistory) => {
     };
 
     let on_submit = () => {
-        history |> Array.length |> string_of_int |> Util.log;
-
         let time = Time.getLocalTime();
-        let state = ref(Executing);
-        let element = (value, time, state.contents);
+        let element = (value, time, Executing);
 
         let new_history = [|element|] |> Array.append(history);
         setHistory(_ => new_history);
         setDisableCancel(_ => false);
 
         let /*parameterList*/ _ = ParameterUtils.constructParameters(value);
-        let headers = Header.init_with("Content-Type", "application/json");
-        let body = "{
-                    \"jsonrpc\": \"2.0\",
-                    \"id\": \"5\",
-                    \"method\": \"analyze\",
-                    \"params\": {\"reset\": false}
-                    }"
-                    |> Body.of_string;
 
-        let scheme = "http";
-        let host = "localhost";
-        let port = 8080;
-        let path = "/api/analyze";
+        // TODO fix body to remove Yojson raised exceptions
+        /* "{
+            \"jsonrpc\": \"2.0\",
+            \"id\": \"5\",
+            \"method\": \"analyze\",
+            \"params\": {\"reset\": false}
+            }" */
+
+        let body = `Assoc([
+            ("jsonrpc", `String("2.0")),
+            ("id", `String("5")),
+            ("method", `String("analyze")),
+            ("params", `Assoc ([
+                    ("reset", `Bool (false))
+                ])
+            )
+        ])|> Yojson.Basic.Util.to_string |> Body.of_string;
 
         let uri = Printf.sprintf("%s://%s:%d%s", scheme, host, port, path) |> Uri.of_string;
 
