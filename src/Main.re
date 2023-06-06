@@ -48,9 +48,10 @@ let make = (~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc) => {
     [|state.display|],
   );
 
-  let parameters = state |> ParameterUtils.getParameters;
-  let destructuredParameters = parameters |> ParameterUtils.concatParameters;
-  let (history, setHistory) = React.useState(_ => [|(destructuredParameters, Time.get_local_time(), ParameterView.Executed)|]);
+  let (goblint_path, parameters) = state |> ParameterUtils.get_parameters;
+  let destructured_params = parameters |> ParameterUtils.concat_parameter_list;
+
+  let (history, setHistory) = React.useState(_ => [|(destructured_params, Time.get_local_time(), ParameterView.Executed)|]);
 
   React.useEffect1(() => {
       None
@@ -74,7 +75,7 @@ let make = (~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc) => {
       | None => <div className="content d-flex flex-column h-75 overflow-auto p-4" />
       | Some(f) => <Content state display=f dispatch />
       }}
-      <Panel state dispatch parameters={destructuredParameters} history setHistory />
+      <Panel state dispatch goblint_path parameters={destructured_params} history setHistory />
     </div>
     <div className="col-3 border-start overflow-auto py-2 h-100">
         <SidebarRight
