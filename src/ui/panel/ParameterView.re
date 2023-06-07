@@ -9,12 +9,16 @@ type paramState = Executed | Executing | Canceled | Error;
 
 // For debugging purposes and potential further use
 let paramState_to_string = (p: paramState) => {
-    switch (p) {
+    switch p {
         | Executed => "Executed";
         | Executing => "Executing";
         | Canceled => "Canceled";
         | Error => "Error";
     };
+};
+
+let is_successful = (p: paramState) => {
+    p == Executed
 };
 
 let scheme = "http";
@@ -35,7 +39,7 @@ let headers = [
 [@react.component]
 let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
 
-    let (value, setValue) = React.useState(_ => parameters);
+    let (value, setValue) = React.useState(_ => parameters |> ParameterUtils.concat_parameter_list);
     let (disableCancel, setDisableCancel) = React.useState(_ => true);
 
     React.useEffect1(() => {
@@ -47,46 +51,57 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
     };
 
     let on_submit = () => {
+        let parameter_list = 
+            value
+            |> ParameterUtils.construct_parameters
+            |> ParameterUtils.group_parameters;
+        
         let time = Time.get_local_time();
-        let element = (value, time, Executing);
+        let element = (parameter_list, time, Executing);
 
         let new_history = [|element|] |> Array.append(history);
         setHistory(_ => new_history);
         setDisableCancel(_ => false);
 
-        let parameter_list = 
-            value
-            |> ParameterUtils.construct_parameters
-            |> ParameterUtils.tuples_from_parameters;
+        let res_state = Error |> ref;
 
-        // TODO create config body and request per created tuple in parameter_list
-        let config_body =
-            `Tuple (parameter_list |> List.map(s => `String (s))) // WIP, does not compile here
-            |> Yojson.Safe.to_string
-            |> Body.of_string;
+        let config_res_states =
+            parameter_list
+            |> ParameterUtils.tuples_from_parameters
+            |> List.map(((a,b)) => {
 
+                let config_body =
+                    `List([`String(a), `String(b)])
+                    |> Yojson.Safe.to_string
+                    |> Body.of_string;
+
+                // config endpoint
+                let config_res = Client.post(config_uri, ~body=config_body,  ~headers=headers) >>= ((res, _)) => {
+                    let code = res |> Response.status |> Code.code_of_status;
+
+                    if (code < 200 || code >= 400) {
+                        Lwt.return(Error);
+                    } else {
+                        Lwt.return(Executed);
+                    };
+                };
+
+                switch (config_res |> Lwt.poll) {
+                    | Some(p) => p
+                    | None => Error
+                }
+
+            })
+            |> List.map(is_successful)
+            |> List.fold_left((a,b) => a && b, true);
+
+        // Body indicates full reanalysis because of empty list
         let analyze_body = `List([
          `String ("Functions"),
          `List ([])
         ])|> Yojson.Safe.to_string |> Body.of_string;
 
-        // config endpoint
-        let config_res = Client.post(config_uri, ~body=/*config_body*/`Empty,  ~headers=headers) >>= ((res, _)) => {
-            let code = res |> Response.status |> Code.code_of_status
-
-            if (code < 200 || code >= 400) {
-                Lwt.return(Error)
-            } else {
-                Lwt.return(Executed)
-            };
-        }
-
-        let res_state = ref(switch (config_res |> Lwt.poll) {
-            | Some(p) => p
-            | None => Error
-        });
-
-        if (res_state.contents != Error && res_state.contents != Canceled) {
+        if (config_res_states) {
 
             // analyze endpoint
             let new_state = Client.post(analyze_uri, ~body=analyze_body, ~headers=headers) >>= ((res, _)) => {
@@ -104,7 +119,7 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
                 | None => Error
             };
 
-        }
+        };
 
         let lastElemIndexInHistory = Array.length(new_history) - 1;
         let lastElement = lastElemIndexInHistory |> Array.get(new_history);
@@ -112,7 +127,7 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
         if (element == lastElement) {
             let intermediateHistory = lastElemIndexInHistory |> Array.sub(new_history, 0);
 
-            let new_element = (value, time, res_state.contents);
+            let new_element = (parameter_list, time, res_state.contents);
 
             let new_history = [|new_element|] |> Array.append(intermediateHistory);
             setHistory(_ => new_history);
@@ -130,7 +145,7 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
         setHistory(_ => new_history);
 
         setDisableCancel(_ => true);
-    }
+    };
 
     let playButton = <Button on_click={on_submit}>
                          <IconPlay fill="bi bi-play-fill" />
@@ -138,7 +153,7 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
                      </Button>;
 
     let map_history_entry_to_list_entry = (arr) => {
-        arr |> Array.mapi((i, (entry, time, paramState)) =>
+        arr |> Array.mapi((i, (parameter_grouping, time, paramState)) =>
             {<li key={String.cat("params_", string_of_int(i))} className="list-group-item">
                 <div className="container text-center">
                     <div className="row">
@@ -151,35 +166,35 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
                             }}
                         </div>
                         <div className="col-2">
-                            <IconClock />
-                            {time |> React.string}
+                            <div className="ms-2"> // TODO fix margin between icon and text
+                                <IconClock />
+                                {time |> React.string}
+                            </div>
                         </div>
                         <div className="col">
-                            {entry |> React.string}
+                            {parameter_grouping |> List.mapi((j,e) => {
+                                <span key=String.cat("pill_", string_of_int(j)) className="m-1 badge rounded-pill bg-secondary">{e |> React.string}</span>
+                            }) |> React.list}
                         </div>
                     </div>
                 </div>
             </li>}
-        )
+        );
     };
 
     let list_elements = history |> map_history_entry_to_list_entry;
 
-    // TODO Show real goblint path in tooltip
     <div>
         <div className="input-group mb-2">
             {playButton}
             <Button color={`Danger} outline={true} on_click={on_cancel} disabled={disableCancel}>
                 {"Cancel" |> React.string}
             </Button>
-            <label data="tooltip" title=goblint_path className="input-group-text" type_="inputGroupFile01">{"./goblint" |> React.string}</label>
-            <Input key="inputGroupFile01" value on_change on_submit />
+            <label data="tooltip" title=goblint_path className="input-group-text" type_="tooltip_path">{"./goblint" |> React.string}</label>
+            <Input key="tooltip_path" value on_change on_submit />
         </div>
         <div className="container-fluid text-center">
-            <div className="row align-items-center">
-                {"History" |> React.string}
-            </div>
-            <div className="row" style={ReactDOM.Style.make(~height="115px", ~maxHeight="100%", ~overflow="auto", ())}>
+            <div className="row" style={ReactDOM.Style.make(~height="140px", ~maxHeight="100%", ~overflow="auto", ())}>
                 <ol key={"params_list"} className="list-group">
                     {<li key={"params_header_item"} className="list-group-item">
                          <div className="container text-center">

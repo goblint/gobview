@@ -20,15 +20,9 @@ let get_parameters = (state) => {
     (raw_params |> List.hd, raw_params |> List.tl)
 };
  
-let construct_parameters = (parameters) => {
-    parameters
-    |> String.split_on_char(' ')
-    //|> List.map((s) => /*"'" |> String.cat(*/s/*) |> String.cat("'")*/)
-}
+let construct_parameters = (parameters) => parameters |> String.split_on_char(' ');//|> List.map((s) => "'" |> String.cat(s) |> String.cat("'"))
 
-// TODO combine --set and the following <option> to one string
-// TODO afterwards, create a list with combined and following value, like so: ["--set <option>", value]
-let rec tuples_from_parameters = (parameters) => {
+let rec group_parameters = (parameters) => {
     if (parameters |> List.length > 0) {
         
         let (command, tail) = (parameters |> List.hd, parameters |> List.tl);
@@ -37,19 +31,59 @@ let rec tuples_from_parameters = (parameters) => {
                 let (option, tail') = (tail |> List.hd, tail |> List.tl);
                 let (value, tail'') = (tail' |> List.hd, tail' |> List.tl);
 
-                let command' = Printf.sprintf("--set %s", option);
-                let tuple = (command', value);
-                tail'' |> tuples_from_parameters |> List.cons(tuple)
+                let parameter = Printf.sprintf("--set %s %s", option, value);
+                tail'' |> group_parameters |> List.cons(parameter)
             }
             | "--enable" => {
                 let (option, tail') = (tail |> List.hd, tail |> List.tl);
 
-                let tuple = (command, option);
-                tail' |> tuples_from_parameters |> List.cons(tuple)
+                let parameter = Printf.sprintf("--enable %s", option);
+                tail' |> group_parameters |> List.cons(parameter)
             } 
+            | "--disable" => {
+                let (option, tail') = (tail |> List.hd, tail |> List.tl);
+
+                let parameter = Printf.sprintf("--disable %s", option);
+                tail' |> group_parameters |> List.cons(parameter)
+            }
             | _ => []
         }
     } else {
         []
     }
 }
+
+let contains_empty_string = (string_list) =>
+    string_list
+    |> List.map(String.length)
+    |> List.filter(i => i == 0)
+    |> List.length > 0
+
+let tuples_from_parameters = (parameters) => {
+    parameters
+    |> List.map(params => {
+        let params_split = params |> String.split_on_char(' ');
+        let command = params_split |> List.hd;
+        let param' = params_split |> List.tl;
+
+        switch command {
+            | "--set" => {
+                let (option, tail') = (param' |> List.hd, param' |> List.tl);
+                let value = tail' |> List.hd;
+
+                Some((option, value))
+            }
+            | "--enable" => {
+                let option = param' |> List.hd;
+                Some((option, "true"))
+            } 
+            | "--disable" => {
+                let option = param' |> List.hd;
+                Some((option, "false"))
+            }
+            | _ => None
+        }
+    })
+    |> List.filter(e => e != None)
+    |> List.map(e => e |> Option.get)
+};
