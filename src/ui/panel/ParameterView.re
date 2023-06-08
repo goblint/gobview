@@ -36,15 +36,28 @@ let headers = [
     ("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 ] |> Header.of_list;
 
+let rev_arr = (array) => array |> Array.to_list |> List.rev |> Array.of_list;
+
 [@react.component]
 let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
 
     let (value, setValue) = React.useState(_ => parameters |> ParameterUtils.concat_parameter_list);
     let (disableCancel, setDisableCancel) = React.useState(_ => true);
+    let (sortDesc, setSortDesc) = React.useState(_ => true);
 
     React.useEffect1(() => {
         None
     }, [|value|]);
+
+    React.useEffect1(() => {
+        setHistory(_ => history |> rev_arr);
+        None
+    }, [|sortDesc|]);
+
+    let on_sort = (ev) => {
+        React.Event.Mouse.preventDefault(ev);
+        setSortDesc(_ => !sortDesc);
+    }
 
     let on_change = (new_value) => {
         setValue(_ => new_value);
@@ -59,7 +72,12 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
         let time = Time.get_local_time();
         let element = (parameter_list, time, Executing);
 
-        let new_history = [|element|] |> Array.append(history);
+        let new_history = if (sortDesc) {
+            history |> Array.append([|element|])
+        } else {
+            [|element|] |> Array.append(history)
+        };
+
         setHistory(_ => new_history);
         setDisableCancel(_ => false);
 
@@ -119,23 +137,35 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
                 | None => Error
             };
 
+        }
+
+        let lastIndex = Array.length(new_history) - 1;
+        // This tuple is used to calculate where to update the last added history/parameter element 
+        let (index, startIndex, endIndex) = if (sortDesc) {
+            (0, 1, lastIndex)
+        } else {
+            (lastIndex, 0, lastIndex)
         };
 
-        let lastElemIndexInHistory = Array.length(new_history) - 1;
-        let lastElement = lastElemIndexInHistory |> Array.get(new_history);
+        let pickedElem = index |> Array.get(new_history);
 
-        if (element == lastElement) {
-            let intermediateHistory = lastElemIndexInHistory |> Array.sub(new_history, 0);
+        if (pickedElem == element) {
+            let intermediateHistory = endIndex |> Array.sub(new_history, startIndex);
 
             let new_element = (parameter_list, time, res_state.contents);
 
-            let new_history = [|new_element|] |> Array.append(intermediateHistory);
+            let new_history = if (sortDesc) {
+                intermediateHistory |> Array.append([|new_element|])
+            } else {
+                [|new_element|] |> Array.append(intermediateHistory)
+            };
             setHistory(_ => new_history);
             setDisableCancel(_ => true);
         }
         
     };
 
+    // This cancel function will be commented out as the feature is not implemented yet, but the option for it is there.
     let on_cancel = () => {
         let lastElemIndex = Array.length(history) - 1;
         let (param, time, _) = Array.get(history, lastElemIndex);
@@ -148,13 +178,13 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
     };
 
     let playButton = <Button on_click={on_submit}>
-                         <IconPlay fill="bi bi-play-fill" />
+                         <IconPlay />
                          {"Run" |> React.string}
                      </Button>;
 
     let map_history_entry_to_list_entry = (arr) => {
         arr |> Array.mapi((i, (parameter_grouping, time, paramState)) =>
-            {<li key={String.cat("params_", string_of_int(i))} className="list-group-item">
+            {<li key={"params_" ++ string_of_int(i)} className="list-group-item">
                 <div className="container text-center">
                     <div className="row">
                         <div className="col-2">
@@ -166,14 +196,14 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
                             }}
                         </div>
                         <div className="col-2">
-                            <div className="ms-2"> // TODO fix margin between icon and text
+                            <div className="ms-2">
                                 <IconClock />
-                                {time |> React.string}
+                                {time ++ " " |> React.string}
                             </div>
                         </div>
                         <div className="col">
                             {parameter_grouping |> List.mapi((j,e) => {
-                                <span key=String.cat("pill_", string_of_int(j)) className="m-1 badge rounded-pill bg-secondary">{e |> React.string}</span>
+                                <span key={"pill_" ++ string_of_int(j)} className="m-1 badge rounded-pill bg-secondary">{e |> React.string}</span>
                             }) |> React.list}
                         </div>
                     </div>
@@ -183,6 +213,12 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
     };
 
     let list_elements = history |> map_history_entry_to_list_entry;
+
+    let icon_for_sort_dir = if (sortDesc) {
+        <IconCaretUpFilled on_click=on_sort />
+    } else {
+        <IconCaretDownFilled on_click=on_sort />
+    };
 
     <div>
         <div className="input-group mb-2">
@@ -200,10 +236,11 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
                          <div className="container text-center">
                              <div className="row">
                                  <div className="col-2">
-                                     {"Status" |> React.string}
+                                    {"Status" |> React.string}
                                  </div>
                                  <div className="col-2">
-                                     {"Time" |> React.string}
+                                    {"Time " |> React.string}
+                                    {icon_for_sort_dir}
                                  </div>
                                  <div className="col">
                                      {"Parameters" |> React.string}
