@@ -1,7 +1,7 @@
 (rule
  (alias gobview)
  (targets dist)
- (deps src/App.bc.js node_modules webpack.config.js)
+ (deps src/App.bc.js goblint-http-server/goblint_http.exe node_modules webpack.config.js)
  (action
   (run npx webpack build)))
 

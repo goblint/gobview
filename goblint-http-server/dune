@@ -1,0 +1,16 @@
+(executable
+ (name goblint_http)
+ (public_name goblint-http)
+ (libraries
+  batteries
+  cohttp
+  cohttp-lwt
+  cohttp-lwt-unix
+  cohttp-server-lwt-unix
+  conduit-lwt-unix
+  jsonrpc
+  lwt.unix
+  yojson
+  uri)
+ (preprocess
+  (pps lwt_ppx ppx_yojson_conv)))
