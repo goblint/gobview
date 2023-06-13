@@ -86,4 +86,5 @@ let tuples_from_parameters = (parameters) => {
     })
     |> List.filter(e => e != None)
     |> List.map(e => e |> Option.get)
+    |> List.filter(((k,_)) => !(String.starts_with(~prefix="server.", k))) // Don't allow server modifications
 };

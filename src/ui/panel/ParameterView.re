@@ -2,6 +2,8 @@ open Lwt
 open Cohttp
 open Cohttp_lwt
 
+module Lwt_js = Js_of_ocaml_lwt.Lwt_js
+module Lwt_js_events = Js_of_ocaml_lwt.Lwt_js_events
 module Client = Cohttp_lwt_jsoo.Client
 module ReactDOM = React.Dom
 
@@ -17,9 +19,7 @@ let paramState_to_string = (p: paramState) => {
     };
 };
 
-let is_successful = (p: paramState) => {
-    p == Executed
-};
+let is_successful = (p: paramState) => p == Executed;
 
 let scheme = "http";
 let host = "127.0.0.1";
@@ -67,7 +67,8 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
         let parameter_list = 
             value
             |> ParameterUtils.construct_parameters
-            |> ParameterUtils.group_parameters;
+            |> ParameterUtils.group_parameters
+            |> List.filter(s => !(String.starts_with(~prefix="server.", s))) // TODO in whitelist: Don't allow server modifications;
         
         let time = Time.get_local_time();
         let element = (parameter_list, time, Executing);
@@ -81,63 +82,55 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
         setHistory(_ => new_history);
         setDisableCancel(_ => false);
 
-        let res_state = Error |> ref;
+        
+        // TODO remove preliminary body and replace with actual params
+        let config_body =
+            `List([`String("files[+]"), `String("")])
+            |> Yojson.Safe.to_string
+            |> Body.of_string;
 
-        let config_res_states =
-            parameter_list
-            |> ParameterUtils.tuples_from_parameters
-            |> List.map(((a,b)) => {
+        // config endpoint
+        let config_req () = Client.post(config_uri, ~body=config_body,  ~headers=headers) >>= ((res, body)) => {
+            let code = res |> Response.status |> Code.code_of_status;
+            let _ = Body.drain_body(body);
 
-                let config_body =
-                    `List([`String(a), `String(b)])
-                    |> Yojson.Safe.to_string
-                    |> Body.of_string;
-
-                // config endpoint
-                let config_res = Client.post(config_uri, ~body=config_body,  ~headers=headers) >>= ((res, _)) => {
-                    let code = res |> Response.status |> Code.code_of_status;
-
-                    if (code < 200 || code >= 400) {
-                        Lwt.return(Error);
-                    } else {
-                        Lwt.return(Executed);
-                    };
-                };
-
-                switch (config_res |> Lwt.poll) {
-                    | Some(p) => p
-                    | None => Error
-                }
-
-            })
-            |> List.map(is_successful)
-            |> List.fold_left((a,b) => a && b, true);
+            if (code < 200 || code >= 400) {
+                Lwt.return(Error);
+            } else {
+                Lwt.return(Executed);
+            };
+        };
 
         // Body indicates full reanalysis because of empty list
-        let analyze_body = `List([
-         `String ("Functions"),
-         `List ([])
-        ])|> Yojson.Safe.to_string |> Body.of_string;
+        /*let analyze_body =
+            `List([`String ("Functions"), `List ([])])
+            |> Yojson.Safe.to_string
+            |> Body.of_string;*/
 
-        if (config_res_states) {
+        // analyze endpoint
+        /*let analyze_req (state) = Client.post(analyze_uri, ~body=analyze_body, ~headers=headers) >>= ((res, body)) => {
+            let p = switch (state |> Lwt.state) {
+                | Lwt.Return(Executed) => Executed
+                | _ => Error
+            };
 
-            // analyze endpoint
-            let new_state = Client.post(analyze_uri, ~body=analyze_body, ~headers=headers) >>= ((res, _)) => {
+            if (p == Executed) {
+
                 let code = res |> Response.status |> Code.code_of_status
+                let _ = Body.drain_body(body);
 
                 if (code < 200 || code >= 400) {
                     Lwt.return(Error)
                 } else {
                     Lwt.return(Executed)
                 };
-            };
 
-            res_state := switch (new_state |> Lwt.poll) {
-                | Some(p) => p
-                | None => Error
-            };
+            } else {
+                Lwt.return(Error);
+            }
+        };*/
 
-        }
+        let%lwt res = config_req()/* >>= analyze_req*/;
 
         let lastIndex = Array.length(new_history) - 1;
         // This tuple is used to calculate where to update the last added history/parameter element 
@@ -152,17 +145,18 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
         if (pickedElem == element) {
             let intermediateHistory = endIndex |> Array.sub(new_history, startIndex);
 
-            let new_element = (parameter_list, time, res_state.contents);
+            let new_element = (parameter_list, time, res);
 
             let new_history = if (sortDesc) {
                 intermediateHistory |> Array.append([|new_element|])
             } else {
                 [|new_element|] |> Array.append(intermediateHistory)
             };
+
             setHistory(_ => new_history);
             setDisableCancel(_ => true);
         }
-        
+
     };
 
     // This cancel function will be commented out as the feature is not implemented yet, but the option for it is there.
