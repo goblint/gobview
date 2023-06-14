@@ -229,9 +229,9 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
     let list_elements = history |> map_history_entry_to_list_entry;
 
     let icon_for_sort_dir = if (sortDesc) {
-        <IconCaretUpFilled on_click=on_sort />
+        <IconArrowUp on_click=on_sort />
     } else {
-        <IconCaretDownFilled on_click=on_sort />
+        <IconArrowDown on_click=on_sort />
     };
 
     <div>
