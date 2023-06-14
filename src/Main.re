@@ -49,7 +49,17 @@ let make = (~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc) => {
   );
 
   let (goblint_path, parameters) = state |> ParameterUtils.get_parameters;
-  let destructured_params = parameters |> ParameterUtils.group_parameters;
+  let destructured_params =
+    parameters
+    |> ParameterUtils.group_parameters
+    |> List.filter(s => {
+      let regex = Str.regexp_string("server.");
+
+      switch (Str.search_forward(regex, s, 0)) {
+        | exception Not_found => true;
+        | _ => false;
+      }
+    });
 
   let (history, setHistory) = React.useState(_ => [|(destructured_params, Time.get_local_time(), ParameterView.Executed)|]);
 

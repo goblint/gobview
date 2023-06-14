@@ -22,7 +22,7 @@ let get_parameters = (state) => {
  
 let construct_parameters = (parameters) => parameters |> String.split_on_char(' ');//|> List.map((s) => "'" |> String.cat(s) |> String.cat("'"))
 
-let rec group_parameters = (parameters) => {
+let rec group_parameters = (parameters: list(string)): list(string) => {
     if (parameters |> List.length > 0) {
         
         let (command, tail) = (parameters |> List.hd, parameters |> List.tl);

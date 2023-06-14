@@ -2,8 +2,6 @@ open Lwt
 open Cohttp
 open Cohttp_lwt
 
-module Lwt_js = Js_of_ocaml_lwt.Lwt_js
-module Lwt_js_events = Js_of_ocaml_lwt.Lwt_js_events
 module Client = Cohttp_lwt_jsoo.Client
 module ReactDOM = React.Dom
 
@@ -68,8 +66,7 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
             value
             |> ParameterUtils.construct_parameters
             |> ParameterUtils.group_parameters
-            |> List.filter(s => !(String.starts_with(~prefix="server.", s))) // TODO in whitelist: Don't allow server modifications;
-        
+            
         let time = Time.get_local_time();
         let element = (parameter_list, time, Executing);
 
@@ -82,24 +79,97 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
         setHistory(_ => new_history);
         setDisableCancel(_ => false);
 
-        
-        // TODO remove preliminary body and replace with actual params
-        let config_body =
-            `List([`String("files[+]"), `String("")])
-            |> Yojson.Safe.to_string
-            |> Body.of_string;
+        let modify_history = (result: paramState): unit => {
+            let lastIndex = Array.length(new_history) - 1;
+            // This tuple is used to calculate where to update the last added history/parameter element 
+            let (index, startIndex, endIndex) = if (sortDesc) {
+                (0, 1, lastIndex)
+            } else {
+                (lastIndex, 0, lastIndex)
+            };
+
+            let pickedElem = index |> Array.get(new_history);
+
+            if (pickedElem == element) {
+                let intermediateHistory = endIndex |> Array.sub(new_history, startIndex);
+
+                let new_element = (parameter_list, time, result);
+
+                let new_history = if (sortDesc) {
+                    intermediateHistory |> Array.append([|new_element|])
+                } else {
+                    [|new_element|] |> Array.append(intermediateHistory)
+                };
+
+                setHistory(_ => new_history);
+                setDisableCancel(_ => true);
+            }
+        }
 
         // config endpoint
-        let config_req () = Client.post(config_uri, ~body=config_body,  ~headers=headers) >>= ((res, body)) => {
-            let code = res |> Response.status |> Code.code_of_status;
-            let _ = Body.drain_body(body);
+        /*let inner_config_api_call = (): Lwt.t(paramState) => {
+            let (promise, resolver) = Lwt.task();
+            let config_req = Js.wrap_callback(() => {
+                Client.post(config_uri, ~body=config_body,  ~headers=headers) >>=
+                ((res, body)) => {
+                    let code = res |> Response.status |> Code.code_of_status;
+                    let _ = Body.drain_body(body);
 
-            if (code < 200 || code >= 400) {
-                Lwt.return(Error);
-            } else {
-                Lwt.return(Executed);
+                    if (code < 200 || code >= 400) {
+                        Lwt.return(Error);
+                    } else {
+                        Lwt.return(Executed);
+                    };
+                }}
+            );
+            let wakeup_call_promise = Js.wrap_callback((p: paramState) => Lwt.wakeup(resolver, p));
+
+            let promise_from_js = Js.Unsafe.fun_call(config_req, [||]);
+            let () = ignore @@ promise_from_js##then_(wakeup_call_promise);
+            promise
+        };*/
+
+        let inner_config_api_call = (config_body): Lwt.t(paramState) => {
+            Client.post(config_uri, ~body=config_body,  ~headers=headers) >>=
+            ((res, body)) => {
+                let code = res |> Response.status |> Code.code_of_status;
+                let _ = Body.drain_body(body);
+
+                if (code < 200 || code >= 400) {
+                    Lwt.return(Error);
+                } else {
+                    Lwt.return(Executed);
+                };
             };
         };
+
+        let config_api_call = (config_opts: list((string, string))) => {
+            config_opts
+            |> List.map(((k,v)) => {
+                `List([`String(k), `String(v)])
+                |> Yojson.Safe.to_string
+                |> Body.of_string;
+            })
+            |> List.map(inner_config_api_call)
+            |> Lwt.npick;
+        };
+
+        let analyze_api_call = () => {
+            let config_opts = parameter_list |> ParameterUtils.tuples_from_parameters;
+
+            config_opts |> config_api_call >>= (result) => {
+                
+                let result_state = result
+                |> List.map(is_successful)
+                |> List.fold_left((a,b) => a && b, true);
+
+                // TODO analyze call
+                modify_history(if (result_state) { Executed } else { Error });
+                Lwt.return();
+            }
+        }
+
+        let () = analyze_api_call() |> ignore
 
         // Body indicates full reanalysis because of empty list
         /*let analyze_body =
@@ -130,9 +200,32 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
             }
         };*/
 
-        let%lwt res = config_req()/* >>= analyze_req*/;
+        /*let eval_config_req = Js.wrap_callback (() => {
+            Lwt_js.sleep(3.) >>= () => config_req//() => {
+                //let _ = Lwt_js.sleep(3.);
+                //Lwt.return(res)
+                /*switch (config_req |> Lwt.state) {
+                | Lwt.Return(o) => o
+                | Lwt.Sleep => Executing
+                | _ => Error
+                }}*/
+            //}
+        });
 
-        let lastIndex = Array.length(new_history) - 1;
+        let res = Js.Unsafe.fun_call(eval_config_req, [| /*Js.Unsafe.inject Js.undefined*/ |]);
+        res |> paramState_to_string |> Util.log*/
+
+        //let%lwt res = config_req()/* >>= analyze_req*/;
+        /*let res = 
+            switch (ClientApi.resolve_promise(config_req)) |> Lwt.state) {
+            | Lwt.Return(Executed) => Executed
+            | Lwt.Sleep => Executing
+            | _ => Error
+            }*/
+
+        // TODO restore code if needed, all from below
+
+        /*let lastIndex = Array.length(new_history) - 1;
         // This tuple is used to calculate where to update the last added history/parameter element 
         let (index, startIndex, endIndex) = if (sortDesc) {
             (0, 1, lastIndex)
@@ -145,7 +238,7 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
         if (pickedElem == element) {
             let intermediateHistory = endIndex |> Array.sub(new_history, startIndex);
 
-            let new_element = (parameter_list, time, res);
+            let new_element = (parameter_list, time, res.contents);
 
             let new_history = if (sortDesc) {
                 intermediateHistory |> Array.append([|new_element|])
@@ -155,7 +248,7 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
 
             setHistory(_ => new_history);
             setDisableCancel(_ => true);
-        }
+        }*/
 
     };
 
