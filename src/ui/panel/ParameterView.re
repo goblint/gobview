@@ -106,29 +106,6 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
             }
         }
 
-        // config endpoint
-        /*let inner_config_api_call = (): Lwt.t(paramState) => {
-            let (promise, resolver) = Lwt.task();
-            let config_req = Js.wrap_callback(() => {
-                Client.post(config_uri, ~body=config_body,  ~headers=headers) >>=
-                ((res, body)) => {
-                    let code = res |> Response.status |> Code.code_of_status;
-                    let _ = Body.drain_body(body);
-
-                    if (code < 200 || code >= 400) {
-                        Lwt.return(Error);
-                    } else {
-                        Lwt.return(Executed);
-                    };
-                }}
-            );
-            let wakeup_call_promise = Js.wrap_callback((p: paramState) => Lwt.wakeup(resolver, p));
-
-            let promise_from_js = Js.Unsafe.fun_call(config_req, [||]);
-            let () = ignore @@ promise_from_js##then_(wakeup_call_promise);
-            promise
-        };*/
-
         let inner_config_api_call = (config_body): Lwt.t(paramState) => {
             Client.post(config_uri, ~body=config_body,  ~headers=headers) >>=
             ((res, body)) => {
@@ -154,101 +131,51 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
             |> Lwt.npick;
         };
 
-        let analyze_api_call = () => {
-            let config_opts = parameter_list |> ParameterUtils.tuples_from_parameters;
-
-            config_opts |> config_api_call >>= (result) => {
-                
-                let result_state = result
-                |> List.map(is_successful)
-                |> List.fold_left((a,b) => a && b, true);
-
-                // TODO analyze call
-                modify_history(if (result_state) { Executed } else { Error });
-                Lwt.return();
-            }
-        }
-
-        let () = analyze_api_call() |> ignore
-
-        // Body indicates full reanalysis because of empty list
-        /*let analyze_body =
-            `List([`String ("Functions"), `List ([])])
-            |> Yojson.Safe.to_string
-            |> Body.of_string;*/
-
-        // analyze endpoint
-        /*let analyze_req (state) = Client.post(analyze_uri, ~body=analyze_body, ~headers=headers) >>= ((res, body)) => {
-            let p = switch (state |> Lwt.state) {
-                | Lwt.Return(Executed) => Executed
-                | _ => Error
-            };
-
-            if (p == Executed) {
-
-                let code = res |> Response.status |> Code.code_of_status
+        let inner_analyze_api_call = (analyze_body): Lwt.t(paramState) => {
+            Client.post(analyze_uri, ~body=analyze_body,  ~headers=headers) >>=
+            ((res, body)) => {
+                let code = res |> Response.status |> Code.code_of_status;
                 let _ = Body.drain_body(body);
 
                 if (code < 200 || code >= 400) {
-                    Lwt.return(Error)
+                    Lwt.return(Error);
                 } else {
-                    Lwt.return(Executed)
+                    Lwt.return(Executed);
                 };
-
-            } else {
-                Lwt.return(Error);
-            }
-        };*/
-
-        /*let eval_config_req = Js.wrap_callback (() => {
-            Lwt_js.sleep(3.) >>= () => config_req//() => {
-                //let _ = Lwt_js.sleep(3.);
-                //Lwt.return(res)
-                /*switch (config_req |> Lwt.state) {
-                | Lwt.Return(o) => o
-                | Lwt.Sleep => Executing
-                | _ => Error
-                }}*/
-            //}
-        });
-
-        let res = Js.Unsafe.fun_call(eval_config_req, [| /*Js.Unsafe.inject Js.undefined*/ |]);
-        res |> paramState_to_string |> Util.log*/
-
-        //let%lwt res = config_req()/* >>= analyze_req*/;
-        /*let res = 
-            switch (ClientApi.resolve_promise(config_req)) |> Lwt.state) {
-            | Lwt.Return(Executed) => Executed
-            | Lwt.Sleep => Executing
-            | _ => Error
-            }*/
-
-        // TODO restore code if needed, all from below
-
-        /*let lastIndex = Array.length(new_history) - 1;
-        // This tuple is used to calculate where to update the last added history/parameter element 
-        let (index, startIndex, endIndex) = if (sortDesc) {
-            (0, 1, lastIndex)
-        } else {
-            (lastIndex, 0, lastIndex)
+            };
         };
 
-        let pickedElem = index |> Array.get(new_history);
+        let analyze_body =
+            `List([`String ("Functions"), `List ([])])
+            |> Yojson.Safe.to_string
+            |> Body.of_string;
 
-        if (pickedElem == element) {
-            let intermediateHistory = endIndex |> Array.sub(new_history, startIndex);
+        let analyze_api_call = () => {
+            let config_opts = parameter_list |> ParameterUtils.tuples_from_parameters;
 
-            let new_element = (parameter_list, time, res.contents);
+            config_opts
+            |> config_api_call >>=
+            (result) => {
+                let result_state = result
+                |> List.map(is_successful)
+                |> List.fold_left((a,b) => a && b, true)
+                |> ((s) => if (s) { Executed } else { Error });
 
-            let new_history = if (sortDesc) {
-                intermediateHistory |> Array.append([|new_element|])
-            } else {
-                [|new_element|] |> Array.append(intermediateHistory)
+                Lwt.return(result_state);
+            } >>=
+            (result) => {
+                switch result {
+                | Executed => inner_analyze_api_call(analyze_body);
+                | _ => Lwt.return(Error);
+                }
+            } >>=
+            (result) => {
+                modify_history(result);
+                Lwt.return()
             };
+        };
 
-            setHistory(_ => new_history);
-            setDisableCancel(_ => true);
-        }*/
+        let () = analyze_api_call() |> ignore;
 
     };
 
