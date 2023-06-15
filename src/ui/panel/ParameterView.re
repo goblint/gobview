@@ -229,7 +229,7 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
                         </div>
                         <div className="col">
                             {parameter_grouping |> List.mapi((j,e) => {
-                                <span key={"pill_" ++ string_of_int(j)} className="m-1 badge rounded-pill bg-secondary">{e |> React.string}</span>
+                                <span key={"pill_" ++ string_of_int(j)} className="m-1 badge rounded-pill bg-secondary text">{e |> React.string}</span>
                             }) |> React.list}
                         </div>
                     </div>
@@ -250,7 +250,7 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
         | true => {
             <div>
                 <Input class_=["form-control", "is-invalid"] value on_change on_submit key="tooltip_path" />
-                <div className="invalid-feedback">
+                <div className="invalid-tooltip">
                     {"Server options are not allowed" |> React.string}
                 </div>
             </div>
