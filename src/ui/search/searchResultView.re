@@ -76,6 +76,13 @@ let make = (~matches: Search.matches, ~dispatch) => {
        <div className="d-flex justify-content-center">
          <div className="spinner-border" />
        </div>
+     | NotSupported =>
+       <div className="alert alert-warning alert-dismissible">
+         {"Query not supported" |> React.string}
+         <Button class_=["btn-close"] color=`None on_click>
+           React.null
+         </Button>
+       </div>
      | Done([]) =>
        <div className="alert alert-warning alert-dismissible">
          {"No results found" |> React.string}

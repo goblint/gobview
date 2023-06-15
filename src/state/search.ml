@@ -30,6 +30,7 @@ module Query = struct
 
   let is_semantic (q : t) = not (String.is_empty q.expression)
 
+  (* throws a QueryMapping.Not_supported exception if query is not supported *)
   let execute (q : t) cil =
     if is_semantic q then (
       ExpressionEvaluation.gv_query := Some q;
@@ -87,7 +88,7 @@ let json_ui_of_graphical_ui gu =
 type mode = Graphical | Json
 
 module Matches = struct
-  type t = None | Loading | Done of (string * Cil.location * string * int) list
+  type t = None | Loading | Done of (string * Cil.location * string * int) list | NotSupported
 end
 
 type matches = Matches.t
@@ -114,5 +115,10 @@ let execute s cil =
     | Graphical -> Some (GraphicalUi.to_query s.graphical_ui)
     | Json -> fst s.json_ui.query
   in
-  let f q = { s with matches = Done (Query.execute q cil) } in
+
+  let f q =
+    let r = try
+      Matches.Done (Query.execute q cil)
+    with QueryMapping.Not_supported -> Matches.NotSupported in
+    { s with matches = r } in
   Option.map_default f s q
