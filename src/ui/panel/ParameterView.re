@@ -40,8 +40,11 @@ let rev_arr = (array) => array |> Array.to_list |> List.rev |> Array.of_list;
 let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
 
     let (value, setValue) = React.useState(_ => parameters |> ParameterUtils.concat_parameter_list);
-    let (disableCancel, setDisableCancel) = React.useState(_ => true);
+    // Linked to cancelation, see reasons below for why it is commented out
+    //let (disableCancel, setDisableCancel) = React.useState(_ => true);
+    let (disableRun, setDisableRun) = React.useState(_ => false);
     let (sortDesc, setSortDesc) = React.useState(_ => true);
+    let (hasServerOpts, setHasServerOpts) = React.useState(_ => false);
 
     React.useEffect1(() => {
         None
@@ -57,7 +60,16 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
         setSortDesc(_ => !sortDesc);
     }
 
+
     let on_change = (new_value) => {
+        let server_opt_regex = Str.regexp_string("server.");
+        let server_opts_found = switch (Str.search_forward(server_opt_regex, new_value, 0)) {
+            | exception Not_found => false;
+            | _ => true
+        }
+        setHasServerOpts(_ => server_opts_found);
+        setDisableRun(_ => server_opts_found);
+
         setValue(_ => new_value);
     };
 
@@ -77,7 +89,7 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
         };
 
         setHistory(_ => new_history);
-        setDisableCancel(_ => false);
+        //setDisableCancel(_ => false);
 
         let modify_history = (result: paramState): unit => {
             let lastIndex = Array.length(new_history) - 1;
@@ -102,7 +114,7 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
                 };
 
                 setHistory(_ => new_history);
-                setDisableCancel(_ => true);
+                //setDisableCancel(_ => true);
             }
         }
 
@@ -179,8 +191,8 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
 
     };
 
-    // This cancel function will be commented out as the feature is not implemented yet, but the option for it is there.
-    let on_cancel = () => {
+    // This cancel function is here in case it will be implemented in the http-server, not far fetched.
+    /*let on_cancel = () => {
         let lastElemIndex = Array.length(history) - 1;
         let (param, time, _) = Array.get(history, lastElemIndex);
 
@@ -189,9 +201,9 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
         setHistory(_ => new_history);
 
         setDisableCancel(_ => true);
-    };
+    };*/
 
-    let playButton = <Button on_click={on_submit}>
+    let playButton = <Button disabled={disableRun} on_click={on_submit}>
                          <IconPlay />
                          {"Run" |> React.string}
                      </Button>;
@@ -234,15 +246,29 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
         <IconArrowDown on_click=on_sort />
     };
 
+    let input = switch hasServerOpts {
+        | true => {
+            <div>
+                <Input class_=["form-control", "is-invalid"] value on_change on_submit key="tooltip_path" />
+                <div className="invalid-feedback">
+                    {"Server options are not allowed" |> React.string}
+                </div>
+            </div>
+        };
+        | _ => <Input value on_change on_submit key="tooltip_path" />;
+    };
+
     <div>
-        <div className="input-group mb-2">
+        <div className="input-group mb-2 has-validation">
             {playButton}
-            <Button color={`Danger} outline={true} on_click={on_cancel} disabled={disableCancel}>
+            // Commented out because http server does not support cancelation yet
+            /*<Button color={`Danger} outline={true} on_click={on_cancel} disabled={disableCancel}>
                 {"Cancel" |> React.string}
-            </Button>
+            </Button>*/
             <label data="tooltip" title=goblint_path className="input-group-text" type_="tooltip_path">{"./goblint" |> React.string}</label>
-            <Input key="tooltip_path" value on_change on_submit />
+            {input}
         </div>
+
         <div className="container-fluid text-center">
             <div className="row" style={ReactDOM.Style.make(~height="140px", ~maxHeight="100%", ~overflow="auto", ())}>
                 <ol key={"params_list"} className="list-group">
