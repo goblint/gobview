@@ -74,121 +74,123 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
     };
 
     let on_submit = () => {
-        let parameter_list = 
-            value
-            |> ParameterUtils.construct_parameters
-            |> ParameterUtils.group_parameters
-            
-        let time = Time.get_local_time();
-        let element = (parameter_list, time, Executing);
+        if (!hasServerOpts) {
+            let parameter_list = 
+                value
+                |> ParameterUtils.construct_parameters
+                |> ParameterUtils.group_parameters
+                
+            let time = Time.get_local_time();
+            let element = (parameter_list, time, Executing);
 
-        let new_history = if (sortDesc) {
-            history |> Array.append([|element|])
-        } else {
-            [|element|] |> Array.append(history)
-        };
-
-        setHistory(_ => new_history);
-        //setDisableCancel(_ => false);
-
-        let modify_history = (result: paramState): unit => {
-            let lastIndex = Array.length(new_history) - 1;
-            // This tuple is used to calculate where to update the last added history/parameter element 
-            let (index, startIndex, endIndex) = if (sortDesc) {
-                (0, 1, lastIndex)
+            let new_history = if (sortDesc) {
+                history |> Array.append([|element|])
             } else {
-                (lastIndex, 0, lastIndex)
+                [|element|] |> Array.append(history)
             };
 
-            let pickedElem = index |> Array.get(new_history);
+            setHistory(_ => new_history);
+            //setDisableCancel(_ => false);
 
-            if (pickedElem == element) {
-                let intermediateHistory = endIndex |> Array.sub(new_history, startIndex);
-
-                let new_element = (parameter_list, time, result);
-
-                let new_history = if (sortDesc) {
-                    intermediateHistory |> Array.append([|new_element|])
+            let modify_history = (result: paramState): unit => {
+                let lastIndex = Array.length(new_history) - 1;
+                // This tuple is used to calculate where to update the last added history/parameter element 
+                let (index, startIndex, endIndex) = if (sortDesc) {
+                    (0, 1, lastIndex)
                 } else {
-                    [|new_element|] |> Array.append(intermediateHistory)
+                    (lastIndex, 0, lastIndex)
                 };
 
-                setHistory(_ => new_history);
-                //setDisableCancel(_ => true);
+                let pickedElem = index |> Array.get(new_history);
+
+                if (pickedElem == element) {
+                    let intermediateHistory = endIndex |> Array.sub(new_history, startIndex);
+
+                    let new_element = (parameter_list, time, result);
+
+                    let new_history = if (sortDesc) {
+                        intermediateHistory |> Array.append([|new_element|])
+                    } else {
+                        [|new_element|] |> Array.append(intermediateHistory)
+                    };
+
+                    setHistory(_ => new_history);
+                    //setDisableCancel(_ => true);
+                }
             }
-        }
 
-        let inner_config_api_call = (config_body): Lwt.t(paramState) => {
-            Client.post(config_uri, ~body=config_body,  ~headers=headers) >>=
-            ((res, body)) => {
-                let code = res |> Response.status |> Code.code_of_status;
-                let _ = Body.drain_body(body);
+            let inner_config_api_call = (config_body): Lwt.t(paramState) => {
+                Client.post(config_uri, ~body=config_body,  ~headers=headers) >>=
+                ((res, body)) => {
+                    let code = res |> Response.status |> Code.code_of_status;
+                    let _ = Body.drain_body(body);
 
-                if (code < 200 || code >= 400) {
-                    Lwt.return(Error);
-                } else {
-                    Lwt.return(Executed);
+                    if (code < 200 || code >= 400) {
+                        Lwt.return(Error);
+                    } else {
+                        Lwt.return(Executed);
+                    };
                 };
             };
-        };
 
-        let config_api_call = (config_opts: list((string, string))) => {
-            config_opts
-            |> List.map(((k,v)) => {
-                `List([`String(k), `String(v)])
+            let config_api_call = (config_opts: list((string, string))) => {
+                config_opts
+                |> List.map(((k,v)) => {
+                    `List([`String(k), `String(v)])
+                    |> Yojson.Safe.to_string
+                    |> Body.of_string;
+                })
+                |> List.map(inner_config_api_call)
+                |> Lwt.npick;
+            };
+
+            let inner_analyze_api_call = (analyze_body): Lwt.t(paramState) => {
+                Client.post(analyze_uri, ~body=analyze_body,  ~headers=headers) >>=
+                ((res, body)) => {
+                    let code = res |> Response.status |> Code.code_of_status;
+                    let _ = Body.drain_body(body);
+
+                    if (code < 200 || code >= 400) {
+                        Lwt.return(Error);
+                    } else {
+                        Lwt.return(Executed);
+                    };
+                };
+            };
+
+            let analyze_body =
+                `List([`String ("Functions"), `List ([])])
                 |> Yojson.Safe.to_string
                 |> Body.of_string;
-            })
-            |> List.map(inner_config_api_call)
-            |> Lwt.npick;
-        };
 
-        let inner_analyze_api_call = (analyze_body): Lwt.t(paramState) => {
-            Client.post(analyze_uri, ~body=analyze_body,  ~headers=headers) >>=
-            ((res, body)) => {
-                let code = res |> Response.status |> Code.code_of_status;
-                let _ = Body.drain_body(body);
+            let analyze_api_call = () => {
+                let config_opts = parameter_list |> ParameterUtils.tuples_from_parameters;
 
-                if (code < 200 || code >= 400) {
-                    Lwt.return(Error);
-                } else {
-                    Lwt.return(Executed);
+                config_opts
+                |> config_api_call >>=
+                (result) => {
+                    let result_state = result
+                    |> List.map(is_successful)
+                    |> List.fold_left((a,b) => a && b, true)
+                    |> ((s) => if (s) { Executed } else { Error });
+
+                    Lwt.return(result_state);
+                } >>=
+                (result) => {
+                    switch result {
+                    | Executed => inner_analyze_api_call(analyze_body);
+                    | _ => Lwt.return(Error);
+                    }
+                } >>=
+                (result) => {
+                    modify_history(result);
+                    Lwt.return()
                 };
             };
-        };
 
-        let analyze_body =
-            `List([`String ("Functions"), `List ([])])
-            |> Yojson.Safe.to_string
-            |> Body.of_string;
-
-        let analyze_api_call = () => {
-            let config_opts = parameter_list |> ParameterUtils.tuples_from_parameters;
-
-            config_opts
-            |> config_api_call >>=
-            (result) => {
-                let result_state = result
-                |> List.map(is_successful)
-                |> List.fold_left((a,b) => a && b, true)
-                |> ((s) => if (s) { Executed } else { Error });
-
-                Lwt.return(result_state);
-            } >>=
-            (result) => {
-                switch result {
-                | Executed => inner_analyze_api_call(analyze_body);
-                | _ => Lwt.return(Error);
-                }
-            } >>=
-            (result) => {
-                modify_history(result);
-                Lwt.return()
-            };
-        };
-
-        let () = analyze_api_call() |> ignore;
-
+            let () = analyze_api_call() |> ignore;
+        
+        }
     };
 
     // This cancel function is here in case it will be implemented in the http-server, not far fetched.
@@ -246,27 +248,29 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
         <IconArrowDown on_click=on_sort />
     };
 
-    let input = switch hasServerOpts {
-        | true => {
-            <div>
-                <Input class_=["form-control", "is-invalid"] value on_change on_submit key="tooltip_path" />
-                <div className="invalid-tooltip">
-                    {"Server options are not allowed" |> React.string}
-                </div>
-            </div>
-        };
-        | _ => <Input value on_change on_submit key="tooltip_path" />;
-    };
-
     <div>
         <div className="input-group mb-2 has-validation">
             {playButton}
+            
             // Commented out because http server does not support cancelation yet
             /*<Button color={`Danger} outline={true} on_click={on_cancel} disabled={disableCancel}>
                 {"Cancel" |> React.string}
             </Button>*/
+
             <label data="tooltip" title=goblint_path className="input-group-text" type_="tooltip_path">{"./goblint" |> React.string}</label>
-            {input}
+            // Input and tooltip are seperated due to display issues
+            {switch hasServerOpts {
+                | true => <Input class_=["form-control", "is-invalid"] value on_change on_submit key="tooltip_path" /*style={ReactDOM.Style.make(~maxWidth="100%", ())}*//>
+                | false => <Input value on_change on_submit key="tooltip_path" />;
+            }}
+            {switch hasServerOpts {
+                | true => {
+                    <div className="invalid-tooltip">
+                        {"Server options are not allowed" |> React.string}
+                    </div>
+                };
+                | _ => React.null;
+            }}
         </div>
 
         <div className="container-fluid text-center">

@@ -1,9 +1,10 @@
 [@react.component]
-let make = (~type_=?, ~class_=?, ~value, ~on_change, ~on_submit=?) => {
+let make = (~type_=?, ~class_=?, ~value, ~on_change, ~on_submit=?, ~style=?) => {
   let (type_, class_, on_submit) =
     Utils.fix_opt_args3(type_, class_, on_submit);
   let type_ = Option.value(type_, ~default=`Text);
   let class_ = Option.value(class_, ~default=["form-control"]);
+  let style_ = Option.value(style, ~default=React.Dom.Style.make());
 
   let type_ =
     switch (type_) {
@@ -25,5 +26,5 @@ let make = (~type_=?, ~class_=?, ~value, ~on_change, ~on_submit=?) => {
       Option.iter(cb => cb(), on_submit);
     };
 
-  <input type_ className value onChange onKeyUp />;
+  <input type_ className value onChange onKeyUp style=style_/>;
 };
