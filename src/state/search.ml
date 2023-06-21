@@ -9,7 +9,7 @@ module Query = struct
   type error = ParseError of string
 
   let create ?(kind = CodeQuery.Var_k) ?(target = CodeQuery.Name_t "") ?(find = CodeQuery.Uses_f)
-      ?(structure = CodeQuery.None_s) ?(limitation = CodeQuery.None_c) ?(expression = "") (* TODO: limitation argument never used *)
+      ?(structure = CodeQuery.None_s) ?(limitation = CodeQuery.None_c) ?(expression = None) (* TODO: limitation argument never used *)
       ?(mode = `Must) () : t =
     { kind; target; find; structure; limitation; expression; mode }
 
@@ -28,7 +28,7 @@ module Query = struct
   let to_syntactic_query (q : t) : CodeQuery.query =
     { sel = []; k = q.kind; tar = q.target; f = q.find; str = q.structure; lim = q.limitation }
 
-  let is_semantic (q : t) = not (String.is_empty q.expression)
+  let is_semantic (q : t) = Option.is_some q.expression
 
   (* throws a QueryMapping.Not_supported exception if query is not supported *)
   let execute (q : t) cil =
@@ -55,7 +55,7 @@ module GraphicalUi = struct
     target : (CodeQuery.target, target_error) result;
     find : CodeQuery.find;
     structure : CodeQuery.structure;
-    expression : string;
+    expression : string option;
     mode : [ `Must | `May ];
   }
 
