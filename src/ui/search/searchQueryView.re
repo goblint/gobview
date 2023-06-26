@@ -26,8 +26,10 @@ let make = (~search: Search.t, ~dispatch) => {
         mode
         dispatch
       />
-      <Link on_click={switch_on_click(Search.Json)}>
-        <div className="mt-4"> {"Switch to JSON editor" |> React.string} </div>
+      <Link class_=["switch-to-json"] on_click={switch_on_click(Search.Json)}>
+        <div className="mt-4">
+          {"Switch to JSON editor" |> React.string}
+        </div>
       </Link>
     </>
   | Json =>

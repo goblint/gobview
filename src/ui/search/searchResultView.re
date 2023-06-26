@@ -9,7 +9,7 @@ let make_table = (matches, dispatch) => {
   };
 
   <>
-    <Button class_=["btn", "my-2"] color=`Danger outline=true on_click=clear>
+    <Button class_=["btn", "my-2", "clear-btn"] color=`Danger outline=true on_click=clear>
       {"Clear results" |> React.string}
     </Button>
     <CollapsibleList collapsed=false>
