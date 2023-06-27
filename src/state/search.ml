@@ -5,7 +5,6 @@ open Syntacticsearch
 
 module Query = struct
   type t = ExpressionEvaluation.query
-
   type error = ParseError of string
 
   let create ?(kind = CodeQuery.Var_k) ?(target = CodeQuery.Name_t "") ?(find = CodeQuery.Uses_f)
@@ -25,27 +24,18 @@ module Query = struct
 
   let to_string = ExpressionEvaluation.query_to_yojson %> Yojson.Safe.to_string
 
-  let to_syntactic_query (q : t) : CodeQuery.query =
-    { sel = []; k = q.kind; tar = q.target; f = q.find; str = q.structure; lim = q.limitation }
-
-  let is_semantic (q : t) = Option.is_some q.expression
-
   (* throws a QueryMapping.Not_supported exception if query is not supported *)
   let execute (q : t) cil =
-    if is_semantic q then (
-      ExpressionEvaluation.gv_query := Some q;
-      Maingoblint.do_analyze None cil;
-      let results = !ExpressionEvaluation.gv_results in
-      let pred =
-        if q.mode = `Must then snd %> Option.default false else snd %> Option.default true
-      in
-      results |> List.filter pred |> List.map fst)
-    else QueryMapping.map_query (to_syntactic_query q) cil
+    ExpressionEvaluation.gv_query := Some q;
+    Maingoblint.do_analyze None cil;
+    let results = !ExpressionEvaluation.gv_results in
+    let pred =
+      if q.mode = `Must then snd %> Option.default false else snd %> Option.default true
+    in
+    results |> List.filter pred |> List.map fst
 
   let string_of_error e = match e with ParseError s -> s
 end
-
-type query = Query.t
 
 module GraphicalUi = struct
   type target_error = ID_t of string
@@ -69,11 +59,10 @@ module GraphicalUi = struct
   let to_query { kind; target; find; structure; expression; mode } =
     let target = Result.to_option target in
     Query.create ~kind ?target ~find ~structure ~expression ~mode ()
+
 end
 
-type graphical_ui = GraphicalUi.t
-
-type json_ui = { text : string; query : query option * Query.error option }
+type json_ui = { text : string; query : Query.t option * Query.error option }
 
 let graphical_ui_of_json_ui ju =
   match fst ju.query with
@@ -93,7 +82,7 @@ end
 
 type matches = Matches.t
 
-type t = { mode : mode; graphical_ui : graphical_ui; json_ui : json_ui; matches : matches }
+type t = { mode : mode; graphical_ui : GraphicalUi.t; json_ui : json_ui; matches : matches }
 
 let default =
   {
