@@ -57,24 +57,16 @@ let headers = [
     ("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 ] |> Header.of_list;
 
-let rev_arr = (array) => array |> Array.to_list |> List.rev |> Array.of_list;
-
 [@react.component]
-let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
-
-    let (value, setValue) = React.useState(_ => parameters |> ParameterUtils.concat_parameter_list);
+let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableRun, ~inputState, ~setInputState, ~sortDesc, ~setSortDesc, ~history, ~setHistory) => {
     // Linked to cancelation, see reasons below in on_cancel() for why it is commented out
     //let (disableCancel, setDisableCancel) = React.useState(_ => true);
-    let (disableRun, setDisableRun) = React.useState(_ => false);
-    let (inputState, setInputState) = React.useState(_ => Ok);
-    let (sortDesc, setSortDesc) = React.useState(_ => true);
-
+    
     React.useEffect1(() => {
         None
-    }, [|value|]);
+    }, [|inputValue|]);
 
     React.useEffect1(() => {
-        setHistory(_ => history |> rev_arr);
         None
     }, [|sortDesc|]);
 
@@ -111,8 +103,8 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
         }
     }
 
-    let react_on_input = (parameter_list, is_malformed, value) => {
-        let input_state = is_input_invalid(parameter_list, is_malformed, value);
+    let react_on_input = (parameter_list, is_malformed, inputValue) => {
+        let input_state = is_input_invalid(parameter_list, is_malformed, inputValue);
         setInputState(_ => input_state);
 
         let isInvalid = !is_ok(input_state)
@@ -121,60 +113,40 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
         isInvalid
     }
 
-    let on_change = (new_value) => {
+    let on_change = (new_inputValue) => {
         let (tuple_parameter_list, is_malformed) =
-            new_value
+            new_inputValue
             |> ParameterUtils.construct_parameters
             |> ((p,b)) => (p |> ParameterUtils.tuples_from_parameters, b);
         
-        let _ = react_on_input(tuple_parameter_list, is_malformed, new_value);
-        setValue(_ => new_value);
+        let _ = react_on_input(tuple_parameter_list, is_malformed, new_inputValue);
+        setInputValue(_ => new_inputValue);
     };
 
     let on_submit = () => {
         let (parameter_list, tuple_parameter_list, is_malformed) =
-            value
+            inputValue
             |> ParameterUtils.construct_parameters
             |> ((p,b)) => (p, p |> ParameterUtils.tuples_from_parameters, b);
 
         // To prevent invalid default input to be executed, with i.e. blacklisted options, we check the input value first
-        let isInvalid = react_on_input(tuple_parameter_list, is_malformed, value);
+        let isInvalid = react_on_input(tuple_parameter_list, is_malformed, inputValue);
 
         if (!isInvalid) {
             let time = Time.get_local_time();
             let element = (parameter_list, time, Executing);
 
-            let new_history = if (sortDesc) {
-                history |> Array.append([|element|])
-            } else {
-                [|element|] |> Array.append(history)
-            };
+            let new_history = List.cons(element, history);
 
             setHistory(_ => new_history);
             //setDisableCancel(_ => false);
 
             let modify_history = (result: paramState): unit => {
-                let lastIndex = Array.length(new_history) - 1;
-                // This tuple is used to calculate where to update the last added history/parameter element 
-                let (index, startIndex, endIndex) = if (sortDesc) {
-                    (0, 1, lastIndex)
-                } else {
-                    (lastIndex, 0, lastIndex)
-                };
-
-                let pickedElem = index |> Array.get(new_history);
+                let pickedElem = new_history |> List.hd;
 
                 if (pickedElem == element) {
-                    let intermediateHistory = endIndex |> Array.sub(new_history, startIndex);
-
-                    let new_element = (parameter_list, time, result);
-
-                    let new_history = if (sortDesc) {
-                        intermediateHistory |> Array.append([|new_element|])
-                    } else {
-                        [|new_element|] |> Array.append(intermediateHistory)
-                    };
-
+                    let intermediateHistory = new_history |> List.tl;
+                    let new_history = List.cons(((parameter_list, time, result)), intermediateHistory);
                     setHistory(_ => new_history);
                     //setDisableCancel(_ => true);
                 }
@@ -258,13 +230,10 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
 
     // This cancel function is here in case it will be implemented in the http-server, not far fetched.
     /*let on_cancel = () => {
-        let lastElemIndex = Array.length(history) - 1;
-        let (param, time, _) = Array.get(history, lastElemIndex);
-
-        let intermediateHistory = Array.sub(history, 0, lastElemIndex);
-        let new_history = Array.append(intermediateHistory, [|(param, time, Canceled)|]);
+        let (param, time, _) = history |> List.hd;
+        let intermediateHistory = history |> List.tl;
+        let new_history = List.cons(((param, time, Canceled)), intermediateHistory);
         setHistory(_ => new_history);
-
         setDisableCancel(_ => true);
     };*/
 
@@ -273,8 +242,16 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
                          {"Run" |> React.string}
                      </Button>;
 
-    let map_history_entry_to_list_entry = (arr) => {
-        arr |> Array.mapi((i, (parameter_grouping, time, paramState)) =>
+    let map_history_entry_to_list_entry = (history) => {
+        history
+        |> (history) => {
+            if (!sortDesc) {
+                history |> List.rev
+            } else {
+                history
+            }
+        }
+        |> List.mapi((i, (parameter_grouping, time, paramState)) =>
             {<li key={"params_" ++ string_of_int(i)} className="list-group-item">
                 <div className="container text-center">
                     <div className="row">
@@ -319,8 +296,8 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
             {switch inputState {
                 | Malformed
                 | Blacklisted
-                | Empty => <Input class_=["form-control", "is-invalid"] value on_change on_submit key="tooltip_path" /*id=input_id style={ReactDOM.Style.make(~maxWidth="100%", ())}*//>
-                | Ok => <Input value on_change on_submit key="tooltip_path" /*id=input_id*/ />;
+                | Empty => <Input class_=["form-control", "is-invalid"] value=inputValue on_change on_submit key="tooltip_path" />
+                | Ok => <Input value=inputValue on_change on_submit key="tooltip_path" /*id=input_id*/ />;
             }}
             {switch inputState {
                 | Ok => React.null;
@@ -355,7 +332,7 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
                              </div>
                          </div>
                      </li>}
-                    {list_elements |> Array.to_list |> React.list}
+                    {list_elements |> React.list}
                 </ol>
             </div>
         </div>

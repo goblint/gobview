@@ -48,10 +48,16 @@ let make = (~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc) => {
     [|state.display|],
   );
 
+  // State management for ParameterView component
   let (goblint_path, parameters) = state |> ParameterUtils.get_parameters;
   let (destructured_params, _) = parameters |> ParameterUtils.construct_parameters;
 
-  let (history, setHistory) = React.useState(_ => [|(destructured_params, Time.get_local_time(), ParameterView.Executed)|]);
+  let (history, setHistory) = React.useState(_ => [(destructured_params, Time.get_local_time(), ParameterView.Executed)]);
+  let (inputValue, setInputValue) = React.useState(_ => destructured_params |> ParameterUtils.concat_parameter_list);
+  let (disableRun, setDisableRun) = React.useState(_ => false);
+  let (inputState, setInputState) = React.useState(_ => ParameterView.Ok);
+  let (sortDesc, setSortDesc) = React.useState(_ => true);
+
 
   React.useEffect1(() => {
       None
@@ -75,7 +81,7 @@ let make = (~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc) => {
       | None => <div className="content d-flex flex-column h-75 overflow-auto p-4" />
       | Some(f) => <Content state display=f dispatch />
       }}
-      <Panel state dispatch goblint_path parameters=destructured_params history setHistory />
+      <Panel state dispatch goblint_path inputValue setInputValue disableRun setDisableRun inputState setInputState sortDesc setSortDesc history setHistory />
     </div>
     <div className="col-3 border-start overflow-auto py-2 h-100">
         <SidebarRight
