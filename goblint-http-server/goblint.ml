@@ -57,11 +57,7 @@ let config_raw goblint name value =
   | Ok _ -> Lwt.return_unit
   | Error err -> invalid_arg err.message
 
-let option_whitelist = [] |> Set.of_list
-
 let config goblint name value =
-  if not (Set.mem name option_whitelist) then
-    invalid_arg (Printf.sprintf "Option '%s' is not in the whitelist" name);
   with_lock goblint (fun () -> config_raw goblint name value)
 
 let temp_dir () = Utils.temp_dir "goblint-http-server." ""

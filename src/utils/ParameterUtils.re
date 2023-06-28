@@ -1,90 +1,66 @@
 open State
 
-let concat_parameters = (parameters) => {
-    parameters
-    |> String.split_on_char(' ')
-    |> List.map((s) => { String.sub(s, 1, String.length(s)-2)})
-    |> String.concat(" ")
-};
-
 let concat_parameter_list = String.concat(" ");
+let concat_grouped_parameters = (parameters) => parameters |> List.map(concat_parameter_list) |> concat_parameter_list;
 
+let parameters_regex = Str.regexp({|\(--\(enable\|disable\) [-a-zA-Z0-9\._]+\)\|\(--set [-a-zA-Z0-9\._]+\(\[\(\+\|\-\)\]\)? [a-zA-Z0-9\._\/-]+\|\("\|'\)[a-zA-Z0-9\._, \!\?\$\*\/-]*\("\|'\)\|\[\(\(\(\("\|'\)[a-zA-Z0-9\._, \!\?\$\*\/-]*\("\|'\)\|[a-zA-Z0-9\._\/-]+\)\(\([ ]*,[ ]*\)\(\("\|'\)[a-zA-Z0-9\._, \!\?\$\*\/-]*\("\|'\)\|[a-zA-Z0-9\._\/-]+\)\)*\)\|\(\("\|'\)[a-zA-Z0-9\._, \!\?\$\*\/-]*\("\|'\)\)\|[a-zA-Z0-9\._\/-]*\)\]\)\|\(--[-a-zA-Z0-9\._]+\(\[\(\+\|\-\)\]\)? \([a-zA-Z0-9\._\/-]+\|\("\|'\)[a-zA-Z0-9\._, \!\?\$\*\/-]*\("\|'\)\|\[\(\(\(\("\|'\)[a-zA-Z0-9\._, \!\?\$\*\/-]*\("\|'\)\|[a-zA-Z0-9\._\/-]+\)\(\([ ]*,[ ]*\)\(\("\|'\)[a-zA-Z0-9\._, \!\?\$\*\/-]*\("\|'\)\|[a-zA-Z0-9\._\/-]+\)\)*\)\|\(\("\|'\)[a-zA-Z0-9\._, \!\?\$\*\/-]*\("\|'\)\)\|[a-zA-Z0-9\._\/-]*\)\]\)\)|});
+let enable_disable_regex = Str.regexp({|--\(enable\|disable\) \([-a-zA-Z0-9\._]+\)|});
+let set_regex = Str.regexp({|--set \([-a-zA-Z0-9\._]+\(\[\(\+\|\-\)\]\)?\) \([a-zA-Z0-9\._\/-]+\|\("\|'\)[a-zA-Z0-9\._, \!\?\$\*\/-]*\("\|'\)\|\[\(\(\(\("\|'\)[a-zA-Z0-9\._, \!\?\$\*\/-]*\("\|'\)\|[a-zA-Z0-9\._\/-]+\)\(\([ ]*,[ ]*\)\(\("\|'\)[a-zA-Z0-9\._, \!\?\$\*\/-]*\("\|'\)\|[a-zA-Z0-9\._\/-]+\)\)*\)\|\(\("\|'\)[a-zA-Z0-9\._, \!\?\$\*\/-]*\("\|'\)\)\|[a-zA-Z0-9\._\/-]*\)\]\)|});
+let other_regex = Str.regexp({|--\([-a-zA-Z0-9\._]+\(\[\(\+\|\-\)\]\)?\) \([a-zA-Z0-9\._\/-]+\|\("\|'\)[a-zA-Z0-9\._, \!\?\$\*\/-]*\("\|'\)\|\[\(\(\(\("\|'\)[a-zA-Z0-9\._, \!\?\$\*\/-]*\("\|'\)\|[a-zA-Z0-9\._\/-]+\)\(\([ ]*,[ ]*\)\(\("\|'\)[a-zA-Z0-9\._, \!\?\$\*\/-]*\("\|'\)\|[a-zA-Z0-9\._\/-]+\)\)*\)\|\(\("\|'\)[a-zA-Z0-9\._, \!\?\$\*\/-]*\("\|'\)\)\|[a-zA-Z0-9\._\/-]*\)\]\)|});
+let string_with_upticks_regex = Str.regexp({|'\(.*\)'|});
+
+// Reads Goblint's path and the parameters which were taken into consideration by Goblint for the first analysis
 let get_parameters = (state) => {
-    let raw_params = switch (Yojson.Safe.Util.member("command", state.meta)) {
+    let raw_parameters = switch (Yojson.Safe.Util.member("command", state.meta)) {
         | `String(command) => command
         | _ => ""
     }
     |> String.split_on_char(' ')
-    |> List.map((s) => { String.sub(s, 1, String.length(s)-2)});
+    |> List.map((s) => { String.sub(s, 1, String.length(s)-2) });
 
-    (raw_params |> List.hd, raw_params |> List.tl)
+    let goblint_path = raw_parameters |> List.hd;
+    let parameters = raw_parameters |> List.tl |> concat_parameter_list;
+
+    (goblint_path, parameters);
 };
- 
-let construct_parameters = (parameters) => parameters |> String.split_on_char(' ');//|> List.map((s) => "'" |> String.cat(s) |> String.cat("'"))
 
-let rec group_parameters = (parameters: list(string)): list(string) => {
-    if (parameters |> List.length > 0) {
-        
-        let (command, tail) = (parameters |> List.hd, parameters |> List.tl);
-        switch command {
-            | "--set" => {
-                let (option, tail') = (tail |> List.hd, tail |> List.tl);
-                let (value, tail'') = (tail' |> List.hd, tail' |> List.tl);
+// Reads and extracts every parameter and returns additionally whether the input is malformed or well formed
+let construct_parameters = (parameters: string): (list(string), bool) => {
+    let replaced_words = ref([]);
+    let result = parameters |> Str.global_substitute(parameters_regex, (substring => {
+        replaced_words := replaced_words.contents |> List.cons(Str.matched_group(0, substring));
+        ""
+    }));
 
-                let parameter = Printf.sprintf("--set %s %s", option, value);
-                tail'' |> group_parameters |> List.cons(parameter)
+    (replaced_words.contents, (result |> String.trim |> String.length) > 0)
+};
+
+let tuples_from_parameters = (grouped_parameters: list(string)): list((string,string)) => {
+    grouped_parameters
+    |> List.map((parameter) => {
+        // The string has to be compared to a regex instead of using String.starts_with as Str.matched_group is used in each case below; otherwise an exc will be raised
+        // Additionally, every Str.matched_group call has to be preceeded by an independent Str.string_match otherwise it takes the group or returns a wrong substring
+        // This order of cases was chosen because "--" matches to all and should be the last option therefore
+        if (Str.string_match(enable_disable_regex, parameter, 0)) {
+            switch ((Str.matched_group(1, parameter), Str.matched_group(2, parameter))) {
+                | ("enable", option) => Some((option, "true"))
+                | ("disable", option) => Some((option, "false"))
+                | exception Not_found => None
+                | _ => None
             }
-            | "--enable" => {
-                let (option, tail') = (tail |> List.hd, tail |> List.tl);
-
-                let parameter = Printf.sprintf("--enable %s", option);
-                tail' |> group_parameters |> List.cons(parameter)
-            } 
-            | "--disable" => {
-                let (option, tail') = (tail |> List.hd, tail |> List.tl);
-
-                let parameter = Printf.sprintf("--disable %s", option);
-                tail' |> group_parameters |> List.cons(parameter)
+        } else if (Str.string_match(set_regex, parameter, 0) || Str.string_match(other_regex, parameter, 0)) {
+            switch ((Str.matched_group(1, parameter), Str.matched_group(4, parameter))) {
+                | (option, value) => Some((option, value))
+                | exception Not_found => None
             }
-            | _ => []
-        }
-    } else {
-        []
-    }
-}
-
-let contains_empty_string = (string_list) =>
-    string_list
-    |> List.map(String.length)
-    |> List.filter(i => i == 0)
-    |> List.length > 0
-
-let tuples_from_parameters = (parameters) => {
-    parameters
-    |> List.map(params => {
-        let params_split = params |> String.split_on_char(' ');
-        let command = params_split |> List.hd;
-        let param' = params_split |> List.tl;
-
-        switch command {
-            | "--set" => {
-                let (option, tail') = (param' |> List.hd, param' |> List.tl);
-                let value = tail' |> List.hd;
-
-                Some((option, value))
-            }
-            | "--enable" => {
-                let option = param' |> List.hd;
-                Some((option, "true"))
-            } 
-            | "--disable" => {
-                let option = param' |> List.hd;
-                Some((option, "false"))
-            }
-            | _ => None
+        } else {
+            None
         }
     })
-    |> List.filter(e => e != None)
-    |> List.map(e => e |> Option.get)
-    |> List.filter(((k,_)) => !(String.starts_with(~prefix="server.", k))) // Don't allow server modifications
+    |> List.filter(e => !Option.is_none(e))
+    |> List.map(e => {
+        let (o,v) = (e |> Option.get);
+        let v' = Str.global_replace(string_with_upticks_regex, {|"\1"|}, v);
+        (o,v')
+    })
 };

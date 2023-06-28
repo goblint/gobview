@@ -1,7 +1,6 @@
 open Lwt
 open Cohttp
 open Cohttp_lwt
-//open AutocompleteBS
 
 module Client = Cohttp_lwt_jsoo.Client
 module ReactDOM = React.Dom
@@ -19,6 +18,29 @@ let paramState_to_string = (p: paramState) => {
 };
 
 let is_successful = (p: paramState) => p == Executed;
+
+type inputState = Blacklisted | Malformed | Empty | Ok;
+
+let inputState_to_string = (i: inputState) => {
+    switch i {
+        | Blacklisted => "Blacklisted options are not allowed";
+        | Malformed => "Options are malformed. Check the input again"
+        | Empty => "At least one parameter has to be entered";
+        | Ok => "";
+    }
+}
+
+let is_ok = (i: inputState) => i == Ok;
+
+let option_whitelist = [
+  "incremental.force-reanalyze.funs",
+  "incremental.reluctant.enabled",
+  "incremental.compare",
+  "incremental.detect-renames",
+  "incremental.restart",
+  "incremental.postsolver",
+  "annotation.goblint_precision"
+];
 
 let scheme = "http";
 let host = "127.0.0.1";
@@ -41,11 +63,11 @@ let rev_arr = (array) => array |> Array.to_list |> List.rev |> Array.of_list;
 let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
 
     let (value, setValue) = React.useState(_ => parameters |> ParameterUtils.concat_parameter_list);
-    // Linked to cancelation, see reasons below for why it is commented out
+    // Linked to cancelation, see reasons below in on_cancel() for why it is commented out
     //let (disableCancel, setDisableCancel) = React.useState(_ => true);
     let (disableRun, setDisableRun) = React.useState(_ => false);
+    let (inputState, setInputState) = React.useState(_ => Ok);
     let (sortDesc, setSortDesc) = React.useState(_ => true);
-    let (hasServerOpts, setHasServerOpts) = React.useState(_ => false);
 
     React.useEffect1(() => {
         None
@@ -61,26 +83,64 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
         setSortDesc(_ => !sortDesc);
     }
 
+    let is_input_invalid = (parameter_list: list((string, string)), is_malformed, input_val): inputState => {
+        if (String.length(input_val) == 0) {
+            Empty
+        } else if(is_malformed || List.length(parameter_list) == 0) {
+            Malformed
+        } else {
+            let has_found_option =
+                parameter_list
+                |> List.for_all(((option, _)) => {
+                    let result =
+                        option_whitelist
+                        |> List.map (whitelisted_option => String.starts_with(~prefix=whitelisted_option, option))
+                        |> List.find_opt (b => b == true);
+
+                    switch (result) {
+                        | Some(b) => b;
+                        | None => false;
+                    }
+                });
+            
+            if (!has_found_option) {
+                Blacklisted
+            } else {
+                Ok
+            }
+        }
+    }
+
+    let react_on_input = (parameter_list, is_malformed, value) => {
+        let input_state = is_input_invalid(parameter_list, is_malformed, value);
+        setInputState(_ => input_state);
+
+        let isInvalid = !is_ok(input_state)
+        setDisableRun(_ => isInvalid);
+
+        isInvalid
+    }
 
     let on_change = (new_value) => {
-        let server_opt_regex = Str.regexp_string("server.");
-        let server_opts_found = switch (Str.search_forward(server_opt_regex, new_value, 0)) {
-            | exception Not_found => false;
-            | _ => true
-        }
-        setHasServerOpts(_ => server_opts_found);
-        setDisableRun(_ => server_opts_found);
-
+        let (tuple_parameter_list, is_malformed) =
+            new_value
+            |> ParameterUtils.construct_parameters
+            |> ((p,b)) => (p |> ParameterUtils.tuples_from_parameters, b);
+        
+        let _ = react_on_input(tuple_parameter_list, is_malformed, new_value);
         setValue(_ => new_value);
     };
 
     let on_submit = () => {
-        if (!hasServerOpts) {
-            let parameter_list = 
-                value
-                |> ParameterUtils.construct_parameters
-                |> ParameterUtils.group_parameters
-                
+        let (parameter_list, tuple_parameter_list, is_malformed) =
+            value
+            |> ParameterUtils.construct_parameters
+            |> ((p,b)) => (p, p |> ParameterUtils.tuples_from_parameters, b);
+
+        // To prevent invalid default input to be executed, with i.e. blacklisted options, we check the input value first
+        let isInvalid = react_on_input(tuple_parameter_list, is_malformed, value);
+
+        if (!isInvalid) {
             let time = Time.get_local_time();
             let element = (parameter_list, time, Executing);
 
@@ -135,14 +195,18 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
             };
 
             let config_api_call = (config_opts: list((string, string))) => {
-                config_opts
-                |> List.map(((k,v)) => {
-                    `List([`String(k), `String(v)])
-                    |> Yojson.Safe.to_string
-                    |> Body.of_string;
-                })
-                |> List.map(inner_config_api_call)
-                |> Lwt.npick;
+                if (List.length(config_opts) == 0) {
+                    Lwt.return([Error])
+                } else {
+                    config_opts
+                    |> List.map(((k,v)) => {
+                        `List([`String(k), Yojson.Safe.from_string(v)])
+                        |> Yojson.Safe.to_string
+                        |> Body.of_string;
+                    })
+                    |> List.map(inner_config_api_call)
+                    |> Lwt.npick;
+                }
             };
 
             let inner_analyze_api_call = (analyze_body): Lwt.t(paramState) => {
@@ -165,15 +229,14 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
                 |> Body.of_string;
 
             let analyze_api_call = () => {
-                let config_opts = parameter_list |> ParameterUtils.tuples_from_parameters;
-
-                config_opts
+                tuple_parameter_list
                 |> config_api_call >>=
                 (result) => {
-                    let result_state = result
-                    |> List.map(is_successful)
-                    |> List.fold_left((a,b) => a && b, true)
-                    |> ((s) => if (s) { Executed } else { Error });
+                    let result_state =
+                        result
+                        |> List.map(is_successful)
+                        |> List.fold_left((a,b) => a && b, true)
+                        |> ((s) => if (s) { Executed } else { Error });
 
                     Lwt.return(result_state);
                 } >>=
@@ -189,8 +252,7 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
                 };
             };
 
-            let () = analyze_api_call() |> ignore;
-        
+            ignore(analyze_api_call());
         }
     };
 
@@ -243,12 +305,6 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
 
     let list_elements = history |> map_history_entry_to_list_entry;
 
-    let icon_for_sort_dir = if (sortDesc) {
-        <IconArrowUp on_click=on_sort />
-    } else {
-        <IconArrowDown on_click=on_sort />
-    };
-
     <div>
         <div className="input-group mb-2 has-validation">
             {playButton}
@@ -260,17 +316,19 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
 
             <label data="tooltip" title=goblint_path className="input-group-text" type_="tooltip_path">{"./goblint" |> React.string}</label>
             // Input and tooltip are seperated due to display issues
-            {switch hasServerOpts {
-                | true => <Input class_=["form-control", "is-invalid"] value on_change on_submit key="tooltip_path" /*style={ReactDOM.Style.make(~maxWidth="100%", ())}*//>
-                | false => <Input value on_change on_submit key="tooltip_path" />;
+            {switch inputState {
+                | Malformed
+                | Blacklisted
+                | Empty => <Input class_=["form-control", "is-invalid"] value on_change on_submit key="tooltip_path" /*id=input_id style={ReactDOM.Style.make(~maxWidth="100%", ())}*//>
+                | Ok => <Input value on_change on_submit key="tooltip_path" /*id=input_id*/ />;
             }}
-            {switch hasServerOpts {
-                | true => {
+            {switch inputState {
+                | Ok => React.null;
+                | _ => {
                     <div className="invalid-tooltip">
-                        {"Server options are not allowed" |> React.string}
+                        {inputState |> inputState_to_string |> React.string}
                     </div>
                 };
-                | _ => React.null;
             }}
         </div>
 
@@ -283,9 +341,13 @@ let make = (~goblint_path, ~parameters, ~history, ~setHistory) => {
                                  <div className="col-2">
                                     {"Status" |> React.string}
                                  </div>
-                                 <div className="col-2">
+                                 <div className="col-2" onClick=on_sort style={ReactDOM.Style.make(~cursor="pointer", ())}>
                                     {"Time " |> React.string}
-                                    {icon_for_sort_dir}
+                                    {switch sortDesc {
+                                    | true => <IconArrowUp />
+                                    | _ => <IconArrowDown />
+                                    };
+                                    }
                                  </div>
                                  <div className="col">
                                      {"Parameters" |> React.string}
