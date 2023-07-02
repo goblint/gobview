@@ -2,6 +2,7 @@ open Lwt
 open Cohttp
 open Cohttp_lwt
 
+module Js = Js_of_ocaml.Js
 module Client = Cohttp_lwt_jsoo.Client
 module ReactDOM = React.Dom
 
@@ -73,6 +74,18 @@ let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableR
     let on_sort = (ev) => {
         React.Event.Mouse.preventDefault(ev);
         setSortDesc(_ => !sortDesc);
+    }
+
+    let on_add_parameter = (ev) => {
+        let target = React.Event.Mouse.target(ev) |> ReactDOM.domElement_of_js;
+        let unresolved_parameter = target##.textContent |> Js.Opt.to_option;
+
+        let parameter = switch unresolved_parameter {
+            | Some(p) => Js.to_string(p) ++ " "
+            | None => ""
+        };
+        
+        setInputValue(inputVal => String.cat(parameter, inputVal));
     }
 
     let is_input_invalid = (parameter_list: list((string, string)), is_malformed, input_val): inputState => {
@@ -156,6 +169,9 @@ let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableR
                 Client.post(config_uri, ~body=config_body,  ~headers=headers) >>=
                 ((res, body)) => {
                     let code = res |> Response.status |> Code.code_of_status;
+                    /*let msg_from_body = Cohttp_lwt.Body.to_string(body) >|= (body) => {
+                        Lwt.return(body)
+                    }*/
                     let _ = Body.drain_body(body);
 
                     if (code < 200 || code >= 400) {
@@ -271,7 +287,9 @@ let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableR
                         </div>
                         <div className="col">
                             {parameter_grouping |> List.mapi((j,e) => {
-                                <span key={"pill_" ++ string_of_int(j)} className="m-1 badge rounded-pill bg-secondary text">{e |> React.string}</span>
+                                <span key={"pill_" ++ string_of_int(j)} className="m-1 badge rounded-pill bg-secondary text" style={ReactDOM.Style.make(~cursor="pointer", ())} onClick=on_add_parameter>
+                                    {e |> React.string}
+                                </span>
                             }) |> React.list}
                         </div>
                     </div>
