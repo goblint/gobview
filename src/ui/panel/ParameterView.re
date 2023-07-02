@@ -62,7 +62,7 @@ let headers = [
 let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableRun, ~inputState, ~setInputState, ~sortDesc, ~setSortDesc, ~history, ~setHistory) => {
     // Linked to cancelation, see reasons below in on_cancel() for why it is commented out
     //let (disableCancel, setDisableCancel) = React.useState(_ => true);
-    
+
     React.useEffect1(() => {
         None
     }, [|inputValue|]);
@@ -76,19 +76,7 @@ let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableR
         setSortDesc(_ => !sortDesc);
     }
 
-    let on_add_parameter = (ev) => {
-        let target = React.Event.Mouse.target(ev) |> ReactDOM.domElement_of_js;
-        let unresolved_parameter = target##.textContent |> Js.Opt.to_option;
-
-        let parameter = switch unresolved_parameter {
-            | Some(p) => Js.to_string(p) ++ " "
-            | None => ""
-        };
-        
-        setInputValue(inputVal => String.cat(parameter, inputVal));
-    }
-
-    let is_input_invalid = (parameter_list: list((string, string)), is_malformed, input_val): inputState => {
+    let get_input_state = (parameter_list: list((string, string)), is_malformed, input_val): inputState => {
         if (String.length(input_val) == 0) {
             Empty
         } else if(is_malformed || List.length(parameter_list) == 0) {
@@ -117,7 +105,7 @@ let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableR
     }
 
     let react_on_input = (parameter_list, is_malformed, inputValue) => {
-        let input_state = is_input_invalid(parameter_list, is_malformed, inputValue);
+        let input_state = get_input_state(parameter_list, is_malformed, inputValue);
         setInputState(_ => input_state);
 
         let isInvalid = !is_ok(input_state)
@@ -126,13 +114,40 @@ let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableR
         isInvalid
     }
 
-    let on_change = (new_inputValue) => {
+    let check_input = (inputValue) : bool => {
         let (tuple_parameter_list, is_malformed) =
-            new_inputValue
+            inputValue
             |> ParameterUtils.construct_parameters
             |> ((p,b)) => (p |> ParameterUtils.tuples_from_parameters, b);
+    
+        react_on_input(tuple_parameter_list, is_malformed, inputValue);
+    }
+
+    let on_add_parameter = (ev) => {
+        let target = React.Event.Mouse.target(ev) |> ReactDOM.domElement_of_js;
+        let unresolved_parameter = target##.textContent |> Js.Opt.to_option;
+
+        let parameter = switch unresolved_parameter {
+            | Some(p) => {
+                let resolved_parameter = Js.to_string(p);
+                if (String.length(inputValue) > 0) {
+                    resolved_parameter ++ " "
+                } else {
+                    resolved_parameter
+                }
+            };
+            | None => ""
+        };
         
-        let _ = react_on_input(tuple_parameter_list, is_malformed, new_inputValue);
+        setInputValue(inputVal => {
+            let new_inputVal = String.cat(parameter, inputVal);
+            let _ = check_input(new_inputVal);
+            new_inputVal
+        });
+    }
+
+    let on_change = (new_inputValue) => {
+        let _ = check_input(new_inputValue);
         setInputValue(_ => new_inputValue);
     };
 
@@ -252,6 +267,13 @@ let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableR
         setHistory(_ => new_history);
         setDisableCancel(_ => true);
     };*/
+
+    // Check whether default parameters are "Ok" or not
+    let (tuple_parameter_list, is_malformed) =
+        inputValue
+        |> ParameterUtils.construct_parameters
+        |> ((p,b)) => (p |> ParameterUtils.tuples_from_parameters, b);
+    let _ = react_on_input(tuple_parameter_list, is_malformed, inputValue);
 
     let playButton = <Button disabled={disableRun} on_click={on_submit}>
                          <IconPlay />
