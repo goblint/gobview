@@ -120,7 +120,7 @@ let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableR
             |> ParameterUtils.construct_parameters
             |> ((p,b)) => (p |> ParameterUtils.tuples_from_parameters, b);
     
-        react_on_input(tuple_parameter_list, is_malformed, inputValue);
+        react_on_input(tuple_parameter_list, is_malformed, inputValue)
     }
 
     let on_add_parameter = (ev) => {
@@ -162,45 +162,41 @@ let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableR
 
         if (!isInvalid) {
             let time = Time.get_local_time();
-            let element = (parameter_list, time, Executing);
+            let element = (parameter_list, time, Executing, "");
 
             let new_history = List.cons(element, history);
 
             setHistory(_ => new_history);
             //setDisableCancel(_ => false);
 
-            let modify_history = (result: paramState): unit => {
+            let modify_history = (result: paramState, response_msg: string): unit => {
                 let pickedElem = new_history |> List.hd;
 
                 if (pickedElem == element) {
                     let intermediateHistory = new_history |> List.tl;
-                    let new_history = List.cons(((parameter_list, time, result)), intermediateHistory);
+                    let new_history = List.cons(((parameter_list, time, result, response_msg)), intermediateHistory);
                     setHistory(_ => new_history);
                     //setDisableCancel(_ => true);
                 }
             }
 
-            let inner_config_api_call = (config_body): Lwt.t(paramState) => {
-                Client.post(config_uri, ~body=config_body,  ~headers=headers) >>=
+            let inner_config_api_call = (config_body): Lwt.t((paramState, string)) => {
+                Client.post(config_uri, ~body=config_body, ~headers=headers) >>=
                 ((res, body)) => {
                     let code = res |> Response.status |> Code.code_of_status;
-                    /*let msg_from_body = Cohttp_lwt.Body.to_string(body) >|= (body) => {
-                        Lwt.return(body)
-                    }*/
-                    let _ = Body.drain_body(body);
-
-                    if (code < 200 || code >= 400) {
-                        Lwt.return(Error);
-                    } else {
-                        Lwt.return(Executed);
-                    };
+                    
+                    Cohttp_lwt.Body.to_string(body) >>= (body) => {
+                        if (code < 200 || code >= 400) {
+                            Lwt.return((Error, body));
+                        } else {
+                            Lwt.return((Executed, body));
+                        };
+                    }
                 };
             };
 
             let config_api_call = (config_opts: list((string, string))) => {
-                if (List.length(config_opts) == 0) {
-                    Lwt.return([Error])
-                } else {
+                let config_call_function = () => {
                     config_opts
                     |> List.map(((k,v)) => {
                         `List([`String(k), Yojson.Safe.from_string(v)])
@@ -209,20 +205,27 @@ let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableR
                     })
                     |> List.map(inner_config_api_call)
                     |> Lwt.npick;
-                }
+                };
+
+                let exception_handler = (exc) => {
+                    Lwt.return([(Error, Printexc.to_string(exc))]);
+                };
+                
+                Lwt.catch(config_call_function, exception_handler);
             };
 
-            let inner_analyze_api_call = (analyze_body): Lwt.t(paramState) => {
+            let inner_analyze_api_call = (analyze_body) => {
                 Client.post(analyze_uri, ~body=analyze_body,  ~headers=headers) >>=
                 ((res, body)) => {
                     let code = res |> Response.status |> Code.code_of_status;
-                    let _ = Body.drain_body(body);
 
-                    if (code < 200 || code >= 400) {
-                        Lwt.return(Error);
-                    } else {
-                        Lwt.return(Executed);
-                    };
+                    Cohttp_lwt.Body.to_string(body) >>= (body) => {
+                        if (code < 200 || code >= 400) {
+                            Lwt.return((Error, body));
+                        } else {
+                            Lwt.return((Executed, body));
+                        };
+                    }
                 };
             };
 
@@ -232,25 +235,28 @@ let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableR
                 |> Body.of_string;
 
             let analyze_api_call = () => {
+                let exception_handler = (exc) => {
+                    Lwt.return((Error, Printexc.to_string(exc)));
+                };
+
                 tuple_parameter_list
                 |> config_api_call >>=
                 (result) => {
-                    let result_state =
-                        result
-                        |> List.map(is_successful)
-                        |> List.fold_left((a,b) => a && b, true)
-                        |> ((s) => if (s) { Executed } else { Error });
+                    let result_state = result |> List.find_opt(((state, _)) => state == Error);
 
-                    Lwt.return(result_state);
-                } >>=
-                (result) => {
-                    switch result {
-                    | Executed => inner_analyze_api_call(analyze_body);
-                    | _ => Lwt.return(Error);
+                    switch (result_state) {
+                        | None => Lwt.return((Executed, ""))
+                        | Some(r) => Lwt.return(r)
                     }
                 } >>=
                 (result) => {
-                    modify_history(result);
+                    switch result {
+                    | (Executed, _) => Lwt.catch(() => inner_analyze_api_call(analyze_body), exception_handler);
+                    | (_, msg) => Lwt.return((Error, msg))
+                    }
+                } >>=
+                ((state, msg)) => {
+                    modify_history(state, msg);
                     Lwt.return()
                 };
             };
@@ -289,18 +295,23 @@ let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableR
                 history
             }
         }
-        |> List.mapi((i, (parameter_grouping, time, paramState)) =>
+        |> List.mapi((i, (parameter_grouping, time, paramState, msg)) =>
             {<li key={"params_" ++ string_of_int(i)} className="list-group-item">
                 <div className="container text-center">
                     <div className="row">
-                        <div className="col-2">
-                            {switch paramState {
-                            | Executing => <Spinner />
-                            | Canceled  => <IconX />
-                            | Executed  => <IconCheckmark />
-                            | Error     => <IconWarning />
-                            }}
-                        </div>
+                        {switch paramState {
+                        | Error => <div className="col-2" data="tooltip" title=msg style={ReactDOM.Style.make(~cursor="help", ())}><IconWarning /></div>
+                        | _ => {
+                            <div className="col-2">
+                                {switch paramState {
+                                | Executing => <Spinner />
+                                | Canceled  => <IconX />
+                                | Executed  => <IconCheckmark />
+                                | Error => <IconWarning />
+                                }}
+                            </div>
+                        }
+                        }}
                         <div className="col-2">
                             <div className="ms-2">
                                 <IconClock />
@@ -309,7 +320,7 @@ let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableR
                         </div>
                         <div className="col">
                             {parameter_grouping |> List.mapi((j,e) => {
-                                <span key={"pill_" ++ string_of_int(j)} className="m-1 badge rounded-pill bg-secondary text" style={ReactDOM.Style.make(~cursor="pointer", ())} onClick=on_add_parameter>
+                                <span key={"pill_" ++ string_of_int(j)} className="m-1 badge rounded-pill bg-secondary text" style={ReactDOM.Style.make(~cursor="copy", ())} onClick=on_add_parameter>
                                     {e |> React.string}
                                 </span>
                             }) |> React.list}
@@ -331,7 +342,7 @@ let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableR
                 {"Cancel" |> React.string}
             </Button>*/
 
-            <label data="tooltip" title=goblint_path className="input-group-text" type_="tooltip_path">{"./goblint" |> React.string}</label>
+            <label data="tooltip" title=goblint_path className="input-group-text" type_="tooltip_path" style={ReactDOM.Style.make(~cursor="help", ())}>{"./goblint" |> React.string}</label>
             // Input and tooltip are seperated due to display issues
             {switch inputState {
                 | Malformed

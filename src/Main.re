@@ -52,7 +52,7 @@ let make = (~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc) => {
   let (goblint_path, parameters) = state |> ParameterUtils.get_parameters;
   let (destructured_params, _) = parameters |> ParameterUtils.construct_parameters;
 
-  let (history, setHistory) = React.useState(_ => [(destructured_params, Time.get_local_time(), ParameterView.Executed)]);
+  let (history, setHistory) = React.useState(_ => [(destructured_params, Time.get_local_time(), ParameterView.Executed, "")]);
   let (inputValue, setInputValue) = React.useState(_ => destructured_params |> ParameterUtils.concat_parameter_list);
   let (disableRun, setDisableRun) = React.useState(_ => false);
   let (inputState, setInputState) = React.useState(_ => ParameterView.Ok);
