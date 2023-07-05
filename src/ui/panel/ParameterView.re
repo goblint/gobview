@@ -141,7 +141,6 @@ let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableR
         
         setInputValue(inputVal => {
             let new_inputVal = String.cat(parameter, inputVal);
-            let _ = check_input(new_inputVal);
             new_inputVal
         });
     }
@@ -158,9 +157,9 @@ let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableR
             |> ((p,b)) => (p, p |> ParameterUtils.tuples_from_parameters, b);
 
         // To prevent invalid default input to be executed, with i.e. blacklisted options, we check the input value first
-        let isInvalid = react_on_input(tuple_parameter_list, is_malformed, inputValue);
+        /*let isInvalid = react_on_input(tuple_parameter_list, is_malformed, inputValue);*/
 
-        if (!isInvalid) {
+        if (inputState == Ok && !is_malformed) {
             let time = Time.get_local_time();
             let element = (parameter_list, time, Executing, "");
 
@@ -199,7 +198,16 @@ let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableR
                 let config_call_function = () => {
                     config_opts
                     |> List.map(((k,v)) => {
-                        `List([`String(k), Yojson.Safe.from_string(v)])
+                        let v' = if (!String.equal("true", v) &&
+                                    !String.equal("false", v) &&
+                                    (!String.starts_with(~prefix="[", v) && !String.ends_with(~suffix="]", v) &&
+                                    !Str.string_match((Str.regexp({|^[0-9]+$|})), v, 0))) {
+                            "\"" ++ v ++ "\"" // check whether value is a string => wrap it in ""
+                        } else {
+                            v
+                        };
+
+                        `List([`String(k), Yojson.Safe.from_string(v')])
                         |> Yojson.Safe.to_string
                         |> Body.of_string;
                     })
@@ -348,7 +356,7 @@ let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableR
                 | Malformed
                 | Blacklisted
                 | Empty => <Input class_=["form-control", "is-invalid"] value=inputValue on_change on_submit key="tooltip_path" />
-                | Ok => <Input value=inputValue on_change on_submit key="tooltip_path" /*id=input_id*/ />;
+                | Ok => <Input value=inputValue on_change on_submit key="tooltip_path" />;
             }}
             {switch inputState {
                 | Ok => React.null;
@@ -371,11 +379,11 @@ let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableR
                                  </div>
                                  <div className="col-2" onClick=on_sort style={ReactDOM.Style.make(~cursor="pointer", ())}>
                                     {"Time " |> React.string}
-                                    {switch sortDesc {
-                                    | true => <IconArrowUp />
-                                    | _ => <IconArrowDown />
-                                    };
-                                    }
+                                    {if (sortDesc) {
+                                        <IconArrowUp />
+                                    } else {
+                                        <IconArrowDown />
+                                    }}
                                  </div>
                                  <div className="col">
                                      {"Parameters" |> React.string}
