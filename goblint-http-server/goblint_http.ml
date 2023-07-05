@@ -25,9 +25,12 @@ let specs =
 
 let paths = ref []
 
-let cors_headers = Header.of_list [("Access-Control-Allow-Origin", "*");
-                    ("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Origin, Access-Control-Allow-Methods, Access-Control-Allow-Headers");
-                    ("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")]
+let cors_headers =
+  [
+    ("Access-Control-Allow-Origin", "*");
+    ("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Origin, Access-Control-Allow-Methods, Access-Control-Allow-Headers");
+    ("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+  ] |> Header.of_list
 
 let process state name body =
   match Hashtbl.find_option Api.registry name with
