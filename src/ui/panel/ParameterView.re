@@ -59,7 +59,7 @@ let headers = [
 ] |> Header.of_list;
 
 [@react.component]
-let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableRun, ~inputState, ~setInputState, ~sortDesc, ~setSortDesc, ~history, ~setHistory) => {
+let make = (~goblint_path, ~inputValue, ~setInputValue, ~disableRun, ~setDisableRun, ~inputState, ~setInputState, ~sortDesc, ~setSortDesc, ~history, ~setHistory) => {
     // Linked to cancelation, see reasons below in on_cancel() for why it is commented out
     //let (disableCancel, setDisableCancel) = React.useState(_ => true);
 
@@ -70,6 +70,10 @@ let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableR
     React.useEffect1(() => {
         None
     }, [|sortDesc|]);
+
+    React.useEffect1(() => {
+        None
+    }, [|disableRun|]);
 
     let on_sort = (ev) => {
         React.Event.Mouse.preventDefault(ev);
@@ -159,7 +163,7 @@ let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableR
         // To prevent invalid default input to be executed, with i.e. blacklisted options, we check the input value first
         /*let isInvalid = react_on_input(tuple_parameter_list, is_malformed, inputValue);*/
 
-        if (inputState == Ok && !is_malformed) {
+        if (inputState == Ok && !is_malformed && !disableRun) {
             let time = Time.get_local_time();
             let element = (parameter_list, time, Executing, "");
 
@@ -167,6 +171,7 @@ let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableR
 
             setHistory(_ => new_history);
             //setDisableCancel(_ => false);
+            setDisableRun(_ => true);
 
             let modify_history = (result: paramState, response_msg: string): unit => {
                 let pickedElem = new_history |> List.hd;
@@ -176,6 +181,7 @@ let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableR
                     let new_history = List.cons(((parameter_list, time, result, response_msg)), intermediateHistory);
                     setHistory(_ => new_history);
                     //setDisableCancel(_ => true);
+                    setDisableRun(_ => false);
                 }
             }
 
@@ -289,11 +295,6 @@ let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableR
         |> ((p,b)) => (p |> ParameterUtils.tuples_from_parameters, b);
     let _ = react_on_input(tuple_parameter_list, is_malformed, inputValue);
 
-    let playButton = <Button disabled={disableRun} on_click={on_submit}>
-                         <IconPlay />
-                         {"Run" |> React.string}
-                     </Button>;
-
     let map_history_entry_to_list_entry = (history) => {
         history
         |> (history) => {
@@ -343,7 +344,10 @@ let make = (~goblint_path, ~inputValue, ~setInputValue,~disableRun, ~setDisableR
 
     <div>
         <div className="input-group mb-2 has-validation">
-            {playButton}
+            <Button disabled={disableRun} on_click={on_submit}>
+                <IconPlay />
+                {"Run" |> React.string}
+            </Button>
             
             // Commented out because http server does not support cancelation yet
             /*<Button color={`Danger} outline={true} on_click={on_cancel} disabled={disableCancel}>
