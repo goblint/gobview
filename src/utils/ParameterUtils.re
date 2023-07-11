@@ -1,4 +1,4 @@
-open State
+open State;
 
 let concat_parameter_list = String.concat(" ");
 let concat_grouped_parameters = (parameters) => parameters |> List.map(concat_parameter_list) |> concat_parameter_list;

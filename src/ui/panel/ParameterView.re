@@ -1,10 +1,10 @@
-open Lwt
-open Cohttp
-open Cohttp_lwt
+open Lwt;
+open Cohttp;
+open Cohttp_lwt;
 
-module Js = Js_of_ocaml.Js
-module Client = Cohttp_lwt_jsoo.Client
-module ReactDOM = React.Dom
+module Js = Js_of_ocaml.Js;
+module Client = Cohttp_lwt_jsoo.Client;
+module ReactDOM = React.Dom;
 
 type paramState = Executed | Executing | Canceled | Error;
 
@@ -188,19 +188,20 @@ let make = (~goblint_path, ~inputValue, ~setInputValue, ~disableRun, ~setDisable
                 }
             }
 
+            let transform_resp = ((res, body)) => {
+                let code = res |> Response.status |> Code.code_of_status;
+
+                Cohttp_lwt.Body.to_string(body) >>= (body) => {
+                    if (code < 200 || code >= 400) {
+                        Lwt.return((Error, body));
+                    } else {
+                        Lwt.return((Executed, body));
+                    };
+                }
+            };
+
             let inner_config_api_call = (config_body): Lwt.t((paramState, string)) => {
-                Client.post(config_uri, ~body=config_body, ~headers=headers) >>=
-                ((res, body)) => {
-                    let code = res |> Response.status |> Code.code_of_status;
-                    
-                    Cohttp_lwt.Body.to_string(body) >>= (body) => {
-                        if (code < 200 || code >= 400) {
-                            Lwt.return((Error, body));
-                        } else {
-                            Lwt.return((Executed, body));
-                        };
-                    }
-                };
+                Client.post(config_uri, ~body=config_body, ~headers=headers) >>= transform_resp
             };
 
             let config_api_call = (config_opts: list((string, string))) => {
@@ -221,7 +222,7 @@ let make = (~goblint_path, ~inputValue, ~setInputValue, ~disableRun, ~setDisable
                         |> Body.of_string;
                     })
                     |> List.map(inner_config_api_call)
-                    |> Lwt.npick;
+                    |> Lwt.all;
                 };
 
                 let exception_handler = (exc) => {
@@ -232,18 +233,7 @@ let make = (~goblint_path, ~inputValue, ~setInputValue, ~disableRun, ~setDisable
             };
 
             let inner_analyze_api_call = (analyze_body) => {
-                Client.post(analyze_uri, ~body=analyze_body,  ~headers=headers) >>=
-                ((res, body)) => {
-                    let code = res |> Response.status |> Code.code_of_status;
-
-                    Cohttp_lwt.Body.to_string(body) >>= (body) => {
-                        if (code < 200 || code >= 400) {
-                            Lwt.return((Error, body));
-                        } else {
-                            Lwt.return((Executed, body));
-                        };
-                    }
-                };
+                Client.post(analyze_uri, ~body=analyze_body, ~headers=headers) >>= transform_resp
             };
 
             let analyze_body =
