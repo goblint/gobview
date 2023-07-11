@@ -31,7 +31,7 @@ let make_nav_pills = (current, dispatch) => {
 };
 
 [@react.component]
-let make = (~state, ~dispatch, ~goblint_path, ~inputValue, ~setInputValue, ~disableRun, ~setDisableRun, ~inputState, ~setInputState, ~sortDesc, ~setSortDesc, ~history, ~setHistory) => {
+let make = (~state, ~dispatch, ~goblint_path, ~inputValue, ~setInputValue, ~disableRun, ~setDisableRun, ~inputState, ~setInputState, ~sortDesc, ~setSortDesc, ~history, ~setHistory, ~setAnalysisState) => {
 
   let locations = (state.goblint)#dead_locations;
 
@@ -41,7 +41,7 @@ let make = (~state, ~dispatch, ~goblint_path, ~inputValue, ~setInputValue, ~disa
     | Some(Warnings) => <WarningView warnings={state.warnings} dispatch />
     | Some(DeadCode) => <DeadCodeView locations dispatch />
     | Some(Statistics) => <GvStatisticsView stats={state.stats} />
-    | Some(Parameters) => <ParameterView goblint_path inputValue setInputValue disableRun setDisableRun inputState setInputState sortDesc setSortDesc history setHistory />
+    | Some(Parameters) => <ParameterView goblint_path inputValue setInputValue disableRun setDisableRun inputState setInputState sortDesc setSortDesc history setHistory setAnalysisState/>
     | _ => React.null
   };
 

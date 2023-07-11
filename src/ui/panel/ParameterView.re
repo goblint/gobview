@@ -59,7 +59,7 @@ let headers = [
 ] |> Header.of_list;
 
 [@react.component]
-let make = (~goblint_path, ~inputValue, ~setInputValue, ~disableRun, ~setDisableRun, ~inputState, ~setInputState, ~sortDesc, ~setSortDesc, ~history, ~setHistory) => {
+let make = (~goblint_path, ~inputValue, ~setInputValue, ~disableRun, ~setDisableRun, ~inputState, ~setInputState, ~sortDesc, ~setSortDesc, ~history, ~setHistory, ~setAnalysisState) => {
     // Linked to cancelation, see reasons below in on_cancel() for why it is commented out
     //let (disableCancel, setDisableCancel) = React.useState(_ => true);
 
@@ -165,13 +165,15 @@ let make = (~goblint_path, ~inputValue, ~setInputValue, ~disableRun, ~setDisable
 
         if (inputState == Ok && !is_malformed && !disableRun) {
             let time = Time.get_local_time();
-            let element = (parameter_list, time, Executing, "");
+            let init_state = Executing;
+            let element = (parameter_list, time, init_state, "");
 
             let new_history = List.cons(element, history);
 
             setHistory(_ => new_history);
             //setDisableCancel(_ => false);
             setDisableRun(_ => true);
+            setAnalysisState(_ => Some(init_state));
 
             let modify_history = (result: paramState, response_msg: string): unit => {
                 let pickedElem = new_history |> List.hd;
@@ -182,6 +184,7 @@ let make = (~goblint_path, ~inputValue, ~setInputValue, ~disableRun, ~setDisable
                     setHistory(_ => new_history);
                     //setDisableCancel(_ => true);
                     setDisableRun(_ => false);
+                    setAnalysisState(_ => Some(result));
                 }
             }
 

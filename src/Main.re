@@ -1,11 +1,65 @@
 open Batteries;
+open Lwt.Infix;
 
 [@react.component]
 let make = (~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc) => {
+  let (analysisState, setAnalysisState) = React.useState(_ => Option.some(ParameterView.Executed));
+  
+  // reloadable components of goblint due to rerunning analyses
+  let (cil_, setCil_) = React.useState(_ => cil);
+  let (goblint_, setGoblint_) = React.useState(_ => goblint);
+  let (warnings_, setWarnings_) = React.useState(_ => warnings);
+  let (stats_, setStats_) = React.useState(_ => stats);
+
+  React.useEffect1(() => {
+    switch (analysisState) {
+      | Some(s) => {
+        if (ParameterView.is_successful(s)) {
+          // reload files
+          let reload = () => {
+            Init.reload(cil_) >>=
+            (result) => {
+              switch (result) {
+              | Some((goblintAndCil, warnings, stats)) => {
+                  let _ = switch (goblintAndCil) {
+                    | Some((goblint', cil')) => {
+                        setGoblint_(_ => goblint')
+                        setCil_(_ => cil');
+                    };
+                    | None => Util.error_without_fail("Could not reload goblint and cil for rerun")
+                  };
+
+                  switch (warnings) {
+                    | Some(w) => setWarnings_(_ => w);
+                    | None => Util.error_without_fail("Could not reload warnings for rerun")
+                  };
+
+                  switch (stats) {
+                    | Some(s) => setStats_(_ => s); 
+                    | None => Util.error_without_fail("Could not reload stats for rerun")
+                  };
+              };
+              | None => Util.error_without_fail("Could not reload metrics for rerun")
+              }
+
+              setAnalysisState(_ => None);
+              Lwt.return();
+            }
+          };
+
+          ignore(reload());
+        }
+      }
+      | None => setAnalysisState(_ => None);
+    };
+    
+    None
+  }, [|analysisState|]);
+
   let (state, dispatch) =
     React.useReducer(
       Reducer.reducer,
-      State.make(~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc, ()),
+      State.make(~cil=cil_, ~goblint=goblint_, ~warnings=warnings_, ~meta, ~stats=stats_, ~file_loc, ()),
     );
 
   let fetch_file =
@@ -81,12 +135,12 @@ let make = (~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc) => {
       | None => <div className="content d-flex flex-column h-75 overflow-auto p-4" />
       | Some(f) => <Content state display=f dispatch />
       }}
-      <Panel state dispatch goblint_path inputValue setInputValue disableRun setDisableRun inputState setInputState sortDesc setSortDesc history setHistory />
+      <Panel state dispatch goblint_path inputValue setInputValue disableRun setDisableRun inputState setInputState sortDesc setSortDesc history setHistory setAnalysisState />
     </div>
     <div className="col-3 border-start overflow-auto py-2 h-100">
         <SidebarRight
           active={state.selected_sidebar_right}
-          goblint
+          goblint={goblint_}
           inspect={state.inspect}
           dispatch
         />
