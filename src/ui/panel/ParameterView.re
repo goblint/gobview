@@ -335,7 +335,7 @@ let make = (~goblint_path, ~inputValue, ~setInputValue, ~disableRun, ~setDisable
 
     let list_elements = history |> map_history_entry_to_list_entry;
 
-    <div>
+    <div id="parameterview">
         <div className="input-group mb-2 has-validation">
             <Button disabled={disableRun} on_click={on_submit}>
                 <IconPlay />

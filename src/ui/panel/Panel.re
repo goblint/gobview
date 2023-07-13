@@ -19,6 +19,7 @@ let make_nav_pills = (current, dispatch) => {
      |> List.mapi((i, (v, n)) => {
           <li key={string_of_int(i)} className="nav-item">
             <a
+              id={"nav-item-" ++ string_of_int(i)}
               href="#"
               className={"nav-link" ++ (current == Some(v) ? " active" : "")}
               onClick={on_click(`SwitchPanel(Some(v)))}>
