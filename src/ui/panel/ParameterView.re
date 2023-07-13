@@ -135,7 +135,7 @@ let make = (~goblint_path, ~inputValue, ~setInputValue, ~disableRun, ~setDisable
             | Some(p) => {
                 let resolved_parameter = Js.to_string(p);
                 if (String.length(inputValue) > 0) {
-                    resolved_parameter ++ " "
+                    " " ++ resolved_parameter
                 } else {
                     resolved_parameter
                 }
@@ -144,7 +144,7 @@ let make = (~goblint_path, ~inputValue, ~setInputValue, ~disableRun, ~setDisable
         };
         
         setInputValue(inputVal => {
-            let new_inputVal = String.cat(parameter, inputVal);
+            let new_inputVal = String.cat(inputVal, parameter);
             new_inputVal
         });
     }
