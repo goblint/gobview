@@ -9,9 +9,3 @@
  (deps monaco.mli)
  (action
   (run %{bin:gen_js_api} -o %{targets} %{deps})))
-
-(rule
- (targets autocompleteBS.ml)
- (deps autocompleteBS.mli)
- (action
-  (run %{bin:gen_js_api} -o %{targets} %{deps})))
