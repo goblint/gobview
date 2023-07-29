@@ -25,7 +25,7 @@ type file = File.t
 
 type func = Func.t
 
-type t = File of file | Func of func
+type t = File of file | Func of func | Graph of (Representation.t option * t option)
 
 let file ~path ?contents () = File (File.make ~path ?contents ()) (* TODO: contents argument never used *)
 

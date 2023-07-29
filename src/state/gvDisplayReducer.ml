@@ -9,6 +9,7 @@ let reduce (s : State.t) (d : D.t option) = function
       let fd = D.Func.fundec f s.cil in
       let dot = Option.map s.goblint#dot_of_fundec fd in
       Some (D.Func { f with dot })
+  | `DisplayUsageGraph ctx -> Some(D.Graph(ctx,s.display))
   | `UpdateFileContents s -> (
       match d with Some (D.File f) -> Some (D.File { f with contents = Some s }) | _ -> d )
   | `UpdateFuncDot s -> (

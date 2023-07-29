@@ -16,6 +16,8 @@ let make_breadcrumb_items = (display: State.display, dispatch) => {
          </li>
          <li className="breadcrumb-item active"> {f.name |> React.string} </li>
        </>
+       // Remove breadcrumbs if the callgraph is displayed
+      | Graph(_) => <div/>
      }}
   </>;
 };

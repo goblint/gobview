@@ -89,7 +89,7 @@ let init_goblint = (solver, spec, registered_name, config, cil) => {
   (goblint, cil);
 };
 
-let init = (solver, spec, config, meta, cil, analyses, warnings, stats, file_loc) => {
+let init = (solver, spec, config, meta, cil, analyses, warnings, stats, file_loc, graph) => {
   let cil =
     switch (cil) {
     | Ok(s) =>
@@ -134,9 +134,25 @@ let init = (solver, spec, config, meta, cil, analyses, warnings, stats, file_loc
     | _ => raise(InitFailed("Failed to load file path table"))
     };
 
+  let temp_graph =
+    switch (graph) {
+    | Ok(s) => Marshal.from_string(s, 0)
+    | _ => Hashtbl.create(1)
+    };
+    
+  // The context representations of the calls have te be converted manually
+  let graph =
+    Hashtbl.map(
+      (_, (f2, yojson)) => {
+        let rep: Representation.t =
+          GvGoblint.representation_of_yojson(yojson);
+         (f2, rep);
+      },
+      temp_graph,
+    );
   print_endline("Rendering app...");
   React.Dom.renderToElementWithId(
-    <Main cil goblint warnings meta stats file_loc/>,
+    <Main cil goblint warnings meta stats file_loc graph/>,
     "app",
   );
 };
@@ -160,6 +176,7 @@ let handle_error = exc => {
   "./warnings.marshalled",
   "./stats.marshalled",
   "./file_loc.marshalled",
+  "./graph.marshalled"
 ]
 |> List.map(HttpClient.get)
 |> Lwt.all
@@ -167,8 +184,8 @@ let handle_error = exc => {
   l =>
     Lwt.return(
       switch (l) {
-      | [solver, spec, config, meta, cil, analyses, warnings, stats, file_loc] =>
-        try(init(solver, spec, config, meta, cil, analyses, warnings, stats, file_loc)) {
+      | [solver, spec, config, meta, cil, analyses, warnings, stats, file_loc, graph] =>
+        try(init(solver, spec, config, meta, cil, analyses, warnings, stats, file_loc, graph)) {
         | exc => handle_error(exc)
         }
       | _ => ()
