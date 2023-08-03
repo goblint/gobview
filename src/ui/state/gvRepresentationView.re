@@ -106,5 +106,5 @@ and make_set = l =>
 
 [@react.component]
 let make = (~represent: Representation.t) => {
-  make_rec(represent);
+  <> {<GvValueAnalysisTable represent />} {make_rec(represent)} </>;
 };
