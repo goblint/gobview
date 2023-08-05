@@ -32,7 +32,7 @@ let make = (~active, ~goblint, ~inspect, ~dispatch) => {
     <div className="tab-content">
       <div className="tab-pane active">
         {switch (active) {
-         | Nodes => <GvNodeStateView goblint inspect />
+         | Nodes => <GvNodeStateView goblint inspect dispatch/>
          | Globals => <GvGlobalStateView analyses=goblint#global_analyses />
          | _ => <div/>
          }}
