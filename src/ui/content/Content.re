@@ -1,7 +1,7 @@
 open Batteries;
 
 let make_active_tab = name => {
-  <li className="nav-item">
+  <li id={name} className="nav-item">
     <Link class_=["nav-link", "active"]> {name |> React.string} </Link>
   </li>;
 };
@@ -13,7 +13,7 @@ let make_tabs = (display: GvDisplay.t, dispatch) => {
     {switch (display) {
      | Graph((_, Some(File(file)))) =>
        <>
-         <li className="nav-item">
+         <li id="Code" className="nav-item">
            <Link
              class_=["nav-link"]
              on_click
@@ -26,7 +26,7 @@ let make_tabs = (display: GvDisplay.t, dispatch) => {
 
      | Graph((_, Some(Func(func)))) =>
        <>
-         <li className="nav-item">
+         <li id="Code" className="nav-item">
            <Link
              class_=["nav-link"]
              on_click
@@ -38,7 +38,7 @@ let make_tabs = (display: GvDisplay.t, dispatch) => {
        </>
      | Graph((_, None)) =>
        <>
-         <li className="nav-item">
+         <li id="Code" className="nav-item">
            <Link
              class_=["nav-link"] on_click callback_data={`DisplayNothing}>
              {"Code" |> React.string}
@@ -49,10 +49,12 @@ let make_tabs = (display: GvDisplay.t, dispatch) => {
      | _ =>
        <>
          {make_active_tab("Code")}
-         <Link
-           class_=["nav-link"] on_click callback_data={`DisplayUsageGraph(None)}>
-           {"Graph" |> React.string}
-         </Link>
+         <li id="Graph" className="nav-item">
+          <Link 
+            class_=["nav-link"] on_click callback_data={`DisplayUsageGraph(None)}>
+            {"Graph" |> React.string}
+          </Link>
+         </li>
        </>
      }}
   </ul>;
