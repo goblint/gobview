@@ -1,19 +1,23 @@
-//Provides: unix_getpid
-function unix_getpid() {
+//Provides: caml_unix_getpid
+//Alias: unix_getuid
+function caml_unix_getpid() {
     return 0;
 }
 
-//Provides: unix_kill
-function unix_kill(pid, signal) { }
+//Provides: caml_unix_kill
+//Alias: unix_kill
+function caml_unix_kill(pid, signal) { }
 
-//Provides: unix_setitimer
-function unix_setitimer(which, newval) {
+//Provides: caml_unix_setitimer
+//Alias: unix_setitimer
+function caml_unix_setitimer(which, newval) {
     return newval;
 }
 
-//Provides: unix_times
+//Provides: caml_unix_times
+//Alias: unix_times
 //only used for timing statistics in Goblint
-function unix_times(x) {
+function caml_unix_times(x) {
   return 0;
 }
 
