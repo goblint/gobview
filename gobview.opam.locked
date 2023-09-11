@@ -19,6 +19,8 @@ depends: [
   "base" {= "v0.15.1"}
   "base-bigarray" {= "base"}
   "base-bytes" {= "base"}
+  "base-domains" {= "base"}
+  "base-nnp" {= "base"}
   "base-threads" {= "base"}
   "base-unix" {= "base"}
   "base64" {= "3.5.0"}
@@ -38,7 +40,6 @@ depends: [
   "conf-gcc" {= "1.0"}
   "conf-gmp" {= "4"}
   "conf-gmp-powm-sec" {= "3"}
-  "conf-libssl" {= "4"}
   "conf-perl" {= "2"}
   "conf-pkg-config" {= "2"}
   "cppo" {= "1.6.9"}
@@ -72,9 +73,7 @@ depends: [
   "jsoo-react" {= "dev"}
   "logs" {= "0.7.0"}
   "lwt" {= "5.6.1"}
-  "lwt_log" {= "1.1.2"}
   "lwt_ppx" {= "2.1.0"}
-  "lwt_ssl" {= "1.1.3"}
   "macaddr" {= "5.3.1"}
   "magic-mime" {= "1.3.0"}
   "menhir" {= "20220210"}
@@ -86,12 +85,12 @@ depends: [
   "mirage-crypto-pk" {= "0.11.1"}
   "mirage-crypto-rng" {= "0.11.1"}
   "num" {= "1.4"}
-  "ocaml" {= "4.14.0"}
+  "ocaml" {= "5.0.0"}
   "ocaml-compiler-libs" {= "v0.12.4"}
-  "ocaml-config" {= "2"}
+  "ocaml-config" {= "3"}
   "ocaml-option-flambda" {= "1"}
   "ocaml-syntax-shims" {= "1.0.0"}
-  "ocaml-variants" {= "4.14.0+options"}
+  "ocaml-variants" {= "5.0.0+options"}
   "ocaml-version" {= "3.5.0"}
   "ocamlbuild" {= "0.14.2"}
   "ocamlfind" {= "1.9.5"}
@@ -121,7 +120,6 @@ depends: [
   "seq" {= "base"}
   "sexplib" {= "v0.15.1"}
   "sexplib0" {= "v0.15.1"}
-  "ssl" {= "0.5.13"}
   "stdio" {= "v0.15.0"}
   "stdlib-shims" {= "0.3.0"}
   "stringext" {= "1.6.0"}
@@ -156,7 +154,7 @@ dev-repo: "git+https://github.com/goblint/gobview.git"
 pin-depends: [
   [
   "jsoo-react.dev"
-  "git+https://github.com/sim642/jsoo-react.git#bc9cc4c00761c6c9d09101cddca437731de96eae"
+  "git+https://github.com/sim642/jsoo-react.git#57c4bde195ea572070c3c38ee7f44aa01767b936"
 ]
   [
   "zarith.1.12-gob0"

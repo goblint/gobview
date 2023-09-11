@@ -25,6 +25,7 @@
  (depends
   dune
   (ocaml (>= 4.10.0))
+  (js_of_ocaml (>= 4.1.0))
   batteries
   cohttp-lwt
   cohttp-lwt-unix
