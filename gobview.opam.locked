@@ -134,6 +134,7 @@ depends: [
   "zarith" {= "1.12-gob0"}
   "zarith_stubs_js" {= "v0.15.0"}
 ]
+conflicts: ["mtime"]
 build: [
   ["dune" "subst"] {dev}
   [

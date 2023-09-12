@@ -33,6 +33,7 @@ depends: [
   "ocamlformat" {dev}
   "odoc" {with-doc}
 ]
+conflicts: ["mtime"]
 build: [
   ["dune" "subst"] {dev}
   [
