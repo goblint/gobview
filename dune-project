@@ -23,6 +23,9 @@
  (name gobview)
  (synopsis "Web frontend for Goblint")
  (depends
+  cohttp
+  cohttp-lwt
+  cohttp-lwt-jsoo
   dune
   (ocaml (>= 4.10.0))
   batteries
@@ -37,6 +40,8 @@
   ppx_yojson_conv ; TODO: switch to ppx_deriving_yojson like Goblint itself
   conduit-lwt-unix
   jsoo-react
+  lwt
+  uri
   (goblint-cil (>= 2.0.0))
   ctypes_stubs_js
   integers_stubs_js

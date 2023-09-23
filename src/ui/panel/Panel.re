@@ -19,6 +19,7 @@ let make_nav_pills = (current, dispatch) => {
      |> List.mapi((i, (v, n)) => {
           <li key={string_of_int(i)} className="nav-item">
             <a
+              id={"nav-item-" ++ string_of_int(i)}
               href="#"
               className={"nav-link" ++ (current == Some(v) ? " active" : "")}
               onClick={on_click(`SwitchPanel(Some(v)))}>
@@ -31,27 +32,25 @@ let make_nav_pills = (current, dispatch) => {
 };
 
 [@react.component]
-let make = (~state, ~dispatch) => {
-  let parameters =
-    switch (Yojson.Safe.Util.member("command", state.meta)) {
-    | `String(command) => command
-    | _ => ""
-    };
+let make = (~state, ~dispatch, ~goblint_path, ~inputValue, ~setInputValue, ~disableRun, ~setDisableRun, ~inputState, ~setInputState, ~sortDesc, ~setSortDesc, ~history, ~setHistory, ~setAnalysisState) => {
 
   let locations = (state.goblint)#dead_locations;
 
   let current = state.selected_panel;
+
+  let component = switch (current) {
+    | Some(Warnings) => <WarningView warnings={state.warnings} dispatch />
+    | Some(DeadCode) => <DeadCodeView locations dispatch />
+    | Some(Statistics) => <GvStatisticsView stats={state.stats} />
+    | Some(Parameters) => <ParameterView goblint_path inputValue setInputValue disableRun setDisableRun inputState setInputState sortDesc setSortDesc history setHistory setAnalysisState/>
+    | _ => React.null
+  };
+
   <div className="panel d-flex flex-column border-right border-left h-25">
     {make_nav_pills(current, dispatch)}
     <div className="tab-content overflow-auto">
       <div className="tab-pane active">
-        {switch (current) {
-         | Some(Warnings) => <WarningView warnings={state.warnings} dispatch />
-         | Some(DeadCode) => <DeadCodeView locations dispatch />
-         | Some(Parameters) => <ParameterView parameters />
-         | Some(Statistics) => <GvStatisticsView stats={state.stats} />
-         | _ => React.null
-         }}
+        {component}
       </div>
     </div>
   </div>;

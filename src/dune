@@ -5,6 +5,9 @@
  (modes js)
  (libraries
   batteries.unthreaded
+  cohttp
+  cohttp-lwt
+  cohttp-lwt-jsoo
   fpath
   gen_js_api
   goblint-cil
@@ -20,6 +23,7 @@
   lwt
   ppx_deriving_yojson.runtime
   ppx_deriving.runtime
+  uri
   yojson
   zarith
   zarith_stubs_js)
