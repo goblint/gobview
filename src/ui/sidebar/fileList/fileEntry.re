@@ -5,7 +5,7 @@ let make_func_list = (file, funcs, dispatch) => {
 
   funcs
   |> List.map(func => {
-       <li key={file ++ func} className="list-group-item px-5">
+       <li key={file ++ func} className="list-group-item">
          <Link
            on_click
            callback_data={`DisplayFunc((func, file))}
