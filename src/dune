@@ -9,6 +9,7 @@
   gen_js_api
   goblint-cil
   goblint-cil.syntacticsearch
+  goblint.common
   goblint.lib
   goblint.timing
   goblint.sites.js
