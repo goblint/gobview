@@ -3,7 +3,8 @@ open GoblintCil;
 open FileTree;
 
 let rec make_entries = (prefix, files, tree, mainFiles, dispatch) => {
-  let prefix_of_main_file = (path) => !List.exists((mf) => String.starts_with(path, mf), mainFiles);
+  let prefix_of_main_file = (path) =>
+    !List.exists((mf) => String.starts_with(mf, path), mainFiles);
   tree
   |> List.map(
        fun
@@ -37,7 +38,7 @@ let make = (~cil: Cil.file, ~dispatch) => {
     (mainFiles, g) =>
     switch(g) {
     | GFun(fdec, loc) => Hashtbl.add(files, loc.file, fdec.svar.vname);
-      if(List.mem(fdec,mf)) {
+      if(List.mem(fdec, mf)) {
         [loc.file, ...mainFiles]
       } else {
         mainFiles
