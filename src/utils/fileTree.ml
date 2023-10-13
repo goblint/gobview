@@ -10,20 +10,6 @@ module FileTree = struct
   type t = File of string
     | Directory of string * t list
 
-  let split_first_directory = fun path ->
-    if String.contains_from path 1 '/' then
-      (* Prevent splits on the first character (ex. "/home" shouldn't split) *)
-      Tuple2.map1 (fun (s : string) -> (String.head path 1) ^ s) (String.split (String.lchop path) ~by:"/")
-    else
-      (path, "")
-
-  (* Compare 2 arguments according to their first directory
-    ("/home/a","/home/b") => 0 (equal)
-    ("/home/a","/usr/a") != 0
-  *)
-  let compare_prefix =
-    curry(Tuple2.mapn (split_first_directory %> fst) %> uncurry(compare))
-
   (*
     Compact a tree by joining Directories with only a single child.
     Directory("src",[Directory("test",[...])])=> Directory("src/test",[...])
@@ -33,25 +19,29 @@ module FileTree = struct
       Directory(p ^ "/" ^ pp, r) |> compact
     | t -> t
 
-  let rec mk_tree = fun paths ->
+  let rec mk_tree_seq_lists (paths : string list list) =
     paths
-    |> List.unique
-    |> List.group compare_prefix
+    |> List.group (fun ls1 ls2 -> compare (List.hd ls1) (List.hd ls2))
     |> List.map
          (function
          (* Unique prefix => no second entry with this path. Therefore has to be a single file *)
-         | [file_path] -> File(file_path)
+         | [file_path] -> File(String.concat "/" file_path)
          | group_paths -> (
              (* All elements in this group will have the same prefix by definition *)
              let prefix =
-               group_paths |> List.hd |> split_first_directory |> fst in
+               group_paths |> List.hd |> List.hd in
              let tree = group_paths
-              |> List.map(split_first_directory %> snd)
-              |> List.filter (fun s -> s!="")
-              |> mk_tree in
+              |> List.map List.tl
+              |> mk_tree_seq_lists in
              Directory (prefix, tree)
              |> compact;
          )
        )
 
+  let mk_tree = fun (paths : string list) ->
+    paths
+    |> List.unique
+    |> List.map Fpath.v
+    |> List.map Fpath.segs
+    |> mk_tree_seq_lists
 end
