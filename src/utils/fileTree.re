@@ -3,10 +3,10 @@ open Batteries;
 module FileTree = {
   /*
     Modified trie / prefix tree
-   Files are Leafs.
-   The whole filepath can be reconstructed by concatinating the prefixes of its parents.
-   Directory("test",[File("a.c")]) => "test/a.c"
-    */
+    Files are Leafs.
+    The whole filepath can be reconstructed by concatinating the prefixes of its parents.
+    Directory("test",[File("a.c")]) => "test/a.c"
+  */
   type t =
     | File(string)
     | Directory(string, list(t));
@@ -21,17 +21,17 @@ module FileTree = {
     };
 
   /*
-   Compare 2 arguments according to their first directory
-   ("/home/a","/home/b") => 0 (equal)
-   ("/home/a","/usr/a") != 0
-   */
+    Compare 2 arguments according to their first directory
+    ("/home/a","/home/b") => 0 (equal)
+    ("/home/a","/usr/a") != 0
+  */
   let compare_prefix =
     curry(Tuple2.mapn(split_first_directory %> fst) %> uncurry(compare));
 
   /*
-     Compact a tree by joining Directories with only a single child.
-     Directory("src",[Directory("test",[...])])=> Directory("src/test",[...])
-   */
+    Compact a tree by joining Directories with only a single child.
+    Directory("src",[Directory("test",[...])])=> Directory("src/test",[...])
+  */
   let rec compact =
     fun
     | Directory(p, [Directory(pp, r)]) =>
