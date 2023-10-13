@@ -17,14 +17,14 @@ let make_func_list = (file, funcs, dispatch) => {
   |> React.list;
 };
 [@react.component]
-let make = (~path, ~name, ~dispatch, ~functions) => {
+let make = (~path, ~name, ~dispatch, ~functions, ~collapsed) => {
   let on_click = (data, _) => Option.may(dispatch, data);
   let make_title = name =>
     <Link on_click class_=["text-link"] callback_data={`DisplayFile(path)}>
       {name |> React.string}
     </Link>;
 
-  <CollapsibleList>
+  <CollapsibleList collapsed=collapsed>
     <CollapsibleListItem name make_title>
       <ul className="list-group">
         {make_func_list(path, functions, dispatch)}

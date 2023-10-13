@@ -3,14 +3,14 @@ open Batteries;
 
 [@react.component]
 let make =
-    (~name=?, ~collapsed=?, ~override_class=?, ~on_toggle=?, ~children=?,~make_title=?) => {
-  let (name, collapsed, override_class, on_toggle, children,make_title) =
-    Utils.fix_opt_args6(name, collapsed, override_class, on_toggle, children,make_title);
+    (~name=?, ~collapsed=?, ~override_class=?, ~on_toggle=?, ~children=?, ~make_title=?) => {
+  let (name, collapsed, override_class, on_toggle, children, make_title) =
+    Utils.fix_opt_args6(name, collapsed, override_class, on_toggle, children, make_title);
   let name = Option.default("", name);
   let collapsed = Option.default(true, collapsed);
   let children = Option.default(React.null, children);
-  let make_title=Option.default((name)=>name|>React.string,make_title);
-  
+  let make_title = Option.default((name) => name |> React.string, make_title);
+
 
   let className =
     switch (override_class) {
