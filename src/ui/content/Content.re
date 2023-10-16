@@ -1,5 +1,4 @@
 open React.Dom.Dsl.Html;
-open Batteries;
 
 [@react.component]
 let make = (~state: State.t, ~display: GvDisplay.t, ~dispatch) => {
