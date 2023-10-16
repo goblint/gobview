@@ -3,10 +3,10 @@ open Batteries;
 let make_single = (ctx, path) => {
   <CollapsibleList collapsed=false override_class=[]>
     <CollapsibleListItem name="Context" override_class=[]>
-      ...<GvRepresentationView represent=ctx />
+      <GvRepresentationView represent=ctx />
     </CollapsibleListItem>
     <CollapsibleListItem name="Path" override_class=[]>
-      ...<GvRepresentationView represent=path />
+      <GvRepresentationView represent=path />
     </CollapsibleListItem>
   </CollapsibleList>;
 };
@@ -23,16 +23,16 @@ let make = (~goblint, ~inspect) =>
             fun
             | [(id, (ctx, path))] =>
               <CollapsibleListItem name={"Node: " ++ id}>
-                ...{make_single(ctx, path)}
+                {make_single(ctx, path)}
               </CollapsibleListItem>
             | [(id, _), ..._] as group =>
               <CollapsibleListItem name={"Node: " ++ id}>
-                ...<CollapsibleList style=`Flush>
+                <CollapsibleList style=`Flush>
                   ...{group
                    |> List.mapi((i, (_, (ctx, path))) =>
                         <CollapsibleListItem
                           name={"Tuple: " ++ string_of_int(i)}>
-                          ...{make_single(ctx, path)}
+                          {make_single(ctx, path)}
                         </CollapsibleListItem>
                       )}
                 </CollapsibleList>

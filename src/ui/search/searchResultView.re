@@ -1,3 +1,4 @@
+open React.Dom.Dsl.Html;
 open Batteries;
 
 let make_table = (matches, dispatch) => {
@@ -10,10 +11,10 @@ let make_table = (matches, dispatch) => {
 
   <>
     <Button class_=["btn", "my-2"] color=`Danger outline=true on_click=clear>
-      {"Clear results" |> React.string}
+      ...{"Clear results" |> React.string}
     </Button>
     <CollapsibleList collapsed=false>
-      {matches
+      ...{matches
         |> List.mapi((i,m) => {
           let (name, loc, signature, _) = m;
           let key = string_of_int(i);
@@ -37,7 +38,7 @@ let make_table = (matches, dispatch) => {
                     <th scope="row"> {"Location" |> React.string} </th>
                     <td>
                       <Link on_click={on_click(loc)}>
-                        {loc.file
+                        ...{loc.file
                         ++ ":"
                         ++ string_of_int(loc.line)
                         |> React.string}
@@ -47,16 +48,14 @@ let make_table = (matches, dispatch) => {
                 </tbody>
               </table>
             </CollapsibleListItem>
-        })
-        |> React.list
-      }
+        })}
     </CollapsibleList>
   </>;
 };
 
 [@react.component]
 let make = (~matches: Search.matches, ~dispatch) => {
-  React.useEffect1(
+  React.use_effect1(
     () => {
       if (matches == Loading) {
         dispatch @@ `PerformSearch;
@@ -80,7 +79,7 @@ let make = (~matches: Search.matches, ~dispatch) => {
        <div className="alert alert-warning alert-dismissible">
          {"No results found" |> React.string}
          <Button class_=["btn-close"] color=`None on_click>
-           React.null
+           ...React.null
          </Button>
        </div>
      | Done(matches) => make_table(matches, dispatch)

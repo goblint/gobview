@@ -16,7 +16,8 @@ let make_nav_pills = (current, dispatch) => {
   };
 
   <ul className="nav nav-pills border-top border-bottom">
-    ...{List.mapi((i, (v, n)) => {
+    ...{views
+        |> List.mapi((i, (v, n)) => {
           <li key={string_of_int(i)} className="nav-item">
             <a
               href="#"
@@ -25,8 +26,7 @@ let make_nav_pills = (current, dispatch) => {
               {n |> React.string}
             </a>
           </li>
-        })
-     |> React.list}
+        })}
   </ul>;
 };
 

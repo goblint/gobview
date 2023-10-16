@@ -6,7 +6,7 @@ let make = (~analyses) => {
     ...{analyses
      |> List.map(((n, results)) => {
           <CollapsibleListItem name=n>
-            ...<GvAnalysesView results />
+            <GvAnalysesView results />
           </CollapsibleListItem>
         })}
   </CollapsibleList>;
