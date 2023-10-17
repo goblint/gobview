@@ -13,7 +13,7 @@ let make = (~search: Search.t, ~dispatch) => {
   let json = search.json_ui.text;
   let query = search.json_ui.query;
 
-  let switch_on_click = (m, _, _) => dispatch @@ `UpdateSearchMode(m);
+  let switch_on_click = (m, _) => dispatch @@ `UpdateSearchMode(m);
 
   switch (search.mode) {
   | Graphical =>

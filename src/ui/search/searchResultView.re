@@ -4,7 +4,7 @@ open Batteries;
 let make_table = (matches, dispatch) => {
   let clear = () => dispatch @@ `ClearSearchMatches;
 
-  let on_click = (loc: GoblintCil.location, _, _) => {
+  let on_click = (loc: GoblintCil.location, _) => {
     dispatch @@ `DisplayFile(loc.file);
     dispatch @@ `InspectLine(GvInspect.Line.of_location(loc));
   };

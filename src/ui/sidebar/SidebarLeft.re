@@ -9,14 +9,14 @@ let views = [
 ];
 
 let make_tabs = (active, dispatch) => {
-  let on_click = (act, _) => Option.may(dispatch, act);
+  let on_click = (v, _) => dispatch @@ `SwitchSidebarLeft(v);
 
   views
   |> List.mapi((i, (v, n)) => {
       let class_ =
         [["nav-link"], v == active ? ["active"] : []] |> List.concat;
       <li key={string_of_int(i)} className="nav-item">
-        <Link class_ on_click callback_data={`SwitchSidebarLeft(v)}>
+        <Link class_ on_click={on_click(v)}>
           ...{n |> React.string}
         </Link>
       </li>;

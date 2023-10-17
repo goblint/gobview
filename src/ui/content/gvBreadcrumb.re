@@ -2,7 +2,7 @@ open React.Dom.Dsl.Html;
 open Batteries;
 
 let make_breadcrumb_items = (display: State.display, dispatch) => {
-  let on_click = (act, _) => Option.may(dispatch, act);
+  let on_click = (f : GvDisplay.func, _) => dispatch @@ `DisplayFile(f.file);
 
   <>
     {switch (display) {
@@ -11,7 +11,7 @@ let make_breadcrumb_items = (display: State.display, dispatch) => {
      | Func(f) =>
        <>
          <li className="breadcrumb-item">
-           <Link on_click callback_data={`DisplayFile(f.file)}>
+           <Link on_click={on_click(f)}>
              ...{f.file |> React.string}
            </Link>
          </li>
