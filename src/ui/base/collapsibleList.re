@@ -5,8 +5,6 @@ module ToggledSet = Set.Make(Int);
 
 [@react.component]
 let make = (~collapsed=?, ~class_=?, ~style=?, ~override_class=?, ~children) => {
-  let (collapsed, class_, style, override_class) =
-    Utils.fix_opt_args4(collapsed, class_, style, override_class);
   let collapsed = Option.default(true, collapsed);
   let class_ = Option.default([], class_);
   let style = Option.default(`Default, style);

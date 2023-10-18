@@ -3,8 +3,6 @@ open Batteries;
 
 [@react.component]
 let make = (~url=?, ~class_=?, ~on_click=?, ~children) => {
-  let (url, class_, on_click) =
-    Utils.fix_opt_args3(url, class_, on_click);
   let class_ = Option.default([], class_);
 
   let href =

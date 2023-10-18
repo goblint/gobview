@@ -17,16 +17,6 @@ let make =
       ~options=?,
       ~on_mount=?,
     ) => {
-  let (width, height, value, default_value, language, options, on_mount) =
-    Utils.fix_opt_args7(
-      width,
-      height,
-      value,
-      default_value,
-      language,
-      options,
-      on_mount,
-    );
   let width = Option.default("100%", width);
   let height = Option.default("100%", height);
   let default_value = Option.default("", default_value);

@@ -2,7 +2,6 @@ open React.Dom.Dsl.Html;
 
 [@react.component]
 let make = (~class_=?, ~value, ~on_change) => {
-  let class_ = Utils.fix_opt_arg(class_);
   let class_ = Option.value(class_, ~default=["form-control"]);
 
   let className = String.concat(" ", class_);

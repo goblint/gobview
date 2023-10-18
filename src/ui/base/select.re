@@ -3,7 +3,7 @@ open Batteries;
 
 [@react.component]
 let make = (~options, ~compare=?, ~value, ~on_change) => {
-  let compare = Utils.fix_opt_arg(compare) |> Option.default((==));
+  let compare = Option.default((==), compare);
   let options = options |> List.mapi((i, e) => (i, e));
 
   let i =

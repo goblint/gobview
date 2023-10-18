@@ -1,7 +1,6 @@
 [@react.component]
 let make = (~class_=?, ~value, ~on_change, ~children) => {
-  let class_ =
-    Utils.fix_opt_arg(class_) |> Option.value(~default=["form-control"]);
+  let class_ = Option.value(~default=["form-control"], class_);
 
   let input_class =
     if (Result.is_error(value)) {

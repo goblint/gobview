@@ -12,8 +12,6 @@ let make =
       ~disabled=?,
       ~children,
     ) => {
-  let (type_, class_, color, outline, on_click, disabled) =
-    Utils.fix_opt_args6(type_, class_, color, outline, on_click, disabled);
   let type_ = Option.default(`Button, type_);
   let class_ = Option.default(["btn"], class_);
   let color = Option.default(`Primary, color);
