@@ -1,17 +1,6 @@
-(rule
- (targets errorBoundary.ml)
- (deps errorBoundary.mli)
- (action
-  (run %{bin:gen_js_api} -o %{targets} %{deps})))
 
 (rule
  (targets monaco.ml)
  (deps monaco.mli)
- (action
-  (run %{bin:gen_js_api} -o %{targets} %{deps})))
-
-(rule
- (targets Graphviz.ml)
- (deps Graphviz.mli)
  (action
   (run %{bin:gen_js_api} -o %{targets} %{deps})))

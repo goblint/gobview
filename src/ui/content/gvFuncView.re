@@ -21,24 +21,21 @@ let make = (~func: GvDisplay.func, ~dispatch) => {
   switch (func.dot) {
   | Some(dot) =>
 
-    let graphiz = Graphviz.make(
-      Graphviz.makeProps(
-        ~dot={dot |> Js.string},
-        ~options={Js.Unsafe.obj([|
-          ("height", Js.Unsafe.inject("100%")),
-          ("width", Js.Unsafe.inject("100%")),
-          ("zoom", Js.Unsafe.inject(true)),
-        |])},
-        ~className={"fun-cfg" |> Js.string}, ()))
-
-
-    ErrorBoundary.make(ErrorBoundary.makeProps(
-      ~message={
+    <ErrorBoundary
+      message={
         "Cannot display the function graph. The generated DOT file is probably too large."
-        |> Js.string
-      },
-      ~children=graphiz,
-      ()))
+        |> Js.string}>
+      <Graphviz
+        dot={dot |> Js.string}
+        options={Js.Unsafe.obj([|
+            ("height", Js.Unsafe.inject("100%")),
+            ("width", Js.Unsafe.inject("100%")),
+            ("zoom", Js.Unsafe.inject(true)),
+          |])}
+        className={"fun-cfg" |> Js.string}
+      />
+    </ErrorBoundary>
+
   | _ => React.null
   };
 };
