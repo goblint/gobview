@@ -43,7 +43,7 @@ let make =
 
   let className = [class_, color_class] |> List.concat |> String.concat(" ");
 
-  let onClick = _ => Option.may(cb => cb(), on_click);
+  let onClick = _ => Option.apply(on_click, ());
 
   <button type_ className onClick disabled> children </button>;
 };

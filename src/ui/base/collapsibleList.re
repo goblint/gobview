@@ -39,17 +39,16 @@ let make = (~collapsed=?, ~class_=?, ~style=?, ~override_class=?, ~children) => 
 
   <ul className>
     {React.Children.mapi(children, (elt, i) => {
-       React.clone_element(
-         elt,
-         CollapsibleListItem.make(
-           ~key=string_of_int(i),
-           ~collapsed={
-             ToggledSet.mem(i, toggled) != collapsed;
-           },
-           ~on_toggle=on_toggle(i),
-           (),
-         ),
-       )
-     })}
+      React.clone_element(
+          elt,
+          Js_of_ocaml.Js.Unsafe.(
+            obj([|
+              ("key", inject(Some(string_of_int(i)))),
+              ("on_toggle", inject(Some(on_toggle(i)))),
+              ("collapsed", inject(Some(ToggledSet.mem(i, toggled) != collapsed)))
+           |])),
+         );
+      },
+    )}
   </ul>;
 };
