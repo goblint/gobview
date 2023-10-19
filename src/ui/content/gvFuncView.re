@@ -24,7 +24,8 @@ let make = (~func: GvDisplay.func, ~dispatch) => {
     <ErrorBoundary
       message={
         "Cannot display the function graph. The generated DOT file is probably too large."
-        |> Js.string}>
+        |> Js.string
+      }>
       <Graphviz
         dot={dot |> Js.string}
         options={Js.Unsafe.obj([|
