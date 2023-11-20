@@ -45,9 +45,9 @@ depends: [
   "cstruct" {= "6.1.1"}
   "ctypes_stubs_js" {= "0.1"}
   "domain-name" {= "0.4.0"}
-  "dune" {= "3.6.1"}
-  "dune-build-info" {= "3.6.1"}
-  "dune-configurator" {= "3.6.1"}
+  "dune" {= "3.7.1"}
+  "dune-build-info" {= "3.7.1"}
+  "dune-configurator" {= "3.7.1"}
   "duration" {= "0.2.1"}
   "either" {= "1.0.0"}
   "eqaf" {= "0.9"}
