@@ -57,7 +57,7 @@ depends: [
   "fpath" {= "0.7.3"}
   "gen_js_api" {= "1.0.9"}
   "gmap" {= "0.3.0"}
-  "goblint-cil" {= "2.0.2"}
+  "goblint-cil" {= "2.0.3"}
   "http" {= "6.0.0~alpha1"}
   "integers_stubs_js" {= "1.0"}
   "ipaddr" {= "5.3.1"}
