@@ -6,7 +6,7 @@ open Lwt.Infix
 module Yojson_conv = Ppx_yojson_conv_lib.Yojson_conv
 
 let docroot = ref "run"
-let distroot = ref "gobview_dist"
+let distroot = ref "gobview/dist"
 let index = ref "index.html"
 let addr = ref "127.0.0.1"
 let port = ref 8080
