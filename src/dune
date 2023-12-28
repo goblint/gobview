@@ -12,6 +12,8 @@
   goblint.config
   goblint.common
   goblint.domain
+  goblint.constraint
+  goblint.solver
   goblint.lib
   goblint.timing
   goblint.sites.js
