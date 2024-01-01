@@ -10,12 +10,20 @@ module Message = struct
     | Single p -> loc p
     | Group { pieces; _ } -> pieces |> List.filter_map loc |> List.enum |> Enum.get
 
-  let severity_to_bs_alert m = match m.severity with
+  let severity_to_hash m = m.severity |> Severity.hash
+  let severity_to_string m = match m.severity with 
+    | Error -> "Error"
+    | Warning -> "Warning"
+    | Info -> "Info"
+    | Debug -> "Debug"
+    | Success -> "Success"
+    let severity_to_bootstrap_class (m:Severity.t) = match m with
     | Error -> "alert-danger"
     | Warning -> "alert-warning"
     | Info -> "alert-info"
     | Debug -> "alert-light"
     | Success -> "alert-success"
+    let message_to_bootstrap_class m = severity_to_bootstrap_class m.severity
 
   let to_string msg =
     let out = IO.output_string () in
