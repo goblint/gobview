@@ -33,6 +33,7 @@ depends: [
   "ocamlformat" {dev}
   "odoc" {with-doc}
 ]
+conflicts: ["mtime"]
 build: [
   ["dune" "subst"] {dev}
   [
@@ -49,6 +50,6 @@ build: [
 ]
 dev-repo: "git+https://github.com/goblint/gobview.git"
 pin-depends: [
-  [ "jsoo-react.dev" "git+https://github.com/sim642/jsoo-react.git#bc9cc4c00761c6c9d09101cddca437731de96eae" ]
+  [ "jsoo-react.dev" "git+https://github.com/sim642/jsoo-react.git#57c4bde195ea572070c3c38ee7f44aa01767b936" ]
   [ "zarith.1.12-gob0" "git+https://github.com/goblint/Zarith.git#goblint-release-1.12" ]
 ]
