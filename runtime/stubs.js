@@ -49,6 +49,12 @@ function smallest_float(x) {
   return 2.2250738585072014e-308;
 }
 
+//Provides: pi
+//from Goblint specific stubs for C float operations
+function pi(x) {
+  return Number.pi;
+}
+
 //external of_int: int -> t
 //Provides: ml_z_of_int const
 //Requires: bigInt
