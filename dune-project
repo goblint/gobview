@@ -25,6 +25,7 @@
  (depends
   dune
   (ocaml (>= 4.10.0))
+  reason
   batteries
   cohttp-lwt
   cohttp-lwt-unix

@@ -38,7 +38,6 @@ depends: [
   "conf-gcc" {= "1.0"}
   "conf-gmp" {= "4"}
   "conf-gmp-powm-sec" {= "3"}
-  "conf-libssl" {= "4"}
   "conf-perl" {= "2"}
   "conf-pkg-config" {= "2"}
   "cppo" {= "1.6.9"}
@@ -53,7 +52,7 @@ depends: [
   "either" {= "1.0.0" & dev}
   "eqaf" {= "0.9"}
   "fileutils" {= "0.6.4"}
-  "fix" {= "20220121" & dev}
+  "fix" {= "20220121"}
   "fmt" {= "0.9.0"}
   "fpath" {= "0.7.3"}
   "gen_js_api" {= "1.0.9"}
@@ -71,12 +70,12 @@ depends: [
   "logs" {= "0.7.0"}
   "lwt" {= "5.6.1"}
   "lwt_ppx" {= "2.1.0"}
-  "lwt_ssl" {= "1.1.3"}
   "macaddr" {= "5.3.1"}
   "magic-mime" {= "1.3.0"}
   "menhir" {= "20220210"}
   "menhirLib" {= "20220210"}
   "menhirSdk" {= "20220210"}
+  "merlin-extend" {= "0.6.1"}
   "mirage-crypto" {= "0.11.1"}
   "mirage-crypto-ec" {= "0.11.1"}
   "mirage-crypto-pk" {= "0.11.1"}
@@ -91,11 +90,12 @@ depends: [
   "ocaml-version" {= "3.5.0" & dev}
   "ocamlbuild" {= "0.14.2"}
   "ocamlfind" {= "1.9.5"}
-  "ocamlformat" {= "0.25.1" & dev}
-  "ocamlformat-lib" {= "0.25.1" & dev}
+  "ocamlformat" {= "0.24.1" & dev}
   "ocp-indent" {= "1.8.1" & dev}
   "ocplib-endian" {= "1.2"}
   "octavius" {= "1.2.2"}
+  "odoc" {= "2.2.0" & with-doc}
+  "odoc-parser" {= "2.0.0" & dev}
   "ojs" {= "1.1.1"}
   "parsexp" {= "v0.15.0"}
   "pbkdf" {= "1.2.0"}
@@ -109,16 +109,17 @@ depends: [
   "ppxlib" {= "0.28.0"}
   "ptime" {= "1.1.0"}
   "re" {= "1.10.4"}
+  "reason" {= "3.8.2"}
   "result" {= "1.5"}
   "rresult" {= "0.7.0"}
   "seq" {= "base"}
   "sexplib" {= "v0.15.1"}
   "sexplib0" {= "v0.15.1"}
-  "ssl" {= "0.5.13"}
   "stdio" {= "v0.15.0" & dev}
   "stdlib-shims" {= "0.3.0"}
   "stringext" {= "1.6.0"}
   "topkg" {= "1.0.6"}
+  "tyxml" {= "4.5.0" & with-doc}
   "uchar" {= "0.0.2"}
   "uri" {= "4.2.0"}
   "uri-sexp" {= "4.2.0"}
@@ -147,10 +148,6 @@ build: [
 ]
 dev-repo: "git+https://github.com/goblint/gobview.git"
 pin-depends: [
-  [
-    "goblint-cil.2.0.2"
-    "git+https://github.com/goblint/cil.git#c7ffc37ad83216a84d90fdbf427cc02a68ea5331"
-  ]
   [
     "ppx_deriving.5.2.1"
     "git+https://github.com/ocaml-ppx/ppx_deriving.git#0a89b619f94cbbfc3b0fb3255ab4fe5bc77d32d6"
