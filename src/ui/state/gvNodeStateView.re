@@ -1,18 +1,28 @@
 open Batteries;
 
-let make_single = (ctx, path) => {
+let make_single = (ctx, path, dispatch) => {
   <CollapsibleList collapsed=false override_class=[]>
     <CollapsibleListItem name="Context" override_class=[]>
+    <button
+      className="btn btn-sm btn-secondary mb-4"
+      onClick={_ => {dispatch @@ `DisplayUsageGraph(Some(ctx))}}>
+      {"Find Usages in this Context" |> React.string}
+    </button>
       <GvRepresentationView represent=ctx />
     </CollapsibleListItem>
     <CollapsibleListItem name="Path" override_class=[]>
+    <button
+      className="btn btn-sm btn-secondary mb-4"
+      onClick={_ => {dispatch @@ `DisplayUsageGraph(Some(ctx))}}>
+      {"Find Usages in this Context" |> React.string}
+    </button>
       <GvRepresentationView represent=path />
     </CollapsibleListItem>
   </CollapsibleList>;
 };
 
 [@react.component]
-let make = (~goblint, ~inspect) =>
+let make = (~goblint, ~inspect, ~dispatch) =>
   switch (inspect) {
   | None => React.null
   | Some(inspect) =>
@@ -23,7 +33,7 @@ let make = (~goblint, ~inspect) =>
             fun
             | [(id, (ctx, path))] =>
               <CollapsibleListItem name={"Node: " ++ id}>
-                {make_single(ctx, path)}
+                {make_single(ctx, path, dispatch)}
               </CollapsibleListItem>
             | [(id, _), ..._] as group =>
               <CollapsibleListItem name={"Node: " ++ id}>
@@ -32,7 +42,7 @@ let make = (~goblint, ~inspect) =>
                    |> List.mapi((i, (_, (ctx, path))) =>
                         <CollapsibleListItem
                           name={"Tuple: " ++ string_of_int(i)}>
-                          {make_single(ctx, path)}
+                          {make_single(ctx, path, dispatch)}
                         </CollapsibleListItem>
                       )
                    |> React.list}
