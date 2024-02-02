@@ -27,6 +27,8 @@ depends: [
   "ppx_yojson_conv"
   "conduit-lwt-unix"
   "jsoo-react"
+  "js_of_ocaml-lwt"
+  "js_of_ocaml-ppx"
   "goblint-cil" {>= "2.0.0"}
   "ctypes_stubs_js"
   "integers_stubs_js"
