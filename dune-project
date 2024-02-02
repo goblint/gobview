@@ -25,6 +25,7 @@
  (depends
   dune
   (ocaml (>= 4.10.0))
+  reason
   batteries
   cohttp-lwt
   cohttp-lwt-unix
@@ -41,4 +42,6 @@
   ctypes_stubs_js
   integers_stubs_js
   zarith_stubs_js
-  (ocamlformat :dev)))
+  (ocamlformat :dev))
+ (conflicts
+  mtime))

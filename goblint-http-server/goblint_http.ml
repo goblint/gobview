@@ -9,7 +9,8 @@ let docroot = ref "run"
 let index = ref "index.html"
 let addr = ref "127.0.0.1"
 let port = ref 8080
-let goblint = ref "goblint"
+let goblint = ref "./goblint"
+let file_paths = ref []
 let rest = ref []
 
 let specs =
@@ -21,8 +22,6 @@ let specs =
     ("-with-goblint", Arg.Set_string goblint, "Path to the Goblint executable");
     ("-goblint", Arg.Rest_all (fun args -> rest := args), "Pass the rest of the arguments to Goblint");
   ]
-
-let paths = ref []
 
 let process state name body =
   match Hashtbl.find_option Api.registry name with
@@ -146,7 +145,7 @@ let callback state _ req body =
   | _ -> Server.respond_not_found ()
 
 let main () =
-  let%lwt state = Goblint.spawn !goblint (!rest @ !paths) >|= State.make in
+  let%lwt state = Goblint.spawn !goblint (!rest @ !file_paths) >|= State.make in
   (* run Goblint once with option gobview enabled to copy the index.html and main.js files into the served directory *)
   let%lwt _ = Goblint.analyze ~save_dir:!docroot ~gobview:true state.goblint in
   let callback = callback state in
@@ -155,6 +154,7 @@ let main () =
 
 let () =
   let program = Sys.argv.(0) in
-  let usage = Printf.sprintf "%s [-docroot DOCROOT] [-index INDEX] [-addr ADDR] [-port PORT] ... path [path ...]" program in
-  Arg.parse specs (fun s -> paths := s :: !paths) usage;
+  let usage = Printf.sprintf "Usage: %s [options] source-files\nLookup options using '%s --help'." program program in
+  let anon_arg a = file_paths := a :: !file_paths; () in
+  Arg.parse specs anon_arg usage;
   Lwt_main.run (main ())

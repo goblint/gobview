@@ -9,6 +9,11 @@
   gen_js_api
   goblint-cil
   goblint-cil.syntacticsearch
+  goblint.config
+  goblint.common
+  goblint.domain
+  goblint.constraint
+  goblint.solver
   goblint.lib
   goblint.timing
   goblint.sites.js
@@ -32,12 +37,6 @@
    static-requires.js))
  (preprocess
   (pps gen_js_api.ppx js_of_ocaml-ppx jsoo-react.ppx)))
-
-(rule
- (targets Graphviz.ml)
- (deps Graphviz.mli)
- (action
-  (run %{bin:gen_js_api} -o %{targets} %{deps})))
 
 (alias
  (name default)

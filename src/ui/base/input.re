@@ -1,7 +1,7 @@
+open React.Dom.Dsl.Html;
+
 [@react.component]
 let make = (~type_=?, ~class_=?, ~value, ~on_change, ~on_submit=?) => {
-  let (type_, class_, on_submit) =
-    Utils.fix_opt_args3(type_, class_, on_submit);
   let type_ = Option.value(type_, ~default=`Text);
   let class_ = Option.value(class_, ~default=["form-control"]);
 
@@ -13,7 +13,7 @@ let make = (~type_=?, ~class_=?, ~value, ~on_change, ~on_submit=?) => {
   let className = String.concat(" ", class_);
 
   let onChange = ev => {
-    React.Event.Synthetic.preventDefault(ev);
+    React.Event.Synthetic.prevent_default(ev);
     React.Event.Synthetic.target(ev)
     |> Ojs.get_prop_ascii(_, "value")
     |> Ojs.string_of_js

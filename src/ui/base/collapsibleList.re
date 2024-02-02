@@ -1,16 +1,15 @@
+open React.Dom.Dsl.Html;
 open Batteries;
 
 module ToggledSet = Set.Make(Int);
 
 [@react.component]
 let make = (~collapsed=?, ~class_=?, ~style=?, ~override_class=?, ~children) => {
-  let (collapsed, class_, style, override_class) =
-    Utils.fix_opt_args4(collapsed, class_, style, override_class);
   let collapsed = Option.default(true, collapsed);
   let class_ = Option.default([], class_);
   let style = Option.default(`Default, style);
 
-  let (toggled, set_toggled) = React.useState(() => ToggledSet.empty);
+  let (toggled, set_toggled) = React.use_state(() => ToggledSet.empty);
 
   let on_toggle = (i, ()) => {
     set_toggled(t =>
@@ -39,18 +38,17 @@ let make = (~collapsed=?, ~class_=?, ~style=?, ~override_class=?, ~children) => 
     };
 
   <ul className>
-    {React.Children.mapWithIndex(children, (elt, i) => {
-       React.cloneElement(
-         elt,
-         CollapsibleListItem.makeProps(
-           ~key=string_of_int(i),
-           ~collapsed={
-             ToggledSet.mem(i, toggled) != collapsed;
-           },
-           ~on_toggle=on_toggle(i),
-           (),
-         ),
-       )
-     })}
+    {React.Children.mapi(children, (elt, i) => {
+      React.clone_element(
+          elt,
+          Js_of_ocaml.Js.Unsafe.(
+            obj([|
+              ("key", inject(Some(string_of_int(i)))),
+              ("on_toggle", inject(Some(on_toggle(i)))),
+              ("collapsed", inject(Some(ToggledSet.mem(i, toggled) != collapsed)))
+           |])),
+         );
+      },
+    )}
   </ul>;
 };

@@ -1,11 +1,12 @@
+open React.Dom.Dsl.Html;
 open Batteries;
 
 [@react.component]
 let make = (~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc) => {
   let (state, dispatch) =
-    React.useReducer(
+    React.use_reducer(
       Reducer.reducer,
-      State.make(~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc, ()),
+      ~init=fun () => State.make(~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc, ()),
     );
 
   let fetch_file =
@@ -35,7 +36,7 @@ let make = (~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc) => {
     );
   };
 
-  React.useEffect1(
+  React.use_effect1(
     () => {
       switch (state.display) {
       | Some(File(f)) when Option.is_none(f.contents) => fetch_file(Hashtbl.find(file_loc, f.path))

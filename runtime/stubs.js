@@ -1,14 +1,33 @@
+//Provides: caml_unix_getpid
+function caml_unix_getpid() {
+    return 0;
+}
+
 //Provides: unix_getpid
 function unix_getpid() {
     return 0;
 }
 
+//Provides: caml_unix_kill
+function caml_unix_kill(pid, signal) { }
+
 //Provides: unix_kill
 function unix_kill(pid, signal) { }
+
+//Provides: caml_unix_setitimer
+function caml_unix_setitimer(which, newval) {
+    return newval;
+}
 
 //Provides: unix_setitimer
 function unix_setitimer(which, newval) {
     return newval;
+}
+
+//Provides: caml_unix_times
+//only used for timing statistics in Goblint
+function caml_unix_times(x) {
+  return 0;
 }
 
 //Provides: unix_times
@@ -28,6 +47,12 @@ function max_float(x) {
 //returns the smallest positive and normalized float
 function smallest_float(x) {
   return 2.2250738585072014e-308;
+}
+
+//Provides: pi
+//from Goblint specific stubs for C float operations
+function pi(x) {
+  return Number.pi;
 }
 
 //external of_int: int -> t

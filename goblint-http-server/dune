@@ -2,7 +2,7 @@
  (name goblint_http)
  (public_name goblint-http)
  (libraries
-  batteries
+  batteries.unthreaded
   cohttp
   cohttp-lwt
   cohttp-lwt-unix
