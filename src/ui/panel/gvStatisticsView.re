@@ -1,3 +1,4 @@
+open React.Dom.Dsl.Html;
 open Batteries;
 
 module Timing = Goblint_timing
@@ -7,7 +8,7 @@ let rec make_task_list = tasks =>
     React.null;
   } else {
     <ul>
-      {tasks
+      ...{tasks
        |> List.mapi((i, task: Timing.tree) => {
             let key = string_of_int(i);
             <li key>
@@ -18,8 +19,7 @@ let rec make_task_list = tasks =>
                |> React.string}
               {task.children |> List.rev |> make_task_list}
             </li>;
-          })
-       |> React.list}
+          })}
     </ul>;
   };
 

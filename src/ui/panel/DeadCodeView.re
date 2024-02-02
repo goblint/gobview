@@ -1,3 +1,4 @@
+open React.Dom.Dsl.Html;
 open Batteries;
 
 [@react.component]
@@ -8,7 +9,7 @@ let make = (~dispatch, ~locations) => {
         {<p>{"No dead code found!" |> React.string}</p>}
       else {
         <ul>
-          {locations
+          ...{locations
           |> List.mapi((i, loc: GoblintCil.location) => {
                 <li
                   className="link-like alert alert-secondary"
@@ -19,8 +20,7 @@ let make = (~dispatch, ~locations) => {
                   }}>
                   {string_of_int(loc.line) ++ " : " ++ loc.file |> React.string}
                 </li>
-              })
-          |> React.list}
+              })}
         </ul>
       }}
   </div>;

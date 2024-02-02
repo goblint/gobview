@@ -38,12 +38,6 @@
  (preprocess
   (pps gen_js_api.ppx js_of_ocaml-ppx jsoo-react.ppx)))
 
-(rule
- (targets Graphviz.ml)
- (deps Graphviz.mli)
- (action
-  (run %{bin:gen_js_api} -o %{targets} %{deps})))
-
 (alias
  (name default)
  (deps App.bc.js static/primitive.css static/prism.css static/prism.js))

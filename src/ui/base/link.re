@@ -1,9 +1,8 @@
+open React.Dom.Dsl.Html;
 open Batteries;
 
 [@react.component]
-let make = (~url=?, ~class_=?, ~on_click=?, ~callback_data=?, ~children) => {
-  let (url, class_, on_click, callback_data) =
-    Utils.fix_opt_args4(url, class_, on_click, callback_data);
+let make = (~url=?, ~class_=?, ~on_click=?, ~children) => {
   let class_ = Option.default([], class_);
 
   let href =
@@ -16,16 +15,15 @@ let make = (~url=?, ~class_=?, ~on_click=?, ~callback_data=?, ~children) => {
 
   let onClick =
     switch (on_click, url) {
-    | (None, None) => Some(ev => React.Event.Mouse.preventDefault(ev))
+    | (None, None) => Some(ev => React.Event.Mouse.prevent_default(ev))
     | (None, Some(_)) => None
-    | (Some(f), None) =>
+    | (Some(f), _) =>
       Some(
         ev => {
-          React.Event.Mouse.preventDefault(ev);
-          f(callback_data, ev);
+          React.Event.Mouse.prevent_default(ev);
+          f(ev);
         },
       )
-    | (Some(f), Some(_)) => Some(f(callback_data))
     };
 
   <a href className ?onClick> children </a>;
