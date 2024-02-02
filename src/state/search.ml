@@ -24,15 +24,22 @@ module Query = struct
 
   let to_string = ExpressionEvaluation.query_to_yojson %> Yojson.Safe.to_string
 
+  let to_syntactic_query (q : t) : CodeQuery.query =
+    { sel = []; k = q.kind; tar = q.target; f = q.find; str = q.structure; lim = q.limitation }
+
+  let is_semantic (q : t) = not (Option.is_none q.expression)
+
   (* throws a QueryMapping.Not_supported exception if query is not supported *)
   let execute (q : t) cil =
-    ExpressionEvaluation.gv_query := Some q;
-    Maingoblint.do_analyze None cil;
-    let results = !ExpressionEvaluation.gv_results in
-    let pred =
-      if q.mode = `Must then snd %> Option.default false else snd %> Option.default true
-    in
-    results |> List.filter pred |> List.map fst
+    if is_semantic q then (
+      ExpressionEvaluation.gv_query := Some q;
+      Maingoblint.do_analyze None cil;
+      let results = !ExpressionEvaluation.gv_results in
+      let pred =
+        if q.mode = `Must then snd %> Option.default false else snd %> Option.default true
+      in
+      results |> List.filter pred |> List.map fst)
+    else QueryMapping.map_query (to_syntactic_query q) cil
 
   let string_of_error e = match e with ParseError s -> s
 end
