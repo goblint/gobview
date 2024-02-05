@@ -26,6 +26,7 @@ let make = (~json, ~query, ~dispatch) => {
       </InvalidFeedback>
     </div>
     <Button
+      class_=["exec-button"]
       type_=`Button
       on_click
       disabled={Option.is_none(query) || Option.is_some(error)}>

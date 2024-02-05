@@ -10,7 +10,7 @@ let make_table = (matches, dispatch) => {
   };
 
   <>
-    <Button class_=["btn", "my-2"] color=`Danger outline=true on_click=clear>
+    <Button class_=["btn", "my-2", "clear-btn"] color=`Danger outline=true on_click=clear>
       ...{"Clear results" |> React.string}
     </Button>
     <CollapsibleList collapsed=false>
@@ -74,6 +74,13 @@ let make = (~matches: Search.matches, ~dispatch) => {
      | Loading =>
        <div className="d-flex justify-content-center">
          <div className="spinner-border" />
+       </div>
+     | NotSupported =>
+       <div className="alert alert-warning alert-dismissible">
+         {"Query not supported" |> React.string}
+         <Button class_=["btn-close"] color=`None on_click>
+           ...React.null
+         </Button>
        </div>
      | Done([]) =>
        <div className="alert alert-warning alert-dismissible">
