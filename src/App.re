@@ -34,6 +34,7 @@ let renumber_goblint_analyses = registered_name => {
 };
 
 let init_goblint = (solver, spec, registered_name, config, cil) => {
+  Cilfacade.init();
   AfterConfig.run(); // This registers the "base" analysis
 
   try(renumber_goblint_analyses(registered_name)) {
@@ -67,7 +68,6 @@ let init_goblint = (solver, spec, registered_name, config, cil) => {
 
   GobConfig.set_auto("trans.activated[+]", "'expeval'");
 
-  Cilfacade.init();
   Maingoblint.handle_extraspecials();
   Maingoblint.handle_flags();
 

@@ -28,6 +28,7 @@
   yojson
   zarith
   zarith_stubs_js)
+ (flags :standard -linkall)
  (js_of_ocaml
   (javascript_files
    ../runtime/stubs.js
