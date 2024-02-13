@@ -50,7 +50,7 @@ let init_goblint = (solver, spec, registered_name, config, cil) => {
 
   GobConfig.merge_file(Fpath.v("/goblint/config.json"));
 
-  GobConfig.set_bool("dbg.verbose", true);
+  GobConfig.set_string("dbg.level", "debug");
   // TODO: Uncomment this to improve performance in future
   // GobConfig.set_bool("verify", false);
 

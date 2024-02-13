@@ -34,7 +34,7 @@ let make = (~stats) => {
   <div>
     {if(total == 0.) {
       <div className="bg-warning">
-        {"For timing statistics the analysis has to be run with -v (alternatively, either option dbg.verbose or dbg.timing.enabled can be activated)" |> React.string}
+        {"For timing statistics the analysis has to be run with -v (alternatively, either option dbg.level debug or dbg.timing.enabled can be activated)" |> React.string}
       </div>;
     } else {
       React.null
