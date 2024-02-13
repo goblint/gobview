@@ -28,6 +28,7 @@
   yojson
   zarith
   zarith_stubs_js)
+ (flags :standard -linkall)
  (js_of_ocaml
   (javascript_files
    ../runtime/stubs.js
@@ -37,12 +38,6 @@
    static-requires.js))
  (preprocess
   (pps gen_js_api.ppx js_of_ocaml-ppx jsoo-react.ppx)))
-
-(rule
- (targets Graphviz.ml)
- (deps Graphviz.mli)
- (action
-  (run %{bin:gen_js_api} -o %{targets} %{deps})))
 
 (alias
  (name default)

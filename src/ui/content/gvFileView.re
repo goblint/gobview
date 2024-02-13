@@ -166,13 +166,13 @@ let make_editor = (goblint, warnings, file, contents, line, dispatch) => {
       ~render_validation_decorations="on",
       (),
     );
-  let state = React.useRef(None);
+  let state = React.use_ref(None);
   let on_mount = e =>
     {editor: e, decorations: [], content_widgets: [], view_zones: []}
     |> Option.some
-    |> React.Ref.setCurrent(state);
+    |> React.Ref.set_current(state);
 
-  React.useEffect5(
+  React.use_effect5(
     () => {
       state
       |> React.Ref.current

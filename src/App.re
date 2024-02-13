@@ -34,6 +34,7 @@ let renumber_goblint_analyses = registered_name => {
 };
 
 let init_goblint = (solver, spec, registered_name, config, cil) => {
+  Cilfacade.init();
   AfterConfig.run(); // This registers the "base" analysis
 
   try(renumber_goblint_analyses(registered_name)) {
@@ -67,7 +68,6 @@ let init_goblint = (solver, spec, registered_name, config, cil) => {
 
   GobConfig.set_auto("trans.activated[+]", "'expeval'");
 
-  Cilfacade.init();
   Maingoblint.handle_extraspecials();
   Maingoblint.handle_flags();
 
@@ -135,9 +135,9 @@ let init = (solver, spec, config, meta, cil, analyses, warnings, stats, file_loc
     };
 
   print_endline("Rendering app...");
-  React.Dom.renderToElementWithId(
+  React.Dom.render_to_element(
     <Main cil goblint warnings meta stats file_loc/>,
-    "app",
+    ~id="app",
   );
 };
 
@@ -147,7 +147,7 @@ let handle_error = exc => {
     | InitFailed(s) => s
     | _ => Printexc.to_string(exc)
     };
-  React.Dom.renderToElementWithId(s |> React.string, "app");
+  React.Dom.render_to_element(s |> React.string, ~id="app");
 };
 
 [

@@ -64,7 +64,7 @@ module Editor : sig
 
     val make :
       ?allow_editor_overflow:bool ->
-      get_dom_node:(unit -> React.Dom.domElement) ->
+      get_dom_node:(unit -> React.Dom.dom_element) ->
       get_id:(unit -> string) ->
       get_position:(unit -> IContentWidgetPosition.t) ->
       unit ->
@@ -116,7 +116,7 @@ module Editor : sig
     type t = private Ojs.t
 
     val make :
-      after_line_number:int -> dom_node:React.Dom.domElement -> ?height_in_lines:float -> unit -> t
+      after_line_number:int -> dom_node:React.Dom.dom_element -> ?height_in_lines:float -> unit -> t
       [@@js.builder]
   end
 
@@ -166,7 +166,7 @@ module Editor : sig
   end
 
   val create :
-    React.Dom.domElement ->
+    React.Dom.dom_element ->
     ?options:IStandaloneEditorConstructionOptions.t ->
     unit ->
     IStandaloneCodeEditor.t

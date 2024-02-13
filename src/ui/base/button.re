@@ -1,3 +1,4 @@
+open React.Dom.Dsl.Html;
 open Batteries;
 
 [@react.component]
@@ -11,8 +12,6 @@ let make =
       ~disabled=?,
       ~children,
     ) => {
-  let (type_, class_, color, outline, on_click, disabled) =
-    Utils.fix_opt_args6(type_, class_, color, outline, on_click, disabled);
   let type_ = Option.default(`Button, type_);
   let class_ = Option.default(["btn"], class_);
   let color = Option.default(`Primary, color);
@@ -44,7 +43,7 @@ let make =
 
   let className = [class_, color_class] |> List.concat |> String.concat(" ");
 
-  let onClick = _ => Option.may(cb => cb(), on_click);
+  let onClick = _ => Option.apply(on_click, ());
 
   <button type_ className onClick disabled> children </button>;
 };

@@ -1,8 +1,9 @@
+open React.Dom.Dsl.Html;
 open Batteries;
 
 [@react.component]
 let make = (~options, ~compare=?, ~value, ~on_change) => {
-  let compare = Utils.fix_opt_arg(compare) |> Option.default((==));
+  let compare = Option.default((==), compare);
   let options = options |> List.mapi((i, e) => (i, e));
 
   let i =
@@ -11,7 +12,7 @@ let make = (~options, ~compare=?, ~value, ~on_change) => {
     |> Option.map(fst %> string_of_int);
 
   let onChange = ev => {
-    React.Event.Synthetic.preventDefault(ev);
+    React.Event.Synthetic.prevent_default(ev);
     let i =
       React.Event.Synthetic.target(ev)
       |> Ojs.get_prop_ascii(_, "value")
@@ -21,11 +22,10 @@ let make = (~options, ~compare=?, ~value, ~on_change) => {
   };
 
   <select className="form-select" value=?i onChange>
-    {options
+    ...{options
      |> List.map(((i, (_, l))) => {
           let key = string_of_int(i);
           <option key value=key> {l |> React.string} </option>;
-        })
-     |> React.list}
+        })}
   </select>;
 };

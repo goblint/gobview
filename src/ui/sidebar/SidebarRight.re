@@ -1,3 +1,4 @@
+open React.Dom.Dsl.Html;
 open Batteries;
 
 module SelectedSidebar = State.SelectedSidebar;
@@ -8,20 +9,19 @@ let views = [
 ];
 
 let make_nav = (active, dispatch) => {
-  let on_click = (act, _) => Option.may(dispatch, act);
+  let on_click = (v, _) => dispatch @@ `SwitchSidebarRight(v);
 
   <ul className="nav nav-tabs">
-    {views
+    ...{views
      |> List.mapi((i, (v, n)) => {
           let class_ =
             [["nav-link"], v == active ? ["active"] : []] |> List.concat;
           <li key={string_of_int(i)} className="nav-item">
-            <Link class_ on_click callback_data={`SwitchSidebarRight(v)}>
-              {n |> React.string}
+            <Link class_ on_click={on_click(v)}>
+              ...{n |> React.string}
             </Link>
           </li>;
-        })
-     |> React.list}
+        })}
   </ul>;
 };
 

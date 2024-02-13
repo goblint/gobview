@@ -1,3 +1,4 @@
+open React.Dom.Dsl.Html;
 open Batteries;
 
 let rec is_simple = r =>
@@ -39,7 +40,7 @@ and make_pair = (a, b) =>
 
 and make_assoc = l =>
   <ul>
-    {l
+    ...{l
      |> List.mapi((i, (n, r)) => {
           <li key={string_of_int(i)}>
             {switch (r) {
@@ -47,14 +48,14 @@ and make_assoc = l =>
              | _ as r =>
                if (is_simple(r)) {
                  <>
-                   <span style={React.Dom.Style.make(~fontWeight="bold", ())}>
+                   <span style=React.Dom.Style.(make([|font_weight("bold")|]))>
                      {n ++ ": " |> React.string}
                    </span>
                    {make_rec(r)}
                  </>;
                } else {
                  <>
-                   <div style={React.Dom.Style.make(~fontWeight="bold", ())}>
+                   <div style=React.Dom.Style.(make([|font_weight("bold")|]))>
                      {n ++ ":" |> React.string}
                    </div>
                    {make_rec(r)}
@@ -62,8 +63,7 @@ and make_assoc = l =>
                }
              }}
           </li>
-        })
-     |> React.list}
+        })}
   </ul>
 
 and make_list = rs =>
@@ -72,19 +72,18 @@ and make_list = rs =>
   | [r] => make_rec(r)
   | _ =>
     <ol>
-      {rs
+      ...{rs
        |> List.map(make_rec)
-       |> List.mapi((i, elt) => {<li key={string_of_int(i)}> elt </li>})
-       |> React.list}
+       |> List.mapi((i, elt) => {<li key={string_of_int(i)}> elt </li>})}
     </ol>
   }
 
 and make_bot_top = s => {
   let style =
     if (List.mem(s, ["⊥", "⊤"])) {
-      React.Dom.Style.make();
+      React.Dom.Style.make([||]);
     } else {
-      React.Dom.Style.make(~fontStyle="italic", ());
+      React.Dom.Style.(make([|font_style("italic")|]));
     };
   <span style> {s |> React.string} </span>;
 }
@@ -100,7 +99,7 @@ and make_set = l =>
          ~last=React.string("}"),
          React.string(", "),
        )
-    |> React.list
+    |> l => React.Fragment.make(~children=l, ())
   | _ => make_list(l)
   };
 

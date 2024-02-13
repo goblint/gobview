@@ -5,11 +5,10 @@ open Syntacticsearch
 
 module Query = struct
   type t = ExpressionEvaluation.query
-
   type error = ParseError of string
 
   let create ?(kind = CodeQuery.Var_k) ?(target = CodeQuery.Name_t "") ?(find = CodeQuery.Uses_f)
-      ?(structure = CodeQuery.None_s) ?(limitation = CodeQuery.None_c) ?(expression = "") (* TODO: limitation argument never used *)
+      ?(structure = CodeQuery.None_s) ?(limitation = CodeQuery.None_c) ?(expression = None) (* TODO: limitation argument never used *)
       ?(mode = `Must) () : t =
     { kind; target; find; structure; limitation; expression; mode }
 
@@ -28,8 +27,9 @@ module Query = struct
   let to_syntactic_query (q : t) : CodeQuery.query =
     { sel = []; k = q.kind; tar = q.target; f = q.find; str = q.structure; lim = q.limitation }
 
-  let is_semantic (q : t) = not (String.is_empty q.expression)
+  let is_semantic (q : t) = not (Option.is_none q.expression)
 
+  (* throws a QueryMapping.Not_supported exception if query is not supported *)
   let execute (q : t) cil =
     if is_semantic q then (
       ExpressionEvaluation.gv_query := Some q;
@@ -44,8 +44,6 @@ module Query = struct
   let string_of_error e = match e with ParseError s -> s
 end
 
-type query = Query.t
-
 module GraphicalUi = struct
   type target_error = ID_t of string
 
@@ -54,7 +52,7 @@ module GraphicalUi = struct
     target : (CodeQuery.target, target_error) result;
     find : CodeQuery.find;
     structure : CodeQuery.structure;
-    expression : string;
+    expression : string option;
     mode : [ `Must | `May ];
   }
 
@@ -68,11 +66,10 @@ module GraphicalUi = struct
   let to_query { kind; target; find; structure; expression; mode } =
     let target = Result.to_option target in
     Query.create ~kind ?target ~find ~structure ~expression ~mode ()
+
 end
 
-type graphical_ui = GraphicalUi.t
-
-type json_ui = { text : string; query : query option * Query.error option }
+type json_ui = { text : string; query : Query.t option * Query.error option }
 
 let graphical_ui_of_json_ui ju =
   match fst ju.query with
@@ -87,12 +84,12 @@ let json_ui_of_graphical_ui gu =
 type mode = Graphical | Json
 
 module Matches = struct
-  type t = None | Loading | Done of (string * Cil.location * string * int) list
+  type t = None | Loading | Done of (string * Cil.location * string * int) list | NotSupported
 end
 
 type matches = Matches.t
 
-type t = { mode : mode; graphical_ui : graphical_ui; json_ui : json_ui; matches : matches }
+type t = { mode : mode; graphical_ui : GraphicalUi.t; json_ui : json_ui; matches : matches }
 
 let default =
   {
@@ -114,5 +111,10 @@ let execute s cil =
     | Graphical -> Some (GraphicalUi.to_query s.graphical_ui)
     | Json -> fst s.json_ui.query
   in
-  let f q = { s with matches = Done (Query.execute q cil) } in
+
+  let f q =
+    let r = try
+      Matches.Done (Query.execute q cil)
+    with QueryMapping.Not_supported -> Matches.NotSupported in
+    { s with matches = r } in
   Option.map_default f s q
