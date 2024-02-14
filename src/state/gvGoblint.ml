@@ -161,7 +161,7 @@ end
 let empty : solver_state = new empty_solver_state
 
 let unmarshal spec cil =
-  let (module Cfg) = Control.compute_cfg cil in
+  let (module Cfg) = CfgTools.compute_cfg cil in
   let (module Spec) = Control.get_spec () in
   Spec.init (Some (Marshal.from_string spec 0));
   let (module G : Sig) =
