@@ -1,6 +1,7 @@
 (executable
  (name goblint_http)
  (public_name goblint-http)
+ (promote (until-clean) (into ../..))
  (libraries
   batteries.unthreaded
   cohttp
