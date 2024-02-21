@@ -6,6 +6,7 @@ open Lwt.Infix
 module Yojson_conv = Ppx_yojson_conv_lib.Yojson_conv
 
 let docroot = ref "run"
+let distroot = ref "gobview/_dist"
 let index = ref "index.html"
 let addr = ref "127.0.0.1"
 let port = ref 8080
@@ -15,7 +16,8 @@ let rest = ref []
 
 let specs =
   [
-    ("-docroot", Arg.Set_string docroot, "Serving directory");
+    ("-docroot", Arg.Set_string docroot, "Serving directory for marshalled data");
+    ("-distroot", Arg.Set_string distroot, "Serving directory for distribution files");
     ("-index", Arg.Set_string index, "Name of index file in directory");
     ("-addr", Arg.Set_string addr, "Listen address");
     ("-port", Arg.Set_int port, "Listen port");
@@ -45,8 +47,8 @@ let process state name body =
           (fun exn -> Server.respond_error ~status:`Bad_request ~body:(Printexc.to_string exn) ())
 
 (* The serving of files is implemented similar as in the binary https://github.com/mirage/ocaml-cohttp/blob/master/cohttp-lwt-unix/bin/cohttp_server_lwt.ml *)
-let serve_file ~docroot ~uri =
-  let fname = Cohttp.Path.resolve_local_file ~docroot ~uri in
+let serve_file ~root ~uri =
+  let fname = Cohttp.Path.resolve_local_file ~docroot:root ~uri in
   Server.respond_file ~fname ()
 
 let sort lst =
@@ -91,48 +93,40 @@ let html_of_listing uri path listing =
     (Uri.pct_decode path) contents
 
 let serve uri path =
-  let file_name = Cohttp.Path.resolve_local_file ~docroot:!docroot ~uri in
+  let file_name_dist = Cohttp.Path.resolve_local_file ~docroot:!distroot ~uri in
+  let file_name_docs = Cohttp.Path.resolve_local_file ~docroot:!docroot ~uri in
+
+  let lookup file_name root () =
+    (Lwt_unix.lstat file_name) >>= (fun (stat_dist) ->
+      (* for symbolic links lstat returns S_LNK, which will result in a forbidden error in this
+      implementation. Use stat instead if symbolic links to folders or files should be handled
+      just like folders or files respectively *)
+    match stat_dist.Unix.st_kind with
+    | Unix.S_DIR -> (
+        let path_len = String.length path in
+        if path_len <> 0 && path.[path_len - 1] <> '/' then (
+          Server.respond_redirect ~uri:(Uri.with_path uri (path ^ "/")) ())
+        else (
+          match Sys.file_exists (Filename.concat file_name !index) with
+          | true -> (
+              let uri = Uri.with_path uri (Filename.concat path !index) in
+              serve_file ~root ~uri)
+          | false ->
+              Lwt.fail Not_found))
+    | Unix.S_REG -> serve_file ~root ~uri
+    | _ -> Lwt.fail Not_found) in
+
   Lwt.catch
-    (fun () ->
-      Lwt_unix.lstat file_name >>= fun stat -> (* for symbolic links lstat returns S_LNK, which will result in a
-        forbidden error in this implementation. Use stat instead if symbolic links to folders or files should be handled
-        just like folders or files respectively *)
-      match stat.Unix.st_kind with
-      | Unix.S_DIR -> (
-          let path_len = String.length path in
-          if path_len <> 0 && path.[path_len - 1] <> '/' then (
-            Server.respond_redirect ~uri:(Uri.with_path uri (path ^ "/")) ())
-          else (
-            match Sys.file_exists (Filename.concat file_name !index) with
-            | true -> (
-                let uri = Uri.with_path uri (Filename.concat path !index) in
-                serve_file ~docroot:!docroot ~uri)
-            | false ->
-                let%lwt files = Lwt_stream.to_list
-                  (Lwt_stream.filter (fun s -> s <> "." && s <> "..") (Lwt_unix.files_of_directory file_name)) in
-                let%lwt listing = Lwt_list.map_s (fun f ->
-                        let file_name = Filename.concat file_name f in
-                        Lwt.try_bind
-                          (fun () -> Lwt_unix.LargeFile.stat file_name)
-                          (fun stat ->
-                            Lwt.return
-                              ( Some
-                                  stat.Unix.LargeFile.st_kind,
-                                f ))
-                          (fun _exn -> Lwt.return (None, f))) files in
-                let body = html_of_listing uri path (sort listing) in
-                Server.respond_string ~status:`OK ~body ()))
-      | Unix.S_REG -> serve_file ~docroot:!docroot ~uri
-      | _ -> (
-          let body = Printf.sprintf "<html><body><h2>Forbidden</h2><p><b>%s</b> is not a normal file or \
-          directory</p><hr/></body></html>" path in
-          Server.respond_string ~status:`OK ~body ()))
+    (lookup file_name_dist !distroot)
     (function
-      | Unix.Unix_error (Unix.ENOENT, "stat", p) as e ->
-          if p = file_name then (
-            Server.respond_not_found ())
-          else Lwt.fail e
-      | e -> Lwt.fail e)
+      | _ ->
+          Lwt.catch (lookup file_name_docs !docroot)
+          (function
+          | Unix.Unix_error (Unix.ENOENT, "stat", p) as e ->
+            if p = file_name_docs then (
+              Server.respond_not_found ())
+            else Lwt.fail e
+          | e -> Lwt.fail e))
 
 let callback state _ req body =
   let uri = Request.uri req in
