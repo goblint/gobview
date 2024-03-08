@@ -39,7 +39,10 @@ let make = (~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc) => {
   React.use_effect1(
     () => {
       switch (state.display) {
-      | Some(File(f)) when Option.is_none(f.contents) => fetch_file(Hashtbl.find(file_loc, f.path))
+      | Some(File(f)) when Option.is_none(f.contents) =>
+        try (fetch_file(Hashtbl.find(file_loc, f.path))) {
+          | Not_found => ()
+        };
       | Some(Func(f)) when Option.is_none(f.dot) =>
         fetch_dot(f.name, f.file)
       | _ => ()
