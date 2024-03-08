@@ -1,17 +1,20 @@
 open Batteries;
 open GoblintCil;
 open FileTree;
+open React.Dom.Dsl;
+open Html;
 
 let rec make_entries = (prefix, files, tree, mainFiles, dispatch) => {
   let prefix_of_main_file = (path) =>
     !List.exists((mf) => String.starts_with(mf, path), mainFiles);
+
   tree
   |> List.map(
        fun
        | FileTree.Directory(name, children) => {
            let path = prefix ++ name;
            <DirEntry name key=path collapsed=prefix_of_main_file(path)>
-             {make_entries(path ++ "/", files, children, mainFiles, dispatch)}
+              ...{make_entries(path ++ "/", files, children, mainFiles, dispatch)}
            </DirEntry>;
          }
        | FileTree.File(name) => {
@@ -26,7 +29,6 @@ let rec make_entries = (prefix, files, tree, mainFiles, dispatch) => {
            />;
          },
      )
-  |> React.list;
 };
 
 [@react.component]
@@ -50,5 +52,7 @@ let make = (~cil: Cil.file, ~dispatch) => {
 
   let tree = files |> Hashtbl.keys |> List.of_enum |> FileTree.mk_tree;
 
-  make_entries("", files, tree, mainFiles, dispatch);
+  <div>
+  ...{make_entries("", files, tree, mainFiles, dispatch)}
+  </div>
 };

@@ -3,12 +3,11 @@ open Batteries;
 [@react.component]
 let make = (~analyses) => {
   <CollapsibleList style=`Flush>
-    {analyses
+    ...{analyses
      |> List.map(((n, results)) => {
           <CollapsibleListItem name=n>
             <GvAnalysesView results />
           </CollapsibleListItem>
-        })
-     |> React.list}
+        })}
   </CollapsibleList>;
 };

@@ -152,7 +152,7 @@ module Make
       let should_prune = false
     end in
     let module S2' =
-      Constraints.GlobSolverFromEqSolver (Generic.LoadRunIncrSolver (Arg)) (EQSys) (LHT) (GHT)
+      ConstrSys.GlobSolverFromEqSolver (Goblint_solver.Generic.LoadRunIncrSolver (Arg)) (EQSys) (LHT) (GHT)
     in
     let r2, _ = S2'.solve [] [] [] None in
     new solver_state_impl r2
@@ -161,7 +161,7 @@ end
 let empty : solver_state = new empty_solver_state
 
 let unmarshal spec cil =
-  let (module Cfg) = Control.compute_cfg cil in
+  let (module Cfg) = CfgTools.compute_cfg cil in
   let (module Spec) = Control.get_spec () in
   Spec.init (Some (Marshal.from_string spec 0));
   let (module G : Sig) =

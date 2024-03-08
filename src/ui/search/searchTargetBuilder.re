@@ -1,3 +1,4 @@
+open React.Dom.Dsl.Html;
 open Batteries;
 open Syntacticsearch;
 
@@ -59,7 +60,7 @@ let make = (~value, ~on_change) => {
 
   <>
     <div className="mb-3">
-      <Label> {"Target" |> React.string} </Label>
+      <Label> ...{"Target" |> React.string} </Label>
       <Select options compare value on_change=on_select />
     </div>
     {switch (value) {
@@ -75,7 +76,7 @@ let make = (~value, ~on_change) => {
          };
        <div className="mb-3">
          <ValidatedInput value on_change=on_change_id>
-           {"An ID must be an integer greater than or equal to zero."
+           ...{"An ID must be an integer greater than or equal to zero."
             |> React.string}
          </ValidatedInput>
        </div>;

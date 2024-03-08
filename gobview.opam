@@ -14,6 +14,7 @@ bug-reports: "https://github.com/goblint/gobview/issues"
 depends: [
   "dune" {>= "2.7"}
   "ocaml" {>= "4.10.0"}
+  "reason"
   "batteries"
   "cohttp-lwt"
   "cohttp-lwt-unix"
@@ -26,6 +27,8 @@ depends: [
   "ppx_yojson_conv"
   "conduit-lwt-unix"
   "jsoo-react"
+  "js_of_ocaml-lwt"
+  "js_of_ocaml-ppx"
   "goblint-cil" {>= "2.0.0"}
   "ctypes_stubs_js"
   "integers_stubs_js"
@@ -33,6 +36,7 @@ depends: [
   "ocamlformat" {dev}
   "odoc" {with-doc}
 ]
+conflicts: ["mtime"]
 build: [
   ["dune" "subst"] {dev}
   [
@@ -49,6 +53,5 @@ build: [
 ]
 dev-repo: "git+https://github.com/goblint/gobview.git"
 pin-depends: [
-  [ "jsoo-react.dev" "git+https://github.com/sim642/jsoo-react.git#bc9cc4c00761c6c9d09101cddca437731de96eae" ]
   [ "zarith.1.12-gob0" "git+https://github.com/goblint/Zarith.git#goblint-release-1.12" ]
 ]

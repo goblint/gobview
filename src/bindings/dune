@@ -1,8 +1,3 @@
-(rule
- (targets errorBoundary.ml)
- (deps errorBoundary.mli)
- (action
-  (run %{bin:gen_js_api} -o %{targets} %{deps})))
 
 (rule
  (targets monaco.ml)

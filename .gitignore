@@ -24,7 +24,8 @@
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -169,6 +170,9 @@ dist
 
 # ocamlbuild working directory
 _build/
+
+# distribution files
+_dist/
 
 # ocamlbuild targets
 *.byte

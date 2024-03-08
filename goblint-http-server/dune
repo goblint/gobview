@@ -1,8 +1,9 @@
 (executable
  (name goblint_http)
  (public_name goblint-http)
+ (promote (until-clean) (into ../..))
  (libraries
-  batteries
+  batteries.unthreaded
   cohttp
   cohttp-lwt
   cohttp-lwt-unix

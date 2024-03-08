@@ -17,7 +17,7 @@ let make = (~goblint, ~inspect) =>
   | None => React.null
   | Some(inspect) =>
     <CollapsibleList collapsed=false style=`Flush>
-      {goblint#local_analyses(inspect)
+      ...{goblint#local_analyses(inspect)
        |> List.group(((id, _), (id', _)) => String.compare(id, id'))
        |> List.map(
             fun
@@ -28,18 +28,16 @@ let make = (~goblint, ~inspect) =>
             | [(id, _), ..._] as group =>
               <CollapsibleListItem name={"Node: " ++ id}>
                 <CollapsibleList style=`Flush>
-                  {group
+                  ...{group
                    |> List.mapi((i, (_, (ctx, path))) =>
                         <CollapsibleListItem
                           name={"Tuple: " ++ string_of_int(i)}>
                           {make_single(ctx, path)}
                         </CollapsibleListItem>
-                      )
-                   |> React.list}
+                      )}
                 </CollapsibleList>
               </CollapsibleListItem>
             | _ => failwith("List.group returned an empty group"),
-          )
-       |> React.list}
+          )}
     </CollapsibleList>
   };

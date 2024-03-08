@@ -1,33 +1,33 @@
+open React.Dom.Dsl;
+open Html;
 open Batteries;
 
 let make_func_list = (file, funcs, dispatch) => {
-  let on_click = (data, _) => Option.may(dispatch, data);
+  let on_click = (func, file, _) => dispatch @@ `DisplayFunc((func, file));
 
   funcs
   |> List.map(func => {
        <li key={file ++ func} className="list-group-item">
          <Link
-           on_click
-           callback_data={`DisplayFunc((func, file))}
+           on_click={on_click(func, file)}
            class_=["text-link"]>
-           {func |> React.string}
+           ...{func |> React.string}
          </Link>
        </li>
      })
-  |> React.list;
 };
 [@react.component]
 let make = (~path, ~name, ~dispatch, ~functions, ~collapsed) => {
-  let on_click = (data, _) => Option.may(dispatch, data);
+  let on_click = (file, _) => dispatch @@ `DisplayFile(file);
   let make_title = name =>
-    <Link on_click class_=["text-link"] callback_data={`DisplayFile(path)}>
-      {name |> React.string}
+    <Link on_click={on_click(name)} class_=["text-link"]>
+      ...{name |> React.string}
     </Link>;
 
   <CollapsibleList collapsed=collapsed>
     <CollapsibleListItem name make_title>
       <ul className="list-group">
-        {make_func_list(path, functions, dispatch)}
+        ...{make_func_list(path, functions, dispatch)}
       </ul>
     </CollapsibleListItem>
   </CollapsibleList>;

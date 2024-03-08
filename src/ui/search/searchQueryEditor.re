@@ -1,3 +1,4 @@
+open React.Dom.Dsl.Html;
 open Batteries;
 
 let string_of_error = Option.map_default(Search.Query.string_of_error, "");
@@ -21,14 +22,15 @@ let make = (~json, ~query, ~dispatch) => {
     <div className="mb-3">
       <TextArea class_=text_area_class value=json on_change />
       <InvalidFeedback>
-        {"Invalid query: " ++ string_of_error(error) |> React.string}
+        ...{"Invalid query: " ++ string_of_error(error) |> React.string}
       </InvalidFeedback>
     </div>
     <Button
+      class_=["exec-button"]
       type_=`Button
       on_click
       disabled={Option.is_none(query) || Option.is_some(error)}>
-      {"Execute" |> React.string}
+      ...{"Execute" |> React.string}
     </Button>
   </>;
 };
