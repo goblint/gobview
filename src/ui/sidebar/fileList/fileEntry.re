@@ -20,7 +20,7 @@ let make_func_list = (file, funcs, dispatch) => {
 let make = (~path, ~name, ~dispatch, ~functions, ~collapsed) => {
   let on_click = (file, _) => dispatch @@ `DisplayFile(file);
   let make_title = name =>
-    <Link on_click={on_click(name)} class_=["text-link"]>
+    <Link on_click={on_click(path)} class_=["text-link"]>
       ...{name |> React.string}
     </Link>;
 
