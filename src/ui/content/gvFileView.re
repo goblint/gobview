@@ -30,7 +30,7 @@ let make_inspect_link = (goblint, file: GvDisplay.file, dispatch, line) =>
     span##.textContent := "Inspect" |> Js.string |> Js.Opt.return;
     span##.onclick :=
       Dom.handler(_ => {
-        dispatch(`InspectLine((file.path, line)));
+        dispatch(`InspectLine(Some((file.path, line))));
         Js._false;
       });
 

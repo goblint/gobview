@@ -1,7 +1,7 @@
 module Line = struct
   type t = string * int
 
-  let of_location (loc : GoblintCil.location) = (loc.file, loc.line)
+  let of_location (loc : GoblintCil.location) = Some (loc.file, loc.line)
 end
 
 module Node = struct
