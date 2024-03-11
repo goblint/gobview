@@ -11,7 +11,7 @@ let make_breadcrumb_items = (display: State.display, dispatch) => {
     {switch (display) {
     | File(f) =>
       <div className="d-flex justify-content-between w-100">
-        <li className="breadcrumb-item active"> {f.path |> React.string} </li>
+        <li className="breadcrumb-item active pt-1"> {f.path |> React.string} </li>
         <div className="btn-group btn-group-toggle">
           <label className="btn btn-secondary btn-sm disabled">
             {"C File" |> React.string}
@@ -23,7 +23,7 @@ let make_breadcrumb_items = (display: State.display, dispatch) => {
       </div>
     | Cil(f) =>
       <div className="d-flex justify-content-between w-100">
-        <li className="breadcrumb-item active">
+        <li className="breadcrumb-item active pt-1">
           {f.source_file_path |> React.string}
         </li>
         <div className="btn-group btn-group-toggle">
