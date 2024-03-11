@@ -16,7 +16,9 @@ let make_breadcrumb_items = (display: State.display, dispatch) => {
           <label className="btn btn-secondary btn-sm disabled">
             {"C File" |> React.string}
           </label>
-          <label className="btn btn-outline-primary btn-sm" onClick={(_) => dispatch @@ `DisplayCil(f.path)}>
+          <label className="btn btn-outline-primary btn-sm" onClick={(_) => {
+            dispatch @@ `InspectLine(None);
+            dispatch @@ `DisplayCil(f.path)}}>
             {"CIL" |> React.string}
           </label>
         </div>
@@ -27,7 +29,9 @@ let make_breadcrumb_items = (display: State.display, dispatch) => {
           {f.source_file_path |> React.string}
         </li>
         <div className="btn-group btn-group-toggle">
-          <label className="btn btn-outline-primary btn-sm" onClick={(_) => dispatch @@ `DisplayFile(f.source_file_path)}>
+          <label className="btn btn-outline-primary btn-sm" onClick={(_) => {
+            dispatch @@ `InspectLine(None);
+            dispatch @@ `DisplayFile(f.source_file_path)}}>
             {"C File" |> React.string}
           </label>
           <label className="btn btn-secondary btn-sm disabled">
