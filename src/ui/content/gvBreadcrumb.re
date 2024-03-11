@@ -2,7 +2,10 @@ open React.Dom.Dsl.Html;
 open Batteries;
 
 let make_breadcrumb_items = (display: State.display, dispatch) => {
-  let on_click = (f : GvDisplay.func, _) => dispatch @@ `DisplayFile(f.file);
+  let on_click = (f : GvDisplay.func, _) => {
+    dispatch @@ `InspectLine(None);
+    dispatch @@ `DisplayFile(f.file)
+  };
 
   <>
     {switch (display) {
