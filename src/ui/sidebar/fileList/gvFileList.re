@@ -32,22 +32,15 @@ let rec make_entries = (prefix, files, tree, mainFiles, dispatch) => {
 };
 
 [@react.component]
-let make = (~cil: Cil.file, ~dispatch) => {
+let make = (~cil: Cil.file, ~dispatch, ~mainFiles) => {
   let files = Hashtbl.create(64);
-  let (mf,_,_) = Goblint_lib.Cilfacade.getFuns(cil);
-  let mainFiles = Cil.foldGlobals(
+  Cil.iterGlobals(
     cil,
-    (mainFiles, g) =>
+    (g) =>
     switch(g) {
-    | GFun(fdec, loc) => Hashtbl.add(files, loc.file, fdec.svar.vname);
-      if(List.mem(fdec, mf)) {
-        [loc.file, ...mainFiles]
-      } else {
-        mainFiles
-      };
-    | _ => mainFiles
+    | GFun(fdec, loc) => Hashtbl.add(files, loc.file, fdec.svar.vname)
+    | _ => ()
     },
-    [],
   );
 
   let tree = files |> Hashtbl.keys |> List.of_enum |> FileTree.mk_tree;
