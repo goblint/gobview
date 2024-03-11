@@ -12,18 +12,28 @@ let make_breadcrumb_items = (display: State.display, dispatch) => {
     | File(f) =>
       <div className="d-flex justify-content-between w-100">
         <li className="breadcrumb-item active"> {f.path |> React.string} </li>
-        <Button on_click={() => dispatch @@ `DisplayCil(f.path)} type_=`Button>
-          ...{"CIL" |> React.string}
-        </Button>
+        <div className="btn-group btn-group-toggle">
+          <label className="btn btn-secondary btn-sm disabled">
+            {"C File" |> React.string}
+          </label>
+          <label className="btn btn-outline-primary btn-sm" onClick={(_) => dispatch @@ `DisplayCil(f.path)}>
+            {"CIL" |> React.string}
+          </label>
+        </div>
       </div>
     | Cil(f) =>
       <div className="d-flex justify-content-between w-100">
         <li className="breadcrumb-item active">
           {f.source_file_path |> React.string}
         </li>
-          <Button on_click={() => dispatch @@ `DisplayFile(f.source_file_path)} type_=`Button>
-            ...{"C File" |> React.string}
-          </Button>
+        <div className="btn-group btn-group-toggle">
+          <label className="btn btn-outline-primary btn-sm" onClick={(_) => dispatch @@ `DisplayFile(f.source_file_path)}>
+            {"C File" |> React.string}
+          </label>
+          <label className="btn btn-secondary btn-sm disabled">
+            {"CIL" |> React.string}
+          </label>
+        </div>
       </div>
      | Func(f) =>
        <>
