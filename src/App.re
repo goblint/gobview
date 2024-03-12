@@ -1,5 +1,4 @@
 open Goblint_lib;
-open GoblintCil;
 open Batteries;
 open Js_of_ocaml;
 open Lwt.Infix;
@@ -134,10 +133,6 @@ let init = (solver, spec, config, meta, cil, analyses, warnings, stats, file_loc
     | Ok(s) => Marshal.from_string(s, 0)
     | _ => raise(InitFailed("Failed to load file path table"))
     };
-
-  let cilfilename = "file.cil";
-  let oc = Stdlib.open_out(cilfilename);
-  dumpFile(defaultCilPrinter, oc, cilfilename, cil);
 
   print_endline("Rendering app...");
   React.Dom.render_to_element(

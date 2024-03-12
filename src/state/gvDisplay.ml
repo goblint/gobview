@@ -2,9 +2,9 @@ open Batteries
 open GoblintCil
 
 module File = struct
-  type t = { path : string; contents : string option }
+  type t = { path : string; contents : string option; cil : string option }
 
-  let make ~path ?contents () = { path; contents }
+  let make ~path ?contents ?cil () = { path; contents; cil }
 end
 
 module CilFile = struct

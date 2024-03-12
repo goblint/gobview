@@ -3,7 +3,8 @@ module D = GvDisplay
 
 let reduce (s : State.t) (d : D.t option) = function
   | `DisplayNothing -> None
-  | `DisplayCil source_file_path -> Some (D.cil ~path:"file.cil" ~source_file_path ())
+  | `DisplayCil (source_file_path, contents) ->
+      Some (D.cil ~path:("dummy.cil") ~source_file_path ~contents ())
   | `DisplayFile path -> Some (D.file ~path ())
   | `DisplayFunc (name, file) ->
       let f = D.Func.make ~name ~file () in
