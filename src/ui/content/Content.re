@@ -9,7 +9,7 @@ let make = (~state: State.t, ~display: GvDisplay.t, ~dispatch) => {
     };
 
   <div className="content d-flex flex-column h-75 p-4">
-    <GvBreadcrumb display={state.display} dispatch cilAST={state.cil} />
+    <GvBreadcrumb display={state.display} dispatch />
     {switch display {
     | File(file) =>
       <GvFileView
@@ -20,14 +20,6 @@ let make = (~state: State.t, ~display: GvDisplay.t, ~dispatch) => {
         dispatch
       />
     | Func(func) => <GvFuncView func dispatch />
-    | Cil(file) =>
-      <GvFileView
-        goblint={state.goblint}
-        warnings={state.warnings}
-        file={GvDisplay.cilfile_to_file(file)}
-        line
-        dispatch
-      />
     }}
   </div>;
 };

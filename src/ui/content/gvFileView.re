@@ -85,7 +85,7 @@ let update =
     ) => {
   let lines = String.count_char(contents, '\n') + 1;
 
-  let markers = make_markers(warnings, file);
+  let markers = (file.mode == GvDisplay.CIL)?[]:make_markers(warnings, file);
   let model = Editor.IStandaloneCodeEditor.get_model(editor);
   Editor.set_model_markers(model, "goblint", markers);
 
@@ -127,10 +127,14 @@ let update =
     |> List.append(decorations);
 
   let (content_widgets, view_zones) =
-    Enum.range(1, ~until=lines)
-    |> Enum.filter_map(make_inspect_link(goblint, file, dispatch))
-    |> List.of_enum
-    |> List.split;
+    if (file.mode == GvDisplay.CIL) {
+      ([], [])
+    } else {
+      Enum.range(1, ~until=lines)
+      |> Enum.filter_map(make_inspect_link(goblint, file, dispatch))
+      |> List.of_enum
+      |> List.split
+    };
 
   s.content_widgets
   |> List.iter(Editor.IStandaloneCodeEditor.remove_content_widget(editor));
@@ -151,11 +155,15 @@ let update =
   );
 
   s.decorations =
-    Editor.IStandaloneCodeEditor.delta_decorations(
-      editor,
-      s.decorations,
-      decorations,
-    );
+    if (file.mode == GvDisplay.CIL) {
+      []
+    } else {
+      Editor.IStandaloneCodeEditor.delta_decorations(
+        editor,
+        s.decorations,
+        decorations,
+      )
+    };
   ();
 };
 
@@ -189,8 +197,9 @@ let make_editor = (goblint, warnings, file, contents, line, dispatch) => {
 
 [@react.component]
 let make = (~goblint, ~warnings, ~file: GvDisplay.file, ~line, ~dispatch) =>
-  switch (file.contents) {
-  | Some(s) => make_editor(goblint, warnings, file, s, line, dispatch)
+  switch (file.mode, file.contents, file.cil) {
+  | (GvDisplay.C, Some(s), _) => make_editor(goblint, warnings, file, s, line, dispatch)
+  | (GvDisplay.CIL, _, Some(s)) => make_editor(goblint, warnings, file, s, line, dispatch)
   | _ =>
     "Cannot display this file. It might be still loading or missing."
     |> React.string
