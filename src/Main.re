@@ -22,7 +22,7 @@ let make = (~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc) => {
     )};
 
   let (state, dispatch) = {
-    let file = GvDisplay.File.make(~path=List.hd(mainFiles), ());
+    let file = GvDisplay.File.make(~path=List.hd(mainFiles), ~mode=GvDisplay.C, ());
     React.use_reducer(
       Reducer.reducer,
       ~init=fun () => State.make(~file, ~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc, ()),
