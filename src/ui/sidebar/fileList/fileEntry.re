@@ -3,7 +3,10 @@ open Html;
 open Batteries;
 
 let make_func_list = (file, funcs, dispatch) => {
-  let on_click = (func, file, _) => dispatch @@ `DisplayFunc((func, file));
+  let on_click = (func, file, _) => {
+    dispatch @@ `InspectNode(None);
+    dispatch @@ `DisplayFunc((func, file))
+  };
 
   funcs
   |> List.map(func => {
@@ -18,7 +21,10 @@ let make_func_list = (file, funcs, dispatch) => {
 };
 [@react.component]
 let make = (~path, ~name, ~dispatch, ~functions, ~collapsed) => {
-  let on_click = (file, _) => dispatch @@ `DisplayFile(file);
+  let on_click = (file, _) => {
+    dispatch @@ `InspectLine(None);
+    dispatch @@ `DisplayFile(file)
+  };
   let make_title = name =>
     <Link on_click={on_click(path)} class_=["text-link"]>
       ...{name |> React.string}

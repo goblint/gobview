@@ -24,7 +24,7 @@ let make_tabs = (active, dispatch) => {
 };
 
 [@react.component]
-let make = (~active, ~dispatch, ~search, ~cil) => {
+let make = (~active, ~dispatch, ~search, ~cil, ~mainFiles) => {
   <div className="sidebar-left">
     <ul className="nav nav-tabs">
     ...{make_tabs(active, dispatch)}
@@ -32,7 +32,7 @@ let make = (~active, ~dispatch, ~search, ~cil) => {
     <div className="tab-content">
       <div className="tab-pane active">
         {switch (active) {
-         | Files => <GvFileList cil dispatch />
+         | Files => <GvFileList cil dispatch mainFiles/>
          | Search => <SearchView search dispatch />
          | _ => <div/>
          }}

@@ -56,5 +56,5 @@ let default =
     search = Search.default;
   }
 
-let make ~cil ~goblint ~warnings ~meta ~stats ~file_loc () =
-  { default with cil; goblint; warnings; meta; stats; file_loc }
+let make ~file ~cil ~goblint ~warnings ~meta ~stats ~file_loc () =
+  { default with display=Some(File(file)); cil; goblint; warnings; meta; stats; file_loc }

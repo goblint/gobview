@@ -16,9 +16,10 @@ let make = (~warnings, ~dispatch) =>
             |> List.mapi((i, (text, loc, alert)) => {
                   let onClick =
                     loc
-                    |> Option.map((loc, _) =>
+                    |> Option.map((loc : GoblintCil.location, _) => {
+                        dispatch @@ `DisplayFile(loc.file);
                         dispatch @@ `InspectLine(GvInspect.Line.of_location(loc))
-                      );
+                  });
                   <li className={"link-like alert " ++ alert} key={string_of_int(i)} ?onClick>
                     {text |> React.string}
                   </li>;

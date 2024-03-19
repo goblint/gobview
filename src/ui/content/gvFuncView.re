@@ -4,7 +4,7 @@ open Js_of_ocaml;
 [@react.component]
 let make = (~func: GvDisplay.func, ~dispatch) => {
   let show_info = id => {
-    dispatch @@ `InspectNode(id |> Js.to_string);
+    dispatch @@ `InspectNode(id |> Js.to_string |> Option.some);
     // When you click on a link like `javascript:show_info('42')` in Firefox, it
     // replaces the contents of the current page with the return value of
     // `show_info('42')`. Therefore, this function must explicitly return
