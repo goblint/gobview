@@ -11,7 +11,7 @@ let make = (~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc) => {
       (mainFiles, g) =>
       switch(g) {
       | GFun(fdec, loc) =>
-        if(List.mem(fdec, mf)) {
+        if(List.mem_cmp(CilType.Fundec.compare, fdec, mf)) {
           [loc.file, ...mainFiles]
         } else {
           mainFiles
