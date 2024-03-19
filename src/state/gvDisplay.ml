@@ -1,12 +1,10 @@
 open Batteries
 open GoblintCil
 
-type fmode = C | CIL
-
 module File = struct
-  type t = { path : string; contents : string option; cil : string option; mode : fmode }
+  type t = { path : string; contents : string option }
 
-  let make ~path ~mode ?contents ?cil () = { path; mode; contents; cil; }
+  let make ~path ?contents () = { path; contents }
 end
 
 module Func = struct
@@ -29,7 +27,7 @@ type func = Func.t
 
 type t = File of file | Func of func
 
-let file ~path ?(mode=C) ?contents ?cil () = File (File.make ~path ~mode ?contents ?cil ()) (* TODO: contents argument never used *)
+let file ~path ?contents () = File (File.make ~path ?contents ()) (* TODO: contents argument never used *)
 
 (* TODO: unused *)
 let func ~name ~file ?dot () = Func (Func.make ~name ~file ?dot ())
