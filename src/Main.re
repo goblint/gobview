@@ -1,13 +1,32 @@
 open React.Dom.Dsl.Html;
 open Batteries;
+open GoblintCil;
 
 [@react.component]
 let make = (~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc) => {
-  let (state, dispatch) =
+  let mainFiles = {
+    let (mf,_,_) = Goblint_lib.Cilfacade.getFuns(cil);
+    Cil.foldGlobals(
+      cil,
+      (mainFiles, g) =>
+      switch(g) {
+      | GFun(fdec, loc) =>
+        if(List.mem_cmp(CilType.Fundec.compare, fdec, mf)) {
+          [loc.file, ...mainFiles]
+        } else {
+          mainFiles
+        };
+      | _ => mainFiles
+      },
+      [],
+    )};
+
+  let (state, dispatch) = {
+    let file = GvDisplay.File.make(~path=List.hd(mainFiles), ~mode=GvDisplay.C, ());
     React.use_reducer(
       Reducer.reducer,
-      ~init=fun () => State.make(~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc, ()),
-    );
+      ~init=fun () => State.make(~file, ~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc, ()),
+    )};
 
   let fetch_file =
     HttpClient.on_get(res => {
@@ -39,7 +58,10 @@ let make = (~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc) => {
   React.use_effect1(
     () => {
       switch (state.display) {
-      | Some(File(f)) when Option.is_none(f.contents) => fetch_file(Hashtbl.find(file_loc, f.path))
+      | Some(File(f)) when Option.is_none(f.contents) =>
+        try (fetch_file(Hashtbl.find(file_loc, f.path))) {
+          | Not_found => ()
+        };
       | Some(Func(f)) when Option.is_none(f.dot) =>
         fetch_dot(f.name, f.file)
       | _ => ()
@@ -60,6 +82,7 @@ let make = (~cil, ~goblint, ~warnings, ~meta, ~stats, ~file_loc) => {
         dispatch
         search={state.search}
         cil={state.cil}
+        mainFiles
       />
     </div>
     <div className="col-6 d-flex flex-column h-100">

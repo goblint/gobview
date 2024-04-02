@@ -1,12 +1,14 @@
 open React.Dom.Dsl.Html;
 open Batteries;
 
+
 [@react.component]
 let make =
-    (~name=?, ~collapsed=?, ~override_class=?, ~on_toggle=?, ~children=?) => {
+    (~name=?, ~collapsed=?, ~override_class=?, ~on_toggle=?, ~children=?, ~make_title=?) => {
   let name = Option.default("", name);
   let collapsed = Option.default(true, collapsed);
   let children = Option.default([React.null], children);
+  let make_title = Option.default((name) => name |> React.string, make_title);
 
   let className =
     switch (override_class) {
@@ -16,7 +18,7 @@ let make =
 
   <li className>
     ...[<div>
-      {name |> React.string}
+      {make_title(name)}
       <Button
         class_=["btn", "btn-sm", "dropdown-toggle"]
         color=`None

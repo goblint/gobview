@@ -49,9 +49,9 @@ function smallest_float(x) {
   return 2.2250738585072014e-308;
 }
 
-//Provides: pi
+//Provides: pi_float
 //from Goblint specific stubs for C float operations
-function pi(x) {
+function pi_float(x) {
   return Number.pi;
 }
 
