@@ -65,7 +65,7 @@ module type Sig = sig
 end
 
 module Make
-    (Cfg : MyCFG.CfgBidir)
+    (Cfg : MyCFG.CfgBidirSkip)
     (Spec : Analyses.Spec) (Inc : sig
       val increment : Analyses.increment_data option
     end) : Sig = struct
