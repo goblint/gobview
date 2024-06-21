@@ -23,7 +23,7 @@ end
 
 module Config = struct
   let name = "config"
-  type body = string * Json.t [@@deriving of_yojson]
+  type body = string * Yojson.Safe.t [@@deriving of_yojson]
   type response = unit [@@deriving to_yojson]
   let process state (conf, json) = Goblint.config state.goblint conf json
 end
