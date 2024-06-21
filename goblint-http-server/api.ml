@@ -1,6 +1,5 @@
 open Batteries
 open State
-open Ppx_yojson_conv_lib.Yojson_conv.Primitives
 
 module type Request = sig
   val name: string
@@ -8,8 +7,8 @@ module type Request = sig
   type body
   type response
 
-  val body_of_yojson: Yojson.Safe.t -> body
-  val yojson_of_response: response -> Yojson.Safe.t
+  val body_of_yojson: Yojson.Safe.t -> (body, string) result
+  val response_to_yojson: response -> Yojson.Safe.t
 
   val process: State.t -> body -> response Lwt.t
 end
