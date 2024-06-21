@@ -35,7 +35,7 @@
   lwt
   lwt_ppx
   yojson
-  ppx_yojson_conv ; TODO: switch to ppx_deriving_yojson like Goblint itself
+  ppx_deriving_yojson
   conduit-lwt-unix
   jsoo-react
   js_of_ocaml-lwt
