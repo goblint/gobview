@@ -63,10 +63,10 @@ depends: [
   "integers_stubs_js" {= "1.0"}
   "ipaddr" {= "5.6.0"}
   "ipaddr-sexp" {= "5.6.0"}
-  "js_of_ocaml" {= "5.8.2"}
-  "js_of_ocaml-compiler" {= "5.8.2"}
-  "js_of_ocaml-lwt" {= "5.8.2"}
-  "js_of_ocaml-ppx" {= "5.8.2"}
+  "js_of_ocaml" {= "5.0.1"}
+  "js_of_ocaml-compiler" {= "5.0.1"}
+  "js_of_ocaml-lwt" {= "5.0.1"}
+  "js_of_ocaml-ppx" {= "5.0.1"}
   "jsonm" {= "1.0.2"}
   "jsonrpc" {= "1.17.0"}
   "jsoo-react" {= "0.1"}
