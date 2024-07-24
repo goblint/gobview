@@ -14,4 +14,4 @@
   yojson
   uri)
  (preprocess
-  (pps lwt_ppx ppx_yojson_conv)))
+  (pps lwt_ppx ppx_deriving_yojson)))
