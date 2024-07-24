@@ -1,5 +1,6 @@
 open Batteries
 open State
+open Ppx_yojson_conv_lib.Yojson_conv.Primitives
 
 module type Request = sig
   val name: string
