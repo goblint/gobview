@@ -19,6 +19,8 @@ depends: [
   "base" {= "v0.16.3"}
   "base-bigarray" {= "base"}
   "base-bytes" {= "base"}
+  "base-domains" {= "base"}
+  "base-nnp" {= "base"}
   "base-threads" {= "base"}
   "base-unix" {= "base"}
   "base64" {= "3.5.1"}
@@ -84,12 +86,12 @@ depends: [
   "mirage-crypto-pk" {= "0.11.3"}
   "mirage-crypto-rng" {= "0.11.3"}
   "num" {= "1.5"}
-  "ocaml" {= "4.14.2"}
+  "ocaml" {= "5.0.0"}
   "ocaml-compiler-libs" {= "v0.12.4"}
-  "ocaml-config" {= "2"}
+  "ocaml-config" {= "3"}
   "ocaml-option-flambda" {= "1"}
   "ocaml-syntax-shims" {= "1.0.0"}
-  "ocaml-variants" {= "4.14.2+options"}
+  "ocaml-variants" {= "5.0.0+options"}
   "ocamlbuild" {= "0.14.3"}
   "ocamlfind" {= "1.9.6"}
   "ocplib-endian" {= "1.2"}
