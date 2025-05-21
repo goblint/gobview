@@ -13,7 +13,7 @@ homepage: "https://github.com/goblint/gobview"
 bug-reports: "https://github.com/goblint/gobview/issues"
 depends: [
   "dune" {>= "2.7"}
-  "ocaml" {>= "4.14.0"}
+  "ocaml" {>= "5"}
   "reason"
   "batteries"
   "cohttp-lwt"

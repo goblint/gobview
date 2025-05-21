@@ -24,7 +24,7 @@
  (synopsis "Web frontend for Goblint")
  (depends
   dune
-  (ocaml (>= 4.14.0))
+  (ocaml (>= 5))
   reason
   batteries
   cohttp-lwt
