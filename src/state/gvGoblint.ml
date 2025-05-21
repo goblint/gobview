@@ -152,7 +152,7 @@ module Make
       let should_prune = false
     end in
     let module S2' =
-      ConstrSys.GlobSolverFromEqSolver (Goblint_solver.Generic.LoadRunIncrSolver (Arg)) (EQSys) (LHT) (GHT)
+      Goblint_constraint.Translators.GlobSolverFromEqSolver (Goblint_solver.Generic.LoadRunIncrSolver (Arg)) (EQSys) (LHT) (GHT)
     in
     let r2, _ = S2'.solve [] [] [] None in
     new solver_state_impl r2
