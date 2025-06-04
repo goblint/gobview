@@ -24,7 +24,7 @@ depends: [
   "base-threads" {= "base"}
   "base-unix" {= "base"}
   "base64" {= "3.5.1"}
-  "batteries" {= "3.8.0"}
+  "batteries" {= "3.9.0"}
   "bigstringaf" {= "0.9.1"}
   "bos" {= "0.2.1"}
   "ca-certs" {= "0.2.3"}
