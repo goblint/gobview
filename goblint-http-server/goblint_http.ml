@@ -3,8 +3,6 @@ open Cohttp_lwt
 open Cohttp_lwt_unix
 open Lwt.Infix
 
-module Yojson_conv = Ppx_yojson_conv_lib.Yojson_conv
-
 let docroot = ref "run"
 let distroot = ref "gobview/_dist"
 let index = ref "index.html"
@@ -35,13 +33,13 @@ let process state name body =
     | exception Yojson.Json_error err -> Server.respond_error ~status:`Bad_request ~body:err ()
     | json ->
       match R.body_of_yojson json with
-      | exception Yojson_conv.Of_yojson_error (exn, _) ->
-        Server.respond_error ~status:`Bad_request ~body:(Printexc.to_string exn) ()
-      | body ->
+      | Error msg ->
+        Server.respond_error ~status:`Bad_request ~body:msg ()
+      | Ok body ->
         Lwt.catch
           (fun () ->
              R.process state body
-             >|= R.yojson_of_response
+             >|= R.response_to_yojson
              >|= Yojson.Safe.to_string
              >>= fun body -> Server.respond_string ~status:`OK ~body ())
           (fun exn -> Server.respond_error ~status:`Bad_request ~body:(Printexc.to_string exn) ())

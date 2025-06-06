@@ -95,7 +95,6 @@ depends: [
   "ocamlbuild" {= "0.14.3"}
   "ocamlfind" {= "1.9.8"}
   "ocplib-endian" {= "1.2"}
-  "octavius" {= "1.2.2"}
   "odoc" {= "2.4.2" & with-doc}
   "odoc-parser" {= "2.4.2" & with-doc}
   "ojs" {= "1.1.2"}
@@ -104,10 +103,7 @@ depends: [
   "ppx_derivers" {= "1.2.1"}
   "ppx_deriving" {= "6.0.2"}
   "ppx_deriving_yojson" {= "3.8.0"}
-  "ppx_js_style" {= "v0.16.0"}
   "ppx_sexp_conv" {= "v0.16.0"}
-  "ppx_yojson_conv" {= "v0.16.0"}
-  "ppx_yojson_conv_lib" {= "v0.16.0"}
   "ppxlib" {= "0.32.1"}
   "ptime" {= "1.1.0"}
   "re" {= "1.11.0"}
