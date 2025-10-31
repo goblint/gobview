@@ -39,8 +39,8 @@ depends: [
   "conduit-lwt-unix" {= "6.2.3"}
   "conf-bash" {= "1"}
   "conf-gcc" {= "1.0"}
-  "conf-gmp" {= "4"}
-  "conf-gmp-powm-sec" {= "3"}
+  "conf-gmp" {= "5"}
+  "conf-gmp-powm-sec" {= "4"}
   "conf-perl" {= "2"}
   "cppo" {= "1.6.9"}
   "crunch" {= "4.0.0" & with-doc}
