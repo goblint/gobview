@@ -1,5 +1,5 @@
 //Provides: caml_unix_getpid
-//Alias: unix_getuid
+//Alias: unix_getpid
 function caml_unix_getpid() {
     return 0;
 }
